@@ -1,0 +1,544 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.428
+O time de dados da Joana construiu um sistema
+
+00:00:04.428 --> 00:00:07.382
+que transforma perguntas em consultas ao banco.
+
+00:00:07.682 --> 00:00:09.646
+E eles já fizeram a parte difícil.
+
+00:00:09.946 --> 00:00:11.456
+Têm um dataset.
+
+00:00:11.756 --> 00:00:15.614
+Cento e vinte perguntas reais, cada uma com a consulta correta.
+
+00:00:16.264 --> 00:00:20.711
+O problema é que rodar o eval é um ritual de meia hora.
+
+00:00:21.011 --> 00:00:24.655
+Abrir um notebook, apontar para a versão certa do prompt,
+
+00:00:24.655 --> 00:00:25.167
+esperar,
+
+00:00:25.167 --> 00:00:28.044
+copiar os resultados numa planilha e comparar
+
+00:00:28.044 --> 00:00:30.154
+com a planilha da semana passada.
+
+00:00:30.804 --> 00:00:34.221
+Então, na prática, o eval roda quando alguém lembra.
+
+00:00:34.521 --> 00:00:38.389
+E na semana em que três pessoas mudaram o prompt, ninguém rodou.
+
+00:00:38.689 --> 00:00:39.921
+O acerto caiu.
+
+00:00:40.221 --> 00:00:43.402
+E eles tiveram que vasculhar as três mudanças na mão,
+
+00:00:43.402 --> 00:00:44.783
+para achar qual causou.
+
+00:00:45.433 --> 00:00:47.243
+Ter os casos não basta.
+
+00:00:47.543 --> 00:00:51.158
+Eles precisam rodar sozinhos, do mesmo jeito sempre,
+
+00:00:51.158 --> 00:00:54.635
+e o resultado precisa chegar a quem fez a mudança,
+
+00:00:54.635 --> 00:00:55.678
+antes do merge.
+
+00:00:55.978 --> 00:00:56.675
+Nesta aula,
+
+00:00:56.675 --> 00:00:59.527
+você vai ver como transformar um dataset numa
+
+00:00:59.527 --> 00:01:02.316
+checagem automática que roda a cada mudança.
+
+00:01:03.516 --> 00:01:06.245
+Um eval harness tem quatro partes fixas.
+
+00:01:06.895 --> 00:01:08.034
+Carregar os casos.
+
+00:01:08.684 --> 00:01:10.613
+Rodar o sistema de verdade em cada um.
+
+00:01:11.263 --> 00:01:13.580
+Dar nota a cada saída com a regra certa.
+
+00:01:14.230 --> 00:01:17.016
+E comparar o resultado com uma linha de base guardada.
+
+00:01:17.666 --> 00:01:19.938
+Aí você liga no seu pipeline.
+
+00:01:20.238 --> 00:01:22.737
+Toda mudança num prompt, num modelo,
+
+00:01:22.737 --> 00:01:26.068
+numa ferramenta ou no código do pipeline dispara
+
+00:01:26.068 --> 00:01:29.053
+o eval e anexa o relatório ao pull request.
+
+00:01:29.353 --> 00:01:31.637
+E um detalhe importa muito.
+
+00:01:31.937 --> 00:01:36.191
+O eval harness roda o sistema como ele roda em produção.
+
+00:01:36.491 --> 00:01:39.148
+Mesmo código, mesmo prompt versionado.
+
+00:01:39.448 --> 00:01:41.520
+Não uma cópia simplificada.
+
+00:01:42.720 --> 00:01:43.963
+Aqui está o fluxo.
+
+00:01:44.263 --> 00:01:46.277
+Alguém abre um pull request.
+
+00:01:46.927 --> 00:01:50.489
+O eval harness carrega a versão atual do dataset.
+
+00:01:51.139 --> 00:01:54.584
+Cada caso roda pelo pipeline de verdade, em paralelo,
+
+00:01:54.584 --> 00:01:57.445
+com algumas repetições quando a saída varia.
+
+00:01:58.095 --> 00:01:59.786
+Cada saída recebe nota.
+
+00:02:00.086 --> 00:02:03.614
+Por comparação exata, por uma regra no código ou por um juiz.
+
+00:02:04.264 --> 00:02:08.290
+As notas viram taxas por categoria, mais custo e latência.
+
+00:02:08.940 --> 00:02:12.744
+O resultado é comparado com a linha de base da branch principal.
+
+00:02:13.394 --> 00:02:15.669
+E o relatório vai para o pull request.
+
+00:02:15.969 --> 00:02:18.801
+Uma regressão acima do limite bloqueia o merge.
+
+00:02:20.001 --> 00:02:20.938
+Na segunda,
+
+00:02:20.938 --> 00:02:25.454
+o pull request da Joana muda só um exemplo do prompt,
+
+00:02:25.454 --> 00:02:27.159
+o de juntar tabelas.
+
+00:02:27.459 --> 00:02:29.938
+O pipeline dispara o eval harness,
+
+00:02:29.938 --> 00:02:32.855
+roda os cento e vinte casos pelo sistema
+
+00:02:32.855 --> 00:02:35.772
+de verdade e posta isto no pull request.
+
+00:02:36.422 --> 00:02:37.871
+Agregação se mantém.
+
+00:02:38.171 --> 00:02:39.746
+Filtro de data se mantém.
+
+00:02:40.046 --> 00:02:42.461
+Junção cai quase dezessete pontos.
+
+00:02:42.761 --> 00:02:43.526
+Regressão.
+
+00:02:44.176 --> 00:02:45.741
+O merge fica bloqueado.
+
+00:02:46.041 --> 00:02:48.784
+O relatório lista os onze casos de junção
+
+00:02:48.784 --> 00:02:51.058
+que passaram de certo para errado.
+
+00:02:51.358 --> 00:02:53.023
+A Joana abre o primeiro,
+
+00:02:53.023 --> 00:02:56.075
+vê a consulta gerada e percebe que o exemplo
+
+00:02:56.075 --> 00:02:58.988
+novo inverteu qual tabela era a principal.
+
+00:02:59.288 --> 00:03:00.497
+Sem o eval harness,
+
+00:03:00.497 --> 00:03:03.426
+essa queda só apareceria na planilha de sexta,
+
+00:03:03.426 --> 00:03:05.655
+misturada com outras duas mudanças.
+
+00:03:05.955 --> 00:03:09.120
+Com ele, a mudança culpada é óbvia,
+
+00:03:09.120 --> 00:03:12.919
+porque só um pull request chegou a entrar.
+
+00:03:13.569 --> 00:03:15.730
+E repare como esses casos recebem nota.
+
+00:03:16.030 --> 00:03:18.119
+Não comparando o texto da consulta.
+
+00:03:18.419 --> 00:03:21.341
+Duas consultas diferentes podem devolver a mesma tabela.
+
+00:03:21.641 --> 00:03:25.522
+O eval harness roda a consulta gerada e a esperada
+
+00:03:25.522 --> 00:03:28.549
+num banco de teste e compara as linhas.
+
+00:03:28.849 --> 00:03:30.796
+Uma consulta escrita de outro jeito
+
+00:03:30.796 --> 00:03:32.742
+que devolve as linhas certas passa.
+
+00:03:33.042 --> 00:03:36.628
+Uma com uma junção a mais que duplica linhas falha.
+
+00:03:36.928 --> 00:03:39.817
+Comparar texto teria recusado a primeira,
+
+00:03:39.817 --> 00:03:41.931
+e às vezes aceitado a segunda.
+
+00:03:43.131 --> 00:03:44.604
+Uma pergunta para você.
+
+00:03:44.904 --> 00:03:47.266
+Lembra da semana em que três pessoas
+
+00:03:47.266 --> 00:03:49.430
+mudaram o prompt e o acerto caiu?
+
+00:03:49.730 --> 00:03:51.380
+O dataset já existia.
+
+00:03:51.680 --> 00:03:54.289
+O que o eval harness teria feito de diferente?
+
+00:03:57.339 --> 00:04:00.006
+Cada pull request teria rodado os cento
+
+00:04:00.006 --> 00:04:02.467
+e vinte casos no sistema de verdade.
+
+00:04:02.767 --> 00:04:06.146
+E o primeiro que quebrasse as junções teria sido bloqueado.
+
+00:04:06.446 --> 00:04:09.896
+Ter casos no repositório não protege.
+
+00:04:10.196 --> 00:04:12.376
+O que falhou foi o ritual do notebook.
+
+00:04:12.676 --> 00:04:15.694
+O eval harness existe para o eval rodar
+
+00:04:15.694 --> 00:04:17.938
+sem ninguém precisar lembrar.
+
+00:04:18.238 --> 00:04:20.361
+E ele fatia o problema para você,
+
+00:04:20.361 --> 00:04:23.772
+então ninguém precisa vasculhar três mudanças na mão.
+
+00:04:24.972 --> 00:04:26.688
+Qual nota usar?
+
+00:04:26.988 --> 00:04:30.115
+Comece pelo que o código decide sozinho.
+
+00:04:30.415 --> 00:04:34.632
+A rota de um classificador: comparação exata.
+
+00:04:35.282 --> 00:04:38.874
+Uma consulta ao banco: rode e compare as linhas.
+
+00:04:39.524 --> 00:04:41.288
+Um agente: confira o caminho.
+
+00:04:41.588 --> 00:04:43.046
+Ele chamou a consulta de pedido.
+
+00:04:43.346 --> 00:04:45.891
+Ele não chamou o estorno sem aprovação.
+
+00:04:46.541 --> 00:04:49.597
+E texto livre, só quando não há outro jeito:
+
+00:04:49.597 --> 00:04:51.889
+um modelo como juiz, com rubrica,
+
+00:04:51.889 --> 00:04:54.737
+conferido contra uma pessoa numa amostra.
+
+00:04:55.037 --> 00:04:56.845
+O juiz é o último recurso.
+
+00:04:57.145 --> 00:04:59.484
+Custa uma chamada a mais por caso,
+
+00:04:59.484 --> 00:05:02.167
+e pode concordar com uma resposta ruim.
+
+00:05:02.467 --> 00:05:05.574
+Se uma regra no código cobre 80% dos casos,
+
+00:05:05.574 --> 00:05:07.886
+deixe o juiz para os outros 20%.
+
+00:05:08.186 --> 00:05:09.565
+Não o contrário.
+
+00:05:10.765 --> 00:05:14.185
+O eval harness costuma rodar em duas velocidades.
+
+00:05:14.485 --> 00:05:15.400
+A cada commit,
+
+00:05:15.400 --> 00:05:19.386
+um subconjunto de vinte casos canário roda em poucos minutos.
+
+00:05:19.686 --> 00:05:21.432
+Ele pega o erro óbvio.
+
+00:05:22.082 --> 00:05:25.606
+Antes do merge, e toda noite, o conjunto inteiro roda,
+
+00:05:25.606 --> 00:05:26.585
+com repetições.
+
+00:05:26.885 --> 00:05:29.220
+Esse pega a categoria rara.
+
+00:05:29.870 --> 00:05:32.090
+E o limite não é questão de gosto.
+
+00:05:32.390 --> 00:05:35.467
+Rode a mesma versão duas vezes, sem mudança nenhuma,
+
+00:05:35.467 --> 00:05:37.479
+e veja quanto o resultado se mexe.
+
+00:05:37.779 --> 00:05:40.417
+Se a variação natural é de um ponto,
+
+00:05:40.417 --> 00:05:43.787
+um limite zero recusa pull requests inocentes.
+
+00:05:44.087 --> 00:05:45.491
+Se é de quatro pontos,
+
+00:05:45.491 --> 00:05:49.065
+um limite de dois deixa passar uma regressão de verdade.
+
+00:05:49.365 --> 00:05:52.758
+O limite fica um pouco acima do ruído que você mediu.
+
+00:05:53.958 --> 00:05:55.628
+Agora, os erros comuns.
+
+00:05:55.928 --> 00:05:57.358
+Uma cópia simplificada.
+
+00:05:57.658 --> 00:06:00.913
+O eval harness chama o modelo direto, sem a busca,
+
+00:06:00.913 --> 00:06:03.192
+sem o roteador, sem as ferramentas.
+
+00:06:03.492 --> 00:06:06.303
+O eval passa, e a produção falha.
+
+00:06:06.603 --> 00:06:08.730
+O ponto de entrada tem que ser a mesma
+
+00:06:08.730 --> 00:06:10.298
+função que a produção chama.
+
+00:06:10.948 --> 00:06:12.855
+Um notebook fazendo papel de pipeline.
+
+00:06:13.155 --> 00:06:14.628
+Funciona uma vez.
+
+00:06:14.928 --> 00:06:18.421
+Na semana dos três pull requests, ninguém abre.
+
+00:06:19.071 --> 00:06:20.446
+Um dataset congelado.
+
+00:06:20.746 --> 00:06:23.756
+O eval harness só é tão bom quanto os casos.
+
+00:06:24.056 --> 00:06:26.817
+Todo bug de produção vira um caso novo.
+
+00:06:27.117 --> 00:06:29.453
+Senão você está medindo um mundo velho.
+
+00:06:30.103 --> 00:06:33.925
+E um limite zero num sistema com muita variação.
+
+00:06:34.225 --> 00:06:36.531
+O mesmo caso passa e falha.
+
+00:06:36.831 --> 00:06:40.750
+Coloque repetições e médias antes de apertar o limite.
+
+00:06:41.950 --> 00:06:44.694
+O eval harness também precisa ser avaliado.
+
+00:06:44.994 --> 00:06:47.077
+O juiz concorda com uma pessoa?
+
+00:06:47.377 --> 00:06:50.664
+Quão estável é o resultado entre rodadas idênticas?
+
+00:06:50.964 --> 00:06:53.085
+E quantos bugs de produção do último
+
+00:06:53.085 --> 00:06:55.030
+trimestre têm um caso no dataset?
+
+00:06:55.680 --> 00:06:57.199
+E fique de olho num sinal.
+
+00:06:57.499 --> 00:07:00.569
+Se o eval da noite cai sem mudança nenhuma no código,
+
+00:07:00.569 --> 00:07:03.291
+suspeite do provedor, com um modelo atualizado,
+
+00:07:03.291 --> 00:07:04.855
+ou dos seus dados de teste.
+
+00:07:05.155 --> 00:07:08.575
+Esse alerta é tão útil quanto o do pull request.
+
+00:07:08.875 --> 00:07:10.493
+A linha de base também envelhece.
+
+00:07:10.793 --> 00:07:13.840
+Guarde os traces de eval separados dos de produção,
+
+00:07:13.840 --> 00:07:15.632
+marcados com a versão testada.
+
+00:07:16.832 --> 00:07:20.267
+Na página, o eval harness vem em Python e TypeScript,
+
+00:07:20.267 --> 00:07:22.212
+e os dois fazem a mesma coisa.
+
+00:07:22.512 --> 00:07:24.099
+Carregam os casos de um arquivo.
+
+00:07:24.399 --> 00:07:27.693
+Rodam cada um algumas vezes pelo sistema de verdade,
+
+00:07:27.693 --> 00:07:29.593
+com um limite de concorrência,
+
+00:07:29.593 --> 00:07:32.064
+para não estourar o limite do provedor.
+
+00:07:32.364 --> 00:07:35.413
+E transformam as notas em taxas por categoria.
+
+00:07:36.063 --> 00:07:37.761
+Depois comparam cada categoria
+
+00:07:37.761 --> 00:07:40.024
+com a linha de base da branch principal.
+
+00:07:40.324 --> 00:07:45.053
+Se alguma cair mais que o limite, o processo sai com erro,
+
+00:07:45.053 --> 00:07:46.603
+e o pipeline falha.
+
+00:07:47.253 --> 00:07:49.660
+É um comando que o seu pipeline consegue rodar.
+
+00:07:49.960 --> 00:07:51.939
+Notas com regras e juízes,
+
+00:07:51.939 --> 00:07:55.517
+e um relatório mais caprichado no pull request,
+
+00:07:55.517 --> 00:07:57.572
+vêm nas próximas iterações.
+
+00:07:57.872 --> 00:08:00.460
+E ferramentas prontas podem poupar a estrutura.
+
+00:08:00.760 --> 00:08:03.667
+O que você nunca terceiriza é o dataset,
+
+00:08:03.667 --> 00:08:06.865
+a regra de nota e o gatilho no pull request.
+
+00:08:08.065 --> 00:08:09.864
+Então, a ideia para levar.
+
+00:08:10.164 --> 00:08:13.178
+Um dataset só protege quando roda sozinho.
+
+00:08:13.478 --> 00:08:15.011
+Rode o sistema de verdade,
+
+00:08:15.011 --> 00:08:17.722
+dê nota com a regra mais simples que funciona,
+
+00:08:17.722 --> 00:08:20.434
+compare por categoria contra uma linha de base
+
+00:08:20.434 --> 00:08:22.615
+e coloque a resposta no pull request,
+
+00:08:22.615 --> 00:08:23.499
+antes do merge.
+
+00:08:23.799 --> 00:08:27.457
+Aí três mudanças na mesma semana deixam de ser um mistério.
+
+00:08:28.107 --> 00:08:32.072
+Na próxima aula, vamos olhar o combustível de tudo isso:
+
+00:08:32.072 --> 00:08:34.833
+o golden dataset, e como mantê-lo vivo.
+
+00:08:35.133 --> 00:08:35.963
+Até lá.

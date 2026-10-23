@@ -1,0 +1,373 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:03.697
+Friday, five in the afternoon.
+
+00:00:03.997 --> 00:00:08.992
+Someone on the product team opens the settings panel and edits the ticket classifier
+
+00:00:08.992 --> 00:00:09.408
+prompt.
+
+00:00:10.058 --> 00:00:15.233
+They swap the word urgent for high priority, to sound a bit more polite.
+
+00:00:15.533 --> 00:00:17.051
+Nobody runs a test.
+
+00:00:17.351 --> 00:00:19.599
+After all, it's just text.
+
+00:00:20.249 --> 00:00:22.733
+On Monday, the urgent queue is empty.
+
+00:00:23.033 --> 00:00:27.370
+The code that read the model's output was looking for the word urgent.
+
+00:00:27.670 --> 00:00:31.958
+Half of the critical tickets spent the whole weekend in the regular queue.
+
+00:00:32.608 --> 00:00:34.621
+The prompt was an interface.
+
+00:00:34.921 --> 00:00:36.719
+Nobody treated it like one.
+
+00:00:37.019 --> 00:00:41.092
+In this lesson, you'll see what it means to treat it that way, and the four
+
+00:00:41.092 --> 00:00:44.242
+questions that turn a prompt from a draft into a contract.
+
+00:00:45.442 --> 00:00:49.903
+A production prompt is an API contract, between your code and the model.
+
+00:00:50.203 --> 00:00:55.336
+It has the same parts as any interface you already version and test.
+
+00:00:55.636 --> 00:01:01.046
+You'd never let someone rename a field in a public API from a settings panel on a
+
+00:01:01.046 --> 00:01:02.181
+Friday afternoon.
+
+00:01:02.481 --> 00:01:04.715
+The prompt deserves the same respect.
+
+00:01:05.915 --> 00:01:07.383
+Let's go through the contract.
+
+00:01:07.683 --> 00:01:12.450
+The calling code knows exactly what it sends, and what it expects back.
+
+00:01:13.100 --> 00:01:15.455
+The input has a defined shape.
+
+00:01:15.755 --> 00:01:19.340
+Which variables, what types, and where they come from.
+
+00:01:19.990 --> 00:01:23.426
+The prompt has a name, a version and an owner.
+
+00:01:23.726 --> 00:01:26.624
+Changing the prompt is changing the interface.
+
+00:01:27.274 --> 00:01:32.248
+The output follows a schema, with fixed fields, not free text that someone has to
+
+00:01:32.248 --> 00:01:32.862
+interpret.
+
+00:01:33.512 --> 00:01:39.794
+The code validates that output before using it, just like it would with any external
+
+00:01:39.794 --> 00:01:40.766
+API response.
+
+00:01:41.416 --> 00:01:46.534
+And a set of test cases, the eval, runs against every new version of the prompt.
+
+00:01:47.184 --> 00:01:51.172
+That Friday afternoon broke steps four and six at the same time.
+
+00:01:51.472 --> 00:01:54.865
+The word in the output was part of the contract.
+
+00:01:55.165 --> 00:01:58.411
+And nobody had a test that failed when it changed.
+
+00:01:59.611 --> 00:02:03.174
+Before any prompt goes to production, answer four questions.
+
+00:02:03.824 --> 00:02:04.313
+Input.
+
+00:02:04.613 --> 00:02:06.700
+What goes in, and from where?
+
+00:02:07.000 --> 00:02:12.640
+For the classifier: the ticket title and body, as plain text, with personal data
+
+00:02:12.640 --> 00:02:13.768
+already removed.
+
+00:02:14.418 --> 00:02:14.960
+Output.
+
+00:02:15.260 --> 00:02:16.604
+What format comes out?
+
+00:02:16.904 --> 00:02:22.266
+A priority field that can only be urgent or normal, and a reason field with a short
+
+00:02:22.266 --> 00:02:23.042
+explanation.
+
+00:02:23.692 --> 00:02:24.481
+Version.
+
+00:02:24.781 --> 00:02:26.345
+How do I know which one ran?
+
+00:02:26.645 --> 00:02:30.794
+Ticket classifier, version seven, recorded on every trace.
+
+00:02:31.444 --> 00:02:32.043
+Test.
+
+00:02:32.343 --> 00:02:34.142
+How do I know it didn't get worse?
+
+00:02:34.442 --> 00:02:37.594
+Two hundred labeled tickets, run on every change.
+
+00:02:38.244 --> 00:02:42.556
+If any answer is I don't know, the prompt is still a draft.
+
+00:02:42.856 --> 00:02:45.043
+Even if it's already in production.
+
+00:02:45.693 --> 00:02:49.440
+And on input, also write down what must not go in.
+
+00:02:49.740 --> 00:02:56.396
+Support tickets at a Brazilian bank often carry a national ID number, a payment key,
+
+00:02:56.396 --> 00:02:58.218
+or pieces of a receipt.
+
+00:02:58.518 --> 00:03:02.297
+That's personal data under Brazil's data protection law.
+
+00:03:02.597 --> 00:03:06.051
+The contract says your code masks it before the call.
+
+00:03:06.351 --> 00:03:11.704
+And the eval has a case proving sensitive data doesn't leak to the provider.
+
+00:03:12.354 --> 00:03:14.601
+That goes for the test cases too.
+
+00:03:14.901 --> 00:03:17.829
+A private repository doesn't cancel the law.
+
+00:03:18.129 --> 00:03:24.454
+If a real ID number sits in a test case, it goes to the provider on every eval run.
+
+00:03:24.754 --> 00:03:26.472
+Mask the fixture as well.
+
+00:03:27.672 --> 00:03:29.117
+Here's one for you.
+
+00:03:29.417 --> 00:03:31.902
+On Monday, the urgent queue is empty.
+
+00:03:32.202 --> 00:03:35.902
+Friday's trace says ticket classifier, version seven.
+
+00:03:36.202 --> 00:03:38.937
+But the settings panel doesn't record any version.
+
+00:03:39.237 --> 00:03:40.939
+What does that already tell you?
+
+00:03:43.989 --> 00:03:46.510
+It tells you the change went around the contract.
+
+00:03:46.810 --> 00:03:51.759
+The trace says version seven, but the text that actually ran isn't version seven
+
+00:03:51.759 --> 00:03:52.997
+from the repository.
+
+00:03:53.297 --> 00:03:55.964
+You can't match what ran to the versioned file.
+
+00:03:56.264 --> 00:03:58.539
+So the trace can't help you investigate.
+
+00:03:59.189 --> 00:04:01.657
+And an eval alone wouldn't save you either.
+
+00:04:01.957 --> 00:04:06.684
+It would test the file in the repository, while production runs something else.
+
+00:04:06.984 --> 00:04:12.175
+The next step is to take the prompt out of the panel, version the file, and reject
+
+00:04:12.175 --> 00:04:14.391
+any output the schema doesn't know.
+
+00:04:15.591 --> 00:04:18.739
+The most common trap is exactly that settings panel.
+
+00:04:19.039 --> 00:04:22.787
+It looks harmless, because the text is right there, visible.
+
+00:04:23.087 --> 00:04:27.983
+In practice, it's a deploy with no diff, no review, and no eval.
+
+00:04:28.633 --> 00:04:32.682
+And the person who edited it on Friday wasn't being reckless.
+
+00:04:32.982 --> 00:04:36.103
+The path the product offered was the wrong one.
+
+00:04:36.403 --> 00:04:38.449
+Fix the path, not the person.
+
+00:04:39.099 --> 00:04:40.898
+The other extreme breaks too.
+
+00:04:41.198 --> 00:04:46.354
+Three copies of the same prompt, in three services, each one almost the same.
+
+00:04:46.654 --> 00:04:49.997
+A bug gets fixed in one, and the other two stay stale.
+
+00:04:50.297 --> 00:04:53.273
+That smell is called scattered prompt strings.
+
+00:04:53.573 --> 00:04:57.659
+The cure is one versioned template, reused by every service.
+
+00:04:58.309 --> 00:05:00.333
+And there's a quieter one.
+
+00:05:00.633 --> 00:05:04.081
+Say the schema asks for priority and reason.
+
+00:05:04.381 --> 00:05:08.604
+In four percent of cases, the model returns only the priority.
+
+00:05:08.904 --> 00:05:13.174
+And the code quietly fills in a default reason and moves on.
+
+00:05:13.474 --> 00:05:17.553
+That's the same fragility as searching the text for the word urgent.
+
+00:05:17.853 --> 00:05:23.282
+Incomplete output should fail validation, and go to a retry or a review queue.
+
+00:05:23.582 --> 00:05:26.960
+If the field is really optional, say so in the schema.
+
+00:05:28.160 --> 00:05:33.087
+Now take one of your own prompts and write its contract, in five minutes, in a file
+
+00:05:33.087 --> 00:05:34.571
+right next to the prompt.
+
+00:05:34.871 --> 00:05:37.194
+A name, a version, an owner.
+
+00:05:37.844 --> 00:05:40.155
+What goes in, and what must stay out.
+
+00:05:40.805 --> 00:05:46.075
+If you couldn't fill in the output without hesitating, your code probably parses
+
+00:05:46.075 --> 00:05:46.734
+free text.
+
+00:05:47.034 --> 00:05:49.384
+That's a smell called free text handoff.
+
+00:05:50.034 --> 00:05:54.356
+And if there's nothing to put next to eval, that's untested prompt.
+
+00:05:55.006 --> 00:05:58.801
+Then compare the contract with the code that consumes the output.
+
+00:05:59.101 --> 00:06:04.415
+If the code looks for a Portuguese word, and the contract promises an English value,
+
+00:06:04.415 --> 00:06:07.325
+you just found Friday's bug before it happens.
+
+00:06:07.625 --> 00:06:10.454
+And the fix isn't translating the schema.
+
+00:06:10.754 --> 00:06:15.030
+It's reading only the validated field, and deleting the word search.
+
+00:06:16.230 --> 00:06:17.814
+So what changes in practice?
+
+00:06:18.114 --> 00:06:22.015
+The prompt lives in the repository, in its own file.
+
+00:06:22.315 --> 00:06:24.755
+Not scattered as strings across the code.
+
+00:06:25.405 --> 00:06:29.190
+Prompt changes go through review, like any other code change.
+
+00:06:29.840 --> 00:06:32.995
+Output is never read by searching the text for a word.
+
+00:06:33.295 --> 00:06:34.729
+It's read from a field.
+
+00:06:35.379 --> 00:06:40.533
+And every call records the prompt version on the trace, so you know what ran when
+
+00:06:40.533 --> 00:06:41.869
+something goes wrong.
+
+00:06:42.519 --> 00:06:45.116
+And a small change still follows the ritual.
+
+00:06:45.416 --> 00:06:49.749
+Say product wants a summary of five sentences instead of three.
+
+00:06:50.049 --> 00:06:55.113
+You bump the version, run the eval, and ship only if the length check still passes.
+
+00:06:55.413 --> 00:06:58.238
+The goal isn't a prompt that never changes.
+
+00:06:58.538 --> 00:07:02.316
+It's a prompt you can change with a test, and a way back.
+
+00:07:03.516 --> 00:07:05.502
+So here's the idea to take with you.
+
+00:07:05.802 --> 00:07:10.079
+Treating the prompt as an interface doesn't make the model deterministic.
+
+00:07:10.379 --> 00:07:13.731
+It makes the rest of your system ready for when it isn't.
+
+00:07:14.031 --> 00:07:17.213
+And it means your team stops being afraid to touch it.
+
+00:07:17.863 --> 00:07:22.445
+In the next lesson, we'll see what happens when that interface grows and nobody
+
+00:07:22.445 --> 00:07:26.215
+prunes it: prompt bloat, where every incident left a rule behind.
+
+00:07:26.515 --> 00:07:27.345
+See you there.

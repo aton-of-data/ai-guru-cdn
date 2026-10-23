@@ -1,0 +1,433 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:06.828
+A logistics company's contract team asked the model: list the main data from this
+
+00:00:06.828 --> 00:00:07.151
+file.
+
+00:00:07.451 --> 00:00:11.060
+And the answer came back as a friendly little paragraph.
+
+00:00:11.710 --> 00:00:14.558
+The contract is with a carrier called Aurora.
+
+00:00:14.858 --> 00:00:17.799
+Total amount, twelve thousand four hundred dollars.
+
+00:00:18.099 --> 00:00:22.017
+Starts in January, automatic renewal, twelve months.
+
+00:00:22.317 --> 00:00:25.163
+A regular expression pulled out the total.
+
+00:00:25.463 --> 00:00:27.049
+And it worked for weeks.
+
+00:00:27.699 --> 00:00:31.061
+Then one day the model wrote the amount in words.
+
+00:00:31.361 --> 00:00:34.323
+Twelve thousand four hundred dollars, spelled out.
+
+00:00:34.973 --> 00:00:37.501
+And for the start date, just January.
+
+00:00:38.151 --> 00:00:42.383
+The system stored the total as empty, and the start date as empty.
+
+00:00:42.683 --> 00:00:46.545
+Nobody noticed until finance reconciled the next month.
+
+00:00:47.195 --> 00:00:50.488
+And the parser also let through things that only looked right.
+
+00:00:50.788 --> 00:00:55.677
+A contract ending in one year and starting in the next went in, because the text had
+
+00:00:55.677 --> 00:00:58.703
+both dates, and the regular expression grabbed both.
+
+00:00:59.003 --> 00:01:04.475
+In this lesson, you'll do the refactoring that ends this, safely, with a measurement
+
+00:01:04.475 --> 00:01:05.583
+before and after.
+
+00:01:06.783 --> 00:01:08.807
+The solution has three moves.
+
+00:01:09.457 --> 00:01:12.236
+Define a schema for what this step outputs.
+
+00:01:12.886 --> 00:01:17.940
+Ask the model to answer in that schema, using the API's structured output feature.
+
+00:01:18.240 --> 00:01:20.192
+Not by asking in the prompt.
+
+00:01:20.842 --> 00:01:24.305
+And validate the result in code, before it moves on.
+
+00:01:25.505 --> 00:01:29.033
+Before, the format is a convention nobody wrote down.
+
+00:01:29.333 --> 00:01:34.712
+The model writes text, a regular expression guesses, and whatever it finds goes into
+
+00:01:34.712 --> 00:01:35.417
+the system.
+
+00:01:35.717 --> 00:01:36.961
+Including nothing.
+
+00:01:37.611 --> 00:01:41.487
+After, the format is a contract, checked at both ends.
+
+00:01:41.787 --> 00:01:45.419
+Same extraction call, now with a schema attached.
+
+00:01:46.069 --> 00:01:49.300
+The API returns an object that follows the schema.
+
+00:01:49.600 --> 00:01:52.129
+Right types, required fields present.
+
+00:01:52.779 --> 00:01:57.866
+Code checks the rules a schema can't express, like dates that make sense together.
+
+00:01:58.516 --> 00:02:01.529
+And only valid data reaches the destination.
+
+00:02:01.829 --> 00:02:04.915
+Failures go to review, with the reason attached.
+
+00:02:05.565 --> 00:02:08.394
+Here's the same contract, now as an object.
+
+00:02:08.694 --> 00:02:12.553
+The tax ID, digits only, because the schema asked for that.
+
+00:02:12.853 --> 00:02:15.180
+The total as an integer, in cents.
+
+00:02:15.480 --> 00:02:17.546
+Dates in a fixed format.
+
+00:02:17.846 --> 00:02:20.305
+Automatic renewal, true or false.
+
+00:02:20.955 --> 00:02:22.636
+No twelve thousand in words.
+
+00:02:22.936 --> 00:02:28.268
+And if the file has no end date, that field comes back empty, explicitly.
+
+00:02:28.568 --> 00:02:33.085
+Not as a phrase like open ended term that the old parser never expected.
+
+00:02:34.285 --> 00:02:37.939
+With free text, the format is an implicit promise.
+
+00:02:38.239 --> 00:02:41.903
+The model usually writes it one way, and your code counts on that.
+
+00:02:42.203 --> 00:02:46.054
+With structured output, the format becomes part of the call.
+
+00:02:46.354 --> 00:02:51.695
+The API constrains what the model can generate, token by token, so the answer always
+
+00:02:51.695 --> 00:02:54.746
+closes into valid data with the required fields.
+
+00:02:55.396 --> 00:02:58.013
+The schema also improves extraction.
+
+00:02:58.313 --> 00:03:02.471
+Clear field names, types and descriptions work as instructions.
+
+00:03:02.771 --> 00:03:07.614
+Total in cents, as an integer, says much more than the total amount.
+
+00:03:07.914 --> 00:03:12.835
+The model doesn't have to decide whether to write dollars, cents, or the number in
+
+00:03:12.835 --> 00:03:13.196
+words.
+
+00:03:13.846 --> 00:03:15.350
+And the error moves.
+
+00:03:15.650 --> 00:03:20.265
+Instead of an empty field that shows up weeks later, the failure appears right away,
+
+00:03:20.265 --> 00:03:21.584
+in the step that failed.
+
+00:03:21.884 --> 00:03:24.556
+Reviewers get the object and the reason.
+
+00:03:24.856 --> 00:03:27.258
+Not a paragraph to reread.
+
+00:03:28.458 --> 00:03:29.860
+Here's one for you.
+
+00:03:30.160 --> 00:03:33.676
+Your schema has a required penalty field, an integer.
+
+00:03:33.976 --> 00:03:37.707
+But half the contracts in the folder have no penalty clause at all.
+
+00:03:38.007 --> 00:03:43.583
+The eval shows a penalty filled in on those cases anyway, almost always zero, or a
+
+00:03:43.583 --> 00:03:45.827
+number copied from another field.
+
+00:03:46.127 --> 00:03:47.244
+What do you do?
+
+00:03:50.294 --> 00:03:55.545
+Make it optional, and validate in code whatever comes back filled in.
+
+00:03:55.845 --> 00:04:01.287
+A required field on a document that sometimes lacks the data pushes the model to
+
+00:04:01.287 --> 00:04:01.967
+invent it.
+
+00:04:02.617 --> 00:04:07.459
+Telling the prompt to use zero when there's no penalty makes zero mean two things.
+
+00:04:07.759 --> 00:04:10.619
+A zero penalty, and a missing penalty.
+
+00:04:10.919 --> 00:04:13.169
+The next step can't tell them apart.
+
+00:04:13.469 --> 00:04:17.610
+And dropping the field throws away the half of the contracts where legal really
+
+00:04:17.610 --> 00:04:18.081
+needs it.
+
+00:04:18.381 --> 00:04:22.576
+Absence is modeled with optional, not by deleting the field.
+
+00:04:23.776 --> 00:04:27.055
+Now the mechanics, in an order that keeps you safe.
+
+00:04:27.705 --> 00:04:29.601
+Step zero is measuring.
+
+00:04:29.901 --> 00:04:34.659
+Build an eval from real documents, with the expected value for each field.
+
+00:04:34.959 --> 00:04:40.245
+Run the current version, and record accuracy per field and the empty field rate.
+
+00:04:40.545 --> 00:04:45.297
+A field that already comes back empty twenty percent of the time, because the
+
+00:04:45.297 --> 00:04:48.691
+regular expression failed, is the first one to benefit.
+
+00:04:49.341 --> 00:04:51.849
+Then list what the next step really uses.
+
+00:04:52.149 --> 00:04:57.918
+If the system only stores the tax ID, the total, the dates and the renewal, those
+
+00:04:57.918 --> 00:04:59.058
+are your fields.
+
+00:04:59.358 --> 00:05:03.207
+Summaries, adjectives and main obligations go away.
+
+00:05:03.857 --> 00:05:06.101
+Write the schema with strong types.
+
+00:05:06.401 --> 00:05:10.072
+Integers for cents, real dates, closed lists.
+
+00:05:10.372 --> 00:05:12.632
+And a short description on each field.
+
+00:05:12.932 --> 00:05:15.190
+That description is the field's prompt.
+
+00:05:15.840 --> 00:05:18.036
+And decide honestly what's optional.
+
+00:05:18.336 --> 00:05:22.753
+Don't let the model invent an end date for a contract with no end.
+
+00:05:23.403 --> 00:05:27.439
+Then swap the call for the structured version, and delete the old parser.
+
+00:05:27.739 --> 00:05:32.419
+While both exist, someone will just fix the regular expression one more time.
+
+00:05:33.069 --> 00:05:35.555
+Add business validation in code.
+
+00:05:35.855 --> 00:05:38.092
+Line items that add up to the total.
+
+00:05:38.392 --> 00:05:40.305
+An end date after the start date.
+
+00:05:40.605 --> 00:05:42.061
+Tax ID check digits.
+
+00:05:42.711 --> 00:05:47.799
+Send failures to review, with the object and the reason, instead of saving partial
+
+00:05:47.799 --> 00:05:48.109
+data.
+
+00:05:48.759 --> 00:05:49.909
+And measure again.
+
+00:05:50.209 --> 00:05:53.248
+Accuracy per field should hold or rise.
+
+00:05:53.548 --> 00:05:56.824
+Empty fields caused by parsing should drop to zero.
+
+00:05:57.124 --> 00:06:01.868
+Reading errors still exist, like the model reading twelve thousand four hundred as
+
+00:06:01.868 --> 00:06:03.661
+one thousand two hundred forty.
+
+00:06:03.961 --> 00:06:07.090
+But now they show up in validation, not weeks later.
+
+00:06:08.290 --> 00:06:09.689
+A few risks to watch.
+
+00:06:09.989 --> 00:06:12.112
+A schema that forces invention.
+
+00:06:12.412 --> 00:06:14.130
+We just saw it with the penalty.
+
+00:06:14.780 --> 00:06:16.393
+A schema that's too big.
+
+00:06:16.693 --> 00:06:19.786
+Dozens of nested fields, and quality drops.
+
+00:06:20.086 --> 00:06:25.169
+The model spreads its attention and starts filling in by guesswork, usually in the
+
+00:06:25.169 --> 00:06:26.470
+fields in the middle.
+
+00:06:26.770 --> 00:06:32.444
+If the document has two parts, like the cover and the annexes, split it into two
+
+00:06:32.444 --> 00:06:35.990
+calls, each with what the next step actually uses.
+
+00:06:36.640 --> 00:06:38.233
+Trusting only the schema.
+
+00:06:38.533 --> 00:06:40.780
+Valid data can still be wrong.
+
+00:06:41.080 --> 00:06:46.096
+A total of one cent is a perfectly legal integer, and an absurd contract.
+
+00:06:46.396 --> 00:06:51.733
+Sum the line items in code, and send it to review when the numbers don't match.
+
+00:06:52.383 --> 00:06:57.750
+And some rules the provider's structured mode won't accept, like certain patterns.
+
+00:06:58.050 --> 00:06:58.792
+That's fine.
+
+00:06:59.092 --> 00:07:03.443
+Ask for a plain string, and validate the fourteen digits in code, right after the
+
+00:07:03.443 --> 00:07:03.712
+call.
+
+00:07:04.362 --> 00:07:06.192
+And the most common mistake.
+
+00:07:06.492 --> 00:07:11.482
+Swapping the regular expression for structured output, and leaving the total typed
+
+00:07:11.482 --> 00:07:12.212
+as a string.
+
+00:07:12.512 --> 00:07:17.583
+The model is still free to return the amount with a currency symbol, as a plain
+
+00:07:17.583 --> 00:07:18.866
+number, or in words.
+
+00:07:19.166 --> 00:07:22.461
+You just moved the parser into a field with a nice name.
+
+00:07:22.761 --> 00:07:24.959
+A strong type is what closes the door.
+
+00:07:26.159 --> 00:07:28.996
+This refactoring isn't only for files.
+
+00:07:29.296 --> 00:07:34.343
+Picture two agents sharing a block of text, a kind of process scratchpad.
+
+00:07:34.643 --> 00:07:37.300
+One writes: customer ok, proceed.
+
+00:07:37.600 --> 00:07:40.961
+The other reads that as a credit approval.
+
+00:07:41.611 --> 00:07:42.546
+Same cure.
+
+00:07:42.846 --> 00:07:47.642
+The scratchpad becomes an object, with a field like credit status, from a closed
+
+00:07:47.642 --> 00:07:51.059
+list of values, validated before the next agent reads it.
+
+00:07:51.359 --> 00:07:56.344
+Prose in the middle becomes a contract, and the second agent stops interpreting
+
+00:07:56.344 --> 00:07:56.660
+okay.
+
+00:07:57.860 --> 00:07:59.845
+So here's the idea to take with you.
+
+00:08:00.145 --> 00:08:04.361
+The parser that guesses is not a bug you fix one more time.
+
+00:08:04.661 --> 00:08:06.419
+It's a contract nobody wrote.
+
+00:08:06.719 --> 00:08:11.979
+Measure, write the contract as a schema with strong types, validate what a schema
+
+00:08:11.979 --> 00:08:14.966
+can't express, and delete the parser for good.
+
+00:08:15.616 --> 00:08:20.204
+In the next lesson, we look at the same extraction from another angle: the model
+
+00:08:20.204 --> 00:08:23.530
+doing math and rules that code would get right every time.
+
+00:08:23.830 --> 00:08:26.629
+LLM doing deterministic work.
+
+00:08:26.929 --> 00:08:27.759
+See you there.

@@ -1,0 +1,385 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.548
+Back to the legal assistant from the last lesson.
+
+00:00:04.848 --> 00:00:09.573
+One services contract, eighteen pages, about twelve thousand tokens.
+
+00:00:10.223 --> 00:00:15.160
+The pipeline splits it into five hundred token chunks, and retrieves the four
+
+00:00:15.160 --> 00:00:16.763
+nearest to each question.
+
+00:00:17.063 --> 00:00:20.084
+Four chunks of five hundred is two thousand tokens.
+
+00:00:20.384 --> 00:00:21.618
+Out of twelve thousand.
+
+00:00:22.268 --> 00:00:27.055
+So when someone asked about terminating for late delivery, the model answered
+
+00:00:27.055 --> 00:00:29.355
+looking at one sixth of the document.
+
+00:00:29.655 --> 00:00:30.776
+And it didn't know that.
+
+00:00:31.076 --> 00:00:32.500
+It said no penalty.
+
+00:00:32.800 --> 00:00:35.411
+Clause fourteen point three said otherwise.
+
+00:00:36.061 --> 00:00:40.845
+In this lesson, you'll take the retrieval out, safely, put the whole contract in
+
+00:00:40.845 --> 00:00:43.955
+front of the model, and keep the bill under control.
+
+00:00:45.155 --> 00:00:47.808
+The refactoring fits in two sentences.
+
+00:00:48.108 --> 00:00:52.978
+Send the whole material in the context, in a fixed block at the start of the call.
+
+00:00:53.278 --> 00:00:58.049
+And turn on prompt caching, so you don't pay for the full read on every question.
+
+00:00:58.699 --> 00:01:03.705
+Vector search exists to pick the little that fits, when the material is large.
+
+00:01:04.005 --> 00:01:07.770
+With small material, that choice only removes information.
+
+00:01:08.070 --> 00:01:12.932
+The split separates clauses that depend on each other, and the search misses when
+
+00:01:12.932 --> 00:01:15.453
+the question's words don't match the text.
+
+00:01:16.653 --> 00:01:20.202
+Before, the contract becomes chunks and embeddings.
+
+00:01:20.502 --> 00:01:22.264
+The question picks four of them.
+
+00:01:22.564 --> 00:01:25.568
+And the model answers with whatever the search chose.
+
+00:01:26.218 --> 00:01:32.015
+After, the whole document goes into a fixed block, right after the instructions.
+
+00:01:32.665 --> 00:01:36.115
+On the first question, that prefix is written to the cache.
+
+00:01:36.765 --> 00:01:41.975
+On the next ones, the model reads the contract from the cache, at a fraction of the
+
+00:01:41.975 --> 00:01:42.289
+cost.
+
+00:01:42.939 --> 00:01:47.653
+And the answer can connect distant clauses, because nothing was cut.
+
+00:01:48.853 --> 00:01:51.455
+So let's ask the same question again.
+
+00:01:51.755 --> 00:01:56.194
+With four chunks, the context had termination, and not the penalty.
+
+00:01:56.494 --> 00:02:00.342
+With the whole contract, both clauses sit in the same prefix.
+
+00:02:00.992 --> 00:02:04.852
+And the instruction asks the model to cite article and paragraph.
+
+00:02:05.152 --> 00:02:07.414
+So the answer becomes this.
+
+00:02:07.714 --> 00:02:08.233
+No.
+
+00:02:08.533 --> 00:02:13.304
+Clause eight allows termination for delay, but fourteen point three applies a
+
+00:02:13.304 --> 00:02:17.393
+penalty on default, and late delivery falls under that definition.
+
+00:02:17.693 --> 00:02:21.014
+That's an answer a lawyer can check in ten seconds.
+
+00:02:21.664 --> 00:02:23.291
+One warning still stands.
+
+00:02:23.591 --> 00:02:28.344
+A huge context doesn't guarantee the model finds the clause in the middle.
+
+00:02:28.644 --> 00:02:31.116
+The research calls it lost in the middle.
+
+00:02:31.416 --> 00:02:34.134
+That's why the condition is fits with room to spare.
+
+00:02:34.434 --> 00:02:37.910
+Twelve thousand tokens in a large window is room.
+
+00:02:38.210 --> 00:02:42.752
+A hundred thousand tokens of stacked annexes is a different design.
+
+00:02:43.952 --> 00:02:45.072
+Here's one for you.
+
+00:02:45.372 --> 00:02:50.879
+After the switch, the user's second question shows zero tokens read from cache.
+
+00:02:51.179 --> 00:02:55.866
+Looking at the prompt, the system block starts with today's date, so the model knows
+
+00:02:55.866 --> 00:02:57.596
+the day, and then the contract.
+
+00:02:57.896 --> 00:02:58.860
+What's the fix?
+
+00:03:01.910 --> 00:03:07.022
+Take the date out of the prefix, and send it in the user message, after the cached
+
+00:03:07.022 --> 00:03:07.583
+document.
+
+00:03:07.883 --> 00:03:11.133
+The cache reuses an identical start of the prompt.
+
+00:03:11.433 --> 00:03:15.739
+A date that changes every day means there's never anything to reuse.
+
+00:03:16.389 --> 00:03:21.368
+It's not the provider's fault, and caching the user message doesn't help either,
+
+00:03:21.368 --> 00:03:23.795
+because that changes on every question.
+
+00:03:24.095 --> 00:03:26.602
+Instructions and contract stay stable.
+
+00:03:26.902 --> 00:03:29.566
+Date, user and question come after.
+
+00:03:30.766 --> 00:03:32.051
+Now the mechanics.
+
+00:03:32.701 --> 00:03:34.667
+Step zero, measure.
+
+00:03:34.967 --> 00:03:40.924
+Run the question eval, and include questions that span sections, like a rule and its
+
+00:03:40.924 --> 00:03:41.633
+exception.
+
+00:03:41.933 --> 00:03:45.888
+Record accuracy, cost and latency per question.
+
+00:03:46.188 --> 00:03:49.559
+Those cross-section questions are the reason for the swap.
+
+00:03:50.209 --> 00:03:51.189
+Check the size.
+
+00:03:51.489 --> 00:03:56.135
+Count the tokens with the provider's token counter, not a guess.
+
+00:03:56.435 --> 00:03:59.241
+Leave room for the conversation and the answer.
+
+00:03:59.541 --> 00:04:02.733
+If there's no room, this refactoring doesn't apply.
+
+00:04:03.383 --> 00:04:05.050
+Build the fixed prefix.
+
+00:04:05.350 --> 00:04:07.976
+Instructions first, then the document.
+
+00:04:08.276 --> 00:04:11.407
+And nothing that varies before the end of the document.
+
+00:04:11.707 --> 00:04:14.857
+No date, no user id, no time.
+
+00:04:15.507 --> 00:04:18.101
+Turn on prompt caching on the document block.
+
+00:04:18.751 --> 00:04:20.010
+Confirm it works.
+
+00:04:20.310 --> 00:04:24.932
+From the second call on, the usage report should show tokens read from cache.
+
+00:04:25.232 --> 00:04:28.566
+If it shows zero, the prefix is changing somewhere.
+
+00:04:29.216 --> 00:04:33.694
+Measure again, and compare accuracy and cost per question.
+
+00:04:33.994 --> 00:04:37.469
+The cross-section questions are the test that matters.
+
+00:04:37.769 --> 00:04:42.657
+In the example, retrieval scored sixty one percent, and the whole document scored
+
+00:04:42.657 --> 00:04:43.442
+eighty eight.
+
+00:04:44.092 --> 00:04:48.758
+And only after the new version is stable, remove the retrieval pipeline.
+
+00:04:49.058 --> 00:04:51.648
+Don't leave it behind a flag, just in case.
+
+00:04:51.948 --> 00:04:57.050
+While both exist, someone will just tune the number of chunks, during an incident.
+
+00:04:58.250 --> 00:04:59.293
+A few risks.
+
+00:04:59.593 --> 00:05:00.932
+The material grows.
+
+00:05:01.232 --> 00:05:02.811
+Today it's one contract.
+
+00:05:03.111 --> 00:05:08.571
+Tomorrow it's a hundred and twenty vendor contracts, and the prefix no longer fits
+
+00:05:08.571 --> 00:05:09.237
+with room.
+
+00:05:09.537 --> 00:05:11.880
+Size changed, so the tool changes.
+
+00:05:12.180 --> 00:05:16.891
+Go back to an index, filtered by the user's contract, and keep direct context for
+
+00:05:16.891 --> 00:05:18.985
+the single document that still fits.
+
+00:05:19.635 --> 00:05:21.209
+Widely spaced questions.
+
+00:05:21.509 --> 00:05:24.906
+The cache expires after a few minutes without use.
+
+00:05:25.206 --> 00:05:28.108
+With low traffic, the discount shows up less.
+
+00:05:28.408 --> 00:05:32.177
+The accuracy gain on cross-clause questions still holds.
+
+00:05:32.827 --> 00:05:34.642
+Parts the user may not see.
+
+00:05:34.942 --> 00:05:40.083
+If some users may only see the pricing annex, a prompt asking the model to hide the
+
+00:05:40.083 --> 00:05:41.756
+rest is not access control.
+
+00:05:42.056 --> 00:05:43.632
+A leading question leaks it.
+
+00:05:43.932 --> 00:05:49.514
+Permission applies before the context is built, with filtered retrieval, or a prefix
+
+00:05:49.514 --> 00:05:50.112
+per role.
+
+00:05:50.762 --> 00:05:53.212
+And thinking that it fits is enough.
+
+00:05:53.512 --> 00:05:59.007
+If the cross-section eval stays poor with the whole document, the problem wasn't
+
+00:05:59.007 --> 00:05:59.694
+retrieval.
+
+00:05:59.994 --> 00:06:05.103
+It may be the prompt, the model, or a contract that's genuinely ambiguous.
+
+00:06:05.753 --> 00:06:06.870
+And a quick boundary.
+
+00:06:07.170 --> 00:06:12.832
+An online store thinks about pasting its catalog of eight thousand products into the
+
+00:06:12.832 --> 00:06:14.247
+prefix, with caching.
+
+00:06:14.547 --> 00:06:16.124
+That's not this refactoring.
+
+00:06:16.424 --> 00:06:21.491
+It doesn't fit with room, each question needs a few rows, and a product's price is a
+
+00:06:21.491 --> 00:06:22.637
+lookup by its code.
+
+00:06:22.937 --> 00:06:27.382
+That's a query tool, or retrieval, not an eight thousand item prefix.
+
+00:06:28.582 --> 00:06:31.038
+The code gets shorter, which is a good sign.
+
+00:06:31.688 --> 00:06:34.302
+The contract is loaded once, as text.
+
+00:06:34.952 --> 00:06:37.005
+The system part has two blocks.
+
+00:06:37.305 --> 00:06:41.078
+The instructions, and then the contract, marked for caching.
+
+00:06:41.728 --> 00:06:46.545
+And the question goes alone in the user message, after everything that's stable.
+
+00:06:46.845 --> 00:06:51.712
+The three lines that used to embed the question, search the database and join the
+
+00:06:51.712 --> 00:06:53.095
+chunks are simply gone.
+
+00:06:53.745 --> 00:06:57.510
+On the page, you'll find the same change across the code tabs.
+
+00:06:57.810 --> 00:07:03.189
+What changes between them is only how each one marks the block for caching, and
+
+00:07:03.189 --> 00:07:06.186
+where it reports the tokens read from cache.
+
+00:07:07.386 --> 00:07:09.573
+So here's the idea to take with you.
+
+00:07:09.873 --> 00:07:15.093
+When the material fits with room to spare, retrieval is a filter that only removes.
+
+00:07:15.393 --> 00:07:19.787
+Put the document first, the question after, let the cache carry the cost, and
+
+00:07:19.787 --> 00:07:22.354
+measure on the questions that cross sections.
+
+00:07:23.004 --> 00:07:28.011
+But sometimes the material really doesn't fit, and you do need chunks.
+
+00:07:28.311 --> 00:07:33.534
+In the next lesson, we'll make each chunk carry the context it lost when it was cut:
+
+00:07:33.534 --> 00:07:34.777
+contextual chunking.
+
+00:07:35.077 --> 00:07:36.184
+See you there.

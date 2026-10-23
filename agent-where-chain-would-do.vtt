@@ -1,0 +1,403 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.941
+A marketplace moderates its listings with an agent.
+
+00:00:05.241 --> 00:00:10.897
+It gets a listing, four tools, check text, check image, check price, and publish the
+
+00:00:10.897 --> 00:00:11.503
+decision.
+
+00:00:11.804 --> 00:00:15.548
+And a prompt that says: review the listing and decide.
+
+00:00:16.198 --> 00:00:18.670
+Here are two traces from the same day.
+
+00:00:18.970 --> 00:00:20.868
+The first one looks perfect.
+
+00:00:21.168 --> 00:00:23.658
+Text, image, price, decision.
+
+00:00:23.958 --> 00:00:26.256
+Four turns, about eleven seconds.
+
+00:00:26.906 --> 00:00:28.493
+The second one is faster.
+
+00:00:28.793 --> 00:00:33.845
+Text, and then the model writes: the image looks consistent with the text.
+
+00:00:34.145 --> 00:00:35.459
+And it approves.
+
+00:00:35.759 --> 00:00:37.437
+The image check never ran.
+
+00:00:38.087 --> 00:00:39.679
+Look at that sentence again.
+
+00:00:39.979 --> 00:00:43.812
+The model gave an opinion on an image it never analyzed.
+
+00:00:44.112 --> 00:00:47.484
+And listing eighty-eight two fourteen had a banned image.
+
+00:00:48.134 --> 00:00:51.958
+Nobody on the team wanted the image check to be optional.
+
+00:00:52.258 --> 00:00:56.183
+The rule was clear: every listing goes through all three checks.
+
+00:00:56.483 --> 00:00:58.785
+But that rule lived in a prompt.
+
+00:00:59.085 --> 00:01:03.173
+And a prompt is a strong suggestion, not a guarantee.
+
+00:01:03.473 --> 00:01:08.286
+In this lesson, you'll learn to spot this smell in your traces, and the refactoring
+
+00:01:08.286 --> 00:01:09.736
+that removes it for good.
+
+00:01:10.936 --> 00:01:12.293
+Here's what's going on.
+
+00:01:12.593 --> 00:01:16.746
+Today, on every turn, the model picks which check to run next.
+
+00:01:17.046 --> 00:01:18.156
+Or whether to stop.
+
+00:01:18.806 --> 00:01:22.308
+So nothing guarantees that every check runs.
+
+00:01:22.958 --> 00:01:25.055
+But the task has a fixed path.
+
+00:01:25.355 --> 00:01:28.461
+In a chain, code always runs all three checks.
+
+00:01:28.761 --> 00:01:34.072
+And the model only steps in where judgment is actually needed: weighing the results
+
+00:01:34.072 --> 00:01:34.904
+and deciding.
+
+00:01:35.554 --> 00:01:37.054
+How do you recognize it?
+
+00:01:37.354 --> 00:01:40.939
+You can draw the task's flowchart, and it's always the same.
+
+00:01:41.589 --> 00:01:44.457
+The agent's prompt lists the steps in order.
+
+00:01:44.757 --> 00:01:46.524
+First do this, then that.
+
+00:01:46.824 --> 00:01:50.606
+If you're writing the order in the prompt, you already know the order.
+
+00:01:51.256 --> 00:01:56.337
+The traces show different orders, skipped steps, or repeated steps, for similar
+
+00:01:56.337 --> 00:01:56.788
+inputs.
+
+00:01:57.438 --> 00:02:01.124
+The number of turns varies a lot, with no business reason.
+
+00:02:01.774 --> 00:02:06.890
+And when it goes wrong, the explanation is: the agent thought it wasn't needed.
+
+00:02:08.090 --> 00:02:09.893
+Agents became the default.
+
+00:02:10.193 --> 00:02:14.923
+Frameworks and tutorials start with agents, and they look more modern than a
+
+00:02:14.923 --> 00:02:16.292
+sequence of functions.
+
+00:02:16.942 --> 00:02:18.554
+The demo convinces.
+
+00:02:18.854 --> 00:02:22.448
+In ten tests, the agent did everything in the right order.
+
+00:02:22.748 --> 00:02:25.672
+The variation shows up in the thousands of runs.
+
+00:02:26.322 --> 00:02:28.339
+Flexibility for the future.
+
+00:02:28.639 --> 00:02:32.459
+What if someday we want to skip the price check for some categories?
+
+00:02:32.759 --> 00:02:38.159
+Flexibility that might be useful someday costs reliability every day.
+
+00:02:38.809 --> 00:02:41.053
+And bundling everything looks simpler.
+
+00:02:41.353 --> 00:02:46.800
+One prompt and four tools look like less code than four chained functions.
+
+00:02:47.100 --> 00:02:48.576
+The code disappears.
+
+00:02:48.876 --> 00:02:52.318
+The complexity stays, hidden in the model's behavior.
+
+00:02:53.518 --> 00:02:55.868
+The cost starts with reliability.
+
+00:02:56.168 --> 00:02:59.943
+Steps that were supposed to be required quietly become optional.
+
+00:03:00.243 --> 00:03:05.275
+In moderation, compliance or finance, a skipped step is an incident.
+
+00:03:05.925 --> 00:03:08.201
+And small rates become real volume.
+
+00:03:08.501 --> 00:03:12.597
+Say the marketplace moderates fifty thousand listings a day.
+
+00:03:12.897 --> 00:03:17.805
+If the agent skips the image check on just zero point one percent of runs, that's
+
+00:03:17.805 --> 00:03:21.682
+fifty listings a day published with nobody looking at the photo.
+
+00:03:22.332 --> 00:03:24.854
+In a month, one thousand five hundred.
+
+00:03:25.154 --> 00:03:29.425
+A rate that looks great in the eval becomes real volume in production.
+
+00:03:30.075 --> 00:03:30.932
+Then money.
+
+00:03:31.232 --> 00:03:36.546
+Every agent turn resends the whole context, and pays for one more call to decide
+
+00:03:36.546 --> 00:03:38.672
+something the code already knew.
+
+00:03:38.972 --> 00:03:44.329
+In that perfect trace, three of the four model calls were only there to pick the
+
+00:03:44.329 --> 00:03:44.999
+next tool.
+
+00:03:45.649 --> 00:03:46.595
+Then latency.
+
+00:03:46.895 --> 00:03:51.371
+The checks run one after another, waiting for the model to choose.
+
+00:03:51.671 --> 00:03:53.300
+They could run at the same time.
+
+00:03:53.950 --> 00:03:55.013
+And testing.
+
+00:03:55.313 --> 00:03:57.824
+A fixed flow is easy to test.
+
+00:03:58.124 --> 00:04:04.014
+An agent needs a statistical eval just to prove it always does the same thing.
+
+00:04:05.214 --> 00:04:06.637
+Here's one for you.
+
+00:04:06.937 --> 00:04:12.282
+To guarantee the image check, the team wrote, in capital letters: always run check
+
+00:04:12.282 --> 00:04:12.673
+image.
+
+00:04:12.973 --> 00:04:16.617
+The skip rate fell from two percent to zero point three.
+
+00:04:16.917 --> 00:04:18.274
+Is the problem solved?
+
+00:04:21.324 --> 00:04:22.067
+No.
+
+00:04:22.367 --> 00:04:24.649
+The guarantee is still statistical.
+
+00:04:24.949 --> 00:04:28.459
+As long as the model decides, the step can be skipped.
+
+00:04:28.759 --> 00:04:33.901
+At fifty thousand listings a day, zero point three percent is one hundred fifty
+
+00:04:33.901 --> 00:04:35.788
+listings with no image check.
+
+00:04:36.438 --> 00:04:39.160
+And a better model won't get you to zero either.
+
+00:04:39.460 --> 00:04:44.600
+It lowers the rate again, but the problem is the design, not the model's ability.
+
+00:04:44.900 --> 00:04:46.944
+A required step has to be code.
+
+00:04:47.244 --> 00:04:49.839
+Then the rate is zero, by construction.
+
+00:04:50.139 --> 00:04:55.472
+Louder prompts also push you toward another smell, rule stacking, where all capital
+
+00:04:55.472 --> 00:04:57.721
+rules pile up and fight each other.
+
+00:04:58.921 --> 00:05:03.271
+The treatment is a refactoring called replace agent with chain.
+
+00:05:03.571 --> 00:05:07.302
+And the chain version of the moderator fits in a few lines.
+
+00:05:07.952 --> 00:05:12.990
+The three checks don't depend on each other, so code runs all three at the same
+
+00:05:12.990 --> 00:05:13.308
+time.
+
+00:05:13.958 --> 00:05:19.090
+Then the model is called once, with the three results, to weigh them and decide.
+
+00:05:19.740 --> 00:05:25.105
+Now, skipping the image takes deleting a line of code, with review and tests.
+
+00:05:25.405 --> 00:05:27.517
+The model stays where it adds value.
+
+00:05:27.817 --> 00:05:33.334
+And latency becomes the slowest check, plus one model call, instead of four calls in
+
+00:05:33.334 --> 00:05:33.728
+a row.
+
+00:05:34.378 --> 00:05:39.427
+Then the team learns that vehicle listings need a fourth check, on the car's
+
+00:05:39.427 --> 00:05:40.889
+registration document.
+
+00:05:41.189 --> 00:05:43.210
+The other categories keep three.
+
+00:05:43.510 --> 00:05:46.663
+Should you go back to the agent, since the path now varies?
+
+00:05:47.313 --> 00:05:48.056
+No.
+
+00:05:48.356 --> 00:05:51.508
+The path varies, but in a way you know before the run.
+
+00:05:51.808 --> 00:05:56.933
+That's a simple if on the category, or a separate route for vehicles.
+
+00:05:57.233 --> 00:05:58.928
+Known branches are routing.
+
+00:05:59.228 --> 00:06:02.857
+And each branch is still a chain, with every step guaranteed.
+
+00:06:03.157 --> 00:06:08.334
+Writing it into the prompt would just bring the same smell back, now on one branch.
+
+00:06:09.534 --> 00:06:12.191
+This smell isn't a rule against agents.
+
+00:06:12.491 --> 00:06:17.278
+When the path really depends on what you discover, an agent is the right tool.
+
+00:06:17.578 --> 00:06:20.748
+A support agent gets: the system is slow.
+
+00:06:21.048 --> 00:06:27.293
+Based on what it finds, it decides whether to look at logs, metrics, recent deploys
+
+00:06:27.293 --> 00:06:28.497
+or the database.
+
+00:06:28.797 --> 00:06:29.984
+That's not this smell.
+
+00:06:30.284 --> 00:06:34.238
+That's open investigation, the classic agent case.
+
+00:06:34.538 --> 00:06:37.981
+What it needs is a step budget and stop conditions.
+
+00:06:38.631 --> 00:06:43.834
+An agent can also be a good prototype, to discover which steps a task needs.
+
+00:06:44.134 --> 00:06:47.845
+When the traces start repeating, turn the path into code.
+
+00:06:48.495 --> 00:06:53.880
+And if skipping a step is truly acceptable, and cheap, the flexibility may be worth
+
+00:06:53.880 --> 00:06:54.074
+it.
+
+00:06:54.724 --> 00:06:57.006
+One last case.
+
+00:06:57.306 --> 00:07:02.030
+A report agent always calls the same three tools, in the same order, and never
+
+00:07:02.030 --> 00:07:04.210
+skipped one in six months of traces.
+
+00:07:04.510 --> 00:07:06.450
+Is it still worth refactoring?
+
+00:07:06.750 --> 00:07:08.556
+Yes, but with no rush.
+
+00:07:08.856 --> 00:07:11.104
+Its behavior is already a chain.
+
+00:07:11.404 --> 00:07:17.493
+Turning it into code cuts cost and latency, and trades a statistical guarantee for a
+
+00:07:17.493 --> 00:07:18.146
+real one.
+
+00:07:18.446 --> 00:07:21.037
+Do it with the next change to that flow.
+
+00:07:22.237 --> 00:07:24.222
+So here's the idea to take with you.
+
+00:07:24.522 --> 00:07:28.469
+If you can write the steps in the prompt, you can write them in code.
+
+00:07:28.769 --> 00:07:32.368
+And in code, a required step runs every single time.
+
+00:07:32.668 --> 00:07:36.046
+Keep the model for judgment, and keep the order for your code.
+
+00:07:36.696 --> 00:07:41.540
+In the next lesson, we close this trail with a real system that puts everything
+
+00:07:41.540 --> 00:07:44.360
+together: a support bot with human escalation.
+
+00:07:44.660 --> 00:07:45.490
+See you there.

@@ -1,0 +1,424 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.421
+A marketplace team had to moderate listings.
+
+00:00:04.721 --> 00:00:09.203
+Check the text, check the image, check the price, and then decide.
+
+00:00:09.853 --> 00:00:12.975
+Someone suggested an agent with four tools.
+
+00:00:13.275 --> 00:00:14.497
+The demo looked great.
+
+00:00:15.147 --> 00:00:20.411
+In production, every now and then, the agent decided the image looked fine, and
+
+00:00:20.411 --> 00:00:22.276
+never called the image tool.
+
+00:00:22.576 --> 00:00:24.621
+Banned listings went live.
+
+00:00:25.271 --> 00:00:27.877
+The moderation path was always the same.
+
+00:00:28.177 --> 00:00:30.917
+Text, image, price, decision.
+
+00:00:31.217 --> 00:00:34.784
+The team gave the model a freedom the task never asked for.
+
+00:00:35.084 --> 00:00:39.315
+In this lesson, you'll learn the one question that would have prevented this, and
+
+00:00:39.315 --> 00:00:42.083
+how to pick the lowest rung that solves your problem.
+
+00:00:43.283 --> 00:00:48.862
+Every system built on a language model answers one design question, whether the team
+
+00:00:48.862 --> 00:00:49.858
+noticed or not.
+
+00:00:50.158 --> 00:00:51.701
+Who decides the next step?
+
+00:00:52.001 --> 00:00:53.643
+Your code, or the model?
+
+00:00:54.843 --> 00:00:56.564
+On one side, a chain.
+
+00:00:56.864 --> 00:01:00.469
+A fixed sequence of calls, with the path written in code.
+
+00:01:00.769 --> 00:01:03.924
+Step B always runs after step A.
+
+00:01:04.224 --> 00:01:05.217
+Always.
+
+00:01:05.867 --> 00:01:07.793
+On the other side, an agent.
+
+00:01:08.093 --> 00:01:11.027
+The model gets a goal and some tools.
+
+00:01:11.327 --> 00:01:13.746
+And on every turn, it decides what to do.
+
+00:01:14.046 --> 00:01:17.570
+Call a tool, which one, with which arguments, or stop.
+
+00:01:18.220 --> 00:01:21.412
+Between those two extremes sit workflows.
+
+00:01:21.712 --> 00:01:26.343
+Flows defined in code, that use the model at specific decision points.
+
+00:01:26.643 --> 00:01:30.113
+A router choosing among three fixed paths is a workflow.
+
+00:01:30.413 --> 00:01:32.296
+Code still owns the structure.
+
+00:01:32.596 --> 00:01:35.314
+The model only picks among options you designed.
+
+00:01:35.964 --> 00:01:39.585
+So the listing moderation was a four box chain.
+
+00:01:39.885 --> 00:01:43.578
+Turning it into an agent didn't add intelligence.
+
+00:01:43.878 --> 00:01:46.397
+It added permission to skip the image box.
+
+00:01:47.597 --> 00:01:50.565
+Think of it as a ladder, with four rungs.
+
+00:01:51.215 --> 00:01:53.422
+At the bottom, a single call.
+
+00:01:53.722 --> 00:01:56.841
+Nobody decides any path, it's one step.
+
+00:01:57.141 --> 00:01:59.148
+Classifying a ticket fits here.
+
+00:01:59.798 --> 00:02:00.508
+Then a chain.
+
+00:02:00.808 --> 00:02:03.500
+Code decides, and it's always the same.
+
+00:02:03.800 --> 00:02:06.544
+Extract, validate, summarize.
+
+00:02:07.194 --> 00:02:08.212
+Then a workflow.
+
+00:02:08.512 --> 00:02:12.067
+Code decides, with model choices at marked points.
+
+00:02:12.367 --> 00:02:14.483
+Routing is the classic example.
+
+00:02:15.133 --> 00:02:17.049
+And at the top, an agent.
+
+00:02:17.349 --> 00:02:19.778
+The model decides, every turn.
+
+00:02:20.078 --> 00:02:25.109
+Like fixing a bug in a repository, where the path depends on what you discover along
+
+00:02:25.109 --> 00:02:25.588
+the way.
+
+00:02:26.238 --> 00:02:30.450
+The rule: climb a rung only when the one below can't handle the job.
+
+00:02:30.750 --> 00:02:33.070
+Every rung up brings more flexibility.
+
+00:02:33.370 --> 00:02:38.825
+And also more cost, more latency, more variation, and more difficulty testing.
+
+00:02:39.475 --> 00:02:44.494
+Anthropic's guide on building effective agents, from December twenty twenty-four,
+
+00:02:44.494 --> 00:02:45.733
+draws the same line.
+
+00:02:46.033 --> 00:02:51.434
+Start with workflows, where code orchestrates and the model fills the points of
+
+00:02:51.434 --> 00:02:52.254
+uncertainty.
+
+00:02:52.554 --> 00:02:55.644
+Bring in an agent when you can't write the sequence in advance.
+
+00:02:56.844 --> 00:02:58.495
+So here's the test.
+
+00:02:58.795 --> 00:02:59.673
+One question.
+
+00:02:59.973 --> 00:03:03.541
+Can I draw the flowchart of this task before it runs?
+
+00:03:04.191 --> 00:03:07.497
+If yes, and it's always the same, it's a chain.
+
+00:03:07.797 --> 00:03:10.001
+Listing moderation passes easily.
+
+00:03:10.301 --> 00:03:12.546
+Four boxes, no surprises.
+
+00:03:13.196 --> 00:03:16.693
+If yes, but with known branches, it's a workflow.
+
+00:03:16.993 --> 00:03:19.271
+An order bot is usually like this.
+
+00:03:19.571 --> 00:03:22.890
+If the message cites an order number, look up the order.
+
+00:03:23.190 --> 00:03:25.814
+If it's about a bill, go to finance.
+
+00:03:26.114 --> 00:03:29.336
+If it doesn't fit anything, hand off to a person.
+
+00:03:29.636 --> 00:03:31.665
+The branches exist before the run.
+
+00:03:32.315 --> 00:03:38.190
+And if no, because the next step depends on the previous result in ways you can't
+
+00:03:38.190 --> 00:03:40.003
+predict, that's an agent.
+
+00:03:40.303 --> 00:03:45.104
+Investigating why a deploy broke on a Friday night rarely has a flowchart.
+
+00:03:45.404 --> 00:03:48.454
+The next command depends on the log that just appeared.
+
+00:03:48.754 --> 00:03:51.178
+That's where an agent pays for itself.
+
+00:03:51.828 --> 00:03:54.057
+Notice it's not about importance.
+
+00:03:54.357 --> 00:03:58.047
+Banning a listing is important too, and it asks for a chain.
+
+00:03:58.347 --> 00:04:01.070
+Importance asks for control, not freedom.
+
+00:04:02.270 --> 00:04:03.744
+Here's one for you.
+
+00:04:04.044 --> 00:04:09.405
+You measured that the moderation agent calls the image tool on seventy percent of
+
+00:04:09.405 --> 00:04:09.736
+runs.
+
+00:04:10.036 --> 00:04:12.946
+The policy requires one hundred percent.
+
+00:04:13.246 --> 00:04:15.193
+What change closes the hole?
+
+00:04:18.243 --> 00:04:23.760
+Move the image call into code, before the decision, and let the model only judge the
+
+00:04:23.760 --> 00:04:24.220
+result.
+
+00:04:24.520 --> 00:04:29.650
+That seventy percent is the model using a freedom the policy never granted.
+
+00:04:30.300 --> 00:04:32.507
+Raising the step limit wouldn't help.
+
+00:04:32.807 --> 00:04:36.707
+A limit prevents an endless loop, it doesn't require a step.
+
+00:04:37.007 --> 00:04:42.395
+And a prompt that says never skip the image lowers the skip rate, but never to zero.
+
+00:04:42.695 --> 00:04:46.762
+The skip really disappears when it stops being the model's decision.
+
+00:04:47.962 --> 00:04:49.467
+Let's put a rough number on it.
+
+00:04:49.767 --> 00:04:55.084
+Say a moderation flow has three checks, each around a thousand input tokens.
+
+00:04:55.734 --> 00:04:58.505
+In a chain, that's always three calls.
+
+00:04:59.155 --> 00:05:04.396
+In an agent, the model may make two, or seven, if it gets unsure and re-reads.
+
+00:05:05.046 --> 00:05:08.617
+You trade a predictable cost for a cost with a tail.
+
+00:05:09.267 --> 00:05:10.837
+And testing changes too.
+
+00:05:11.137 --> 00:05:16.340
+A chain has three contracts, and its eval is simple: did all three steps pass?
+
+00:05:16.640 --> 00:05:20.367
+An agent has a goal and a whole space of possible paths.
+
+00:05:20.667 --> 00:05:26.246
+Its eval needs traces, a step limit, and test cases where skipping a step was the
+
+00:05:26.246 --> 00:05:26.798
+failure.
+
+00:05:27.998 --> 00:05:32.960
+The most common mistake in practice has a name: agent where a chain would do.
+
+00:05:33.260 --> 00:05:36.023
+Autonomy for a problem that never asked for it.
+
+00:05:36.673 --> 00:05:37.893
+Here's how it looks.
+
+00:05:38.193 --> 00:05:42.258
+A team has an agent with twelve tools to onboard new merchants.
+
+00:05:42.558 --> 00:05:47.579
+And in practice, it always asks for the same four documents, in the same order.
+
+00:05:47.879 --> 00:05:49.387
+That's not a coincidence.
+
+00:05:49.687 --> 00:05:51.011
+It's evidence.
+
+00:05:51.311 --> 00:05:54.814
+The flowchart already exists, written by the traces.
+
+00:05:55.114 --> 00:05:56.154
+Put it in code.
+
+00:05:56.804 --> 00:05:58.789
+And the opposite mistake exists too.
+
+00:05:59.089 --> 00:06:04.615
+A chain with thirty if statements, trying to predict every question a fraud analyst
+
+00:06:04.615 --> 00:06:05.281
+might ask.
+
+00:06:05.581 --> 00:06:08.829
+Each new if is a branch you invented without data.
+
+00:06:09.129 --> 00:06:12.713
+When the branches explode, the workflow got too small.
+
+00:06:13.013 --> 00:06:14.169
+That's when you climb.
+
+00:06:14.469 --> 00:06:19.396
+But you climb with an eval, built from the cases the chain no longer covers, and
+
+00:06:19.396 --> 00:06:21.366
+with a cost limit for the agent.
+
+00:06:22.566 --> 00:06:25.016
+The same cut shows up in every stack.
+
+00:06:25.316 --> 00:06:30.366
+In LangGraph, a chain or a workflow is a graph whose edges you write.
+
+00:06:30.666 --> 00:06:31.939
+An agent is a tool loop.
+
+00:06:32.239 --> 00:06:38.311
+The agent helpers in LangChain, the OpenAI Agents SDK and the Claude Agent SDK all
+
+00:06:38.311 --> 00:06:39.866
+start from that loop.
+
+00:06:40.516 --> 00:06:42.675
+But the library doesn't pick the rung.
+
+00:06:42.975 --> 00:06:43.718
+You do.
+
+00:06:44.018 --> 00:06:49.210
+If the flowchart fits on paper, your code draws the edges, whatever library you use.
+
+00:06:50.410 --> 00:06:54.801
+Now take three tasks from your own product and classify each one.
+
+00:06:55.101 --> 00:06:55.884
+Fixed flowchart?
+
+00:06:56.184 --> 00:06:56.929
+Branches?
+
+00:06:57.229 --> 00:06:57.994
+Which rung?
+
+00:06:58.644 --> 00:07:04.078
+Summarizing a meeting has a fixed flowchart, no branches.
+
+00:07:04.378 --> 00:07:05.656
+That makes it a chain.
+
+00:07:06.306 --> 00:07:10.944
+Answering a customer about an order has a fixed flowchart, with branches.
+
+00:07:11.244 --> 00:07:11.903
+Workflow.
+
+00:07:12.553 --> 00:07:16.499
+Investigating why a deploy failed has no fixed flowchart.
+
+00:07:16.799 --> 00:07:17.470
+Agent.
+
+00:07:18.120 --> 00:07:22.856
+If a task you already solve with an agent landed on chain or workflow, you just
+
+00:07:22.856 --> 00:07:26.933
+found a candidate for a refactoring called replace agent with chain.
+
+00:07:28.133 --> 00:07:29.931
+So here's the idea to take with you.
+
+00:07:30.231 --> 00:07:32.062
+Autonomy isn't a feature.
+
+00:07:32.362 --> 00:07:36.255
+It's a cost you pay when you can't write the path in advance.
+
+00:07:36.555 --> 00:07:39.646
+Start at the lowest rung that solves the problem.
+
+00:07:39.946 --> 00:07:43.828
+You can always climb later, with an eval showing it was worth it.
+
+00:07:44.478 --> 00:07:49.352
+In the next lesson, we'll build the first rung properly: prompt chaining, a few
+
+00:07:49.352 --> 00:07:51.512
+short steps, each one easy to test.
+
+00:07:51.812 --> 00:07:52.641
+See you there.

@@ -1,0 +1,157 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.977
+Hi, I'm Aton Bertini, and this is ai-guru.
+
+00:00:05.627 --> 00:00:08.689
+Before you start a trail, give me three minutes.
+
+00:00:08.989 --> 00:00:13.080
+I'll tell you what this is, who it's for, and how to get the most out of it.
+
+00:00:14.280 --> 00:00:16.632
+Software engineering is changing.
+
+00:00:16.932 --> 00:00:22.138
+More and more of the systems we build have a language model somewhere inside.
+
+00:00:22.788 --> 00:00:26.465
+It answers your customers, on chat and on the phone.
+
+00:00:27.115 --> 00:00:31.741
+It reads the contracts and invoices nobody wants to type in.
+
+00:00:32.391 --> 00:00:36.901
+And more and more, it calls tools and makes decisions on its own.
+
+00:00:37.551 --> 00:00:39.931
+Getting a demo to work is easy.
+
+00:00:40.231 --> 00:00:45.356
+Getting it to work every day, at a cost you can predict, without leaking data or
+
+00:00:45.356 --> 00:00:47.727
+making things up, is a different job.
+
+00:00:48.377 --> 00:00:51.287
+That job has a name: the AI engineer.
+
+00:00:51.587 --> 00:00:55.310
+And it's one of the fastest growing careers in software right now.
+
+00:00:55.960 --> 00:00:58.765
+ai-guru is a training path for that move.
+
+00:00:59.065 --> 00:01:03.869
+It's for developers who already know how to build software, and want to build the
+
+00:01:03.869 --> 00:01:06.300
+judgment this new kind of system demands.
+
+00:01:07.500 --> 00:01:09.803
+Every lesson comes in two forms.
+
+00:01:10.453 --> 00:01:12.205
+A video, like this one.
+
+00:01:12.505 --> 00:01:15.879
+It's narrated in English, with Portuguese subtitles.
+
+00:01:16.179 --> 00:01:20.269
+And you can also listen to it as a podcast, on your way to work.
+
+00:01:20.919 --> 00:01:25.930
+And a reading page, with the diagram, the worked example, and the code in more than
+
+00:01:25.930 --> 00:01:26.533
+one stack.
+
+00:01:27.183 --> 00:01:32.265
+And at the end, a short check on what you really understood, not what you memorized.
+
+00:01:32.565 --> 00:01:35.291
+Answering it is what completes the lesson.
+
+00:01:35.941 --> 00:01:38.636
+You can watch, or you can read.
+
+00:01:38.936 --> 00:01:42.737
+They cover the same ground, so pick whatever fits your day.
+
+00:01:43.387 --> 00:01:46.985
+All lessons share one vocabulary, in five kinds.
+
+00:01:47.635 --> 00:01:50.801
+Fundamentals, what you need to know first.
+
+00:01:51.451 --> 00:01:55.219
+Smells, the signs that something is wrong with your system.
+
+00:01:55.869 --> 00:01:58.141
+Refactorings, the safe way to fix it.
+
+00:01:58.791 --> 00:02:00.845
+Patterns, the shape you're aiming for.
+
+00:02:01.495 --> 00:02:05.919
+And scenarios, real systems where everything comes together.
+
+00:02:07.119 --> 00:02:13.088
+Lessons are organized in six trails that form one course, in order, with no lesson
+
+00:02:13.088 --> 00:02:13.743
+repeated.
+
+00:02:14.043 --> 00:02:16.384
+If you're starting out, begin with the first.
+
+00:02:17.034 --> 00:02:22.034
+LLM foundations, for what changes when a model becomes part of your system.
+
+00:02:22.684 --> 00:02:28.485
+Evals and reliability, for knowing a feature works before your users tell you.
+
+00:02:29.135 --> 00:02:33.889
+RAG and context, for giving the model the right information at the right time.
+
+00:02:34.539 --> 00:02:39.116
+Agents, for giving the model autonomy without the classic accidents.
+
+00:02:39.766 --> 00:02:44.575
+Security, for whoever answers for what the agent does with money, data and
+
+00:02:44.575 --> 00:02:45.225
+customers.
+
+00:02:45.875 --> 00:02:50.215
+And production, for systems that are cheap, fast and observable.
+
+00:02:50.865 --> 00:02:53.042
+Each trail ends with a real project.
+
+00:02:53.342 --> 00:02:58.808
+When you finish it, you get a signed certificate that anyone can verify, ready to
+
+00:02:58.808 --> 00:03:00.765
+download or post on LinkedIn.
+
+00:03:01.965 --> 00:03:06.275
+My advice is simple: start with the first trail, and do one lesson a day.
+
+00:03:06.575 --> 00:03:10.430
+That's about ten minutes of video, and a few more for the check.
+
+00:03:11.080 --> 00:03:15.547
+In a few weeks, you'll look at an AI system and know what's wrong with it.
+
+00:03:15.847 --> 00:03:19.099
+And you'll know how to fix it, without breaking the rest.
+
+00:03:19.749 --> 00:03:24.034
+That's the judgment companies are looking for in an AI engineer.
+
+00:03:24.334 --> 00:03:25.791
+So start the first trail.
+
+00:03:26.091 --> 00:03:28.056
+I'll see you in the first lesson.

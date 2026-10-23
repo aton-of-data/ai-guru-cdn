@@ -1,0 +1,430 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.395
+Carla runs the support bot for an online store.
+
+00:00:04.695 --> 00:00:08.480
+In the beginning, the bot only talked about delivery times.
+
+00:00:08.780 --> 00:00:09.457
+Easy.
+
+00:00:10.107 --> 00:00:12.870
+Then someone asked it to send invoice copies.
+
+00:00:13.170 --> 00:00:15.254
+Then returns and exchanges.
+
+00:00:15.554 --> 00:00:20.665
+And every new topic got its own chunk in the main prompt, the set of instructions
+
+00:00:20.665 --> 00:00:23.315
+the model reads before every conversation.
+
+00:00:23.615 --> 00:00:27.262
+Things like: if the customer asks about billing, do this.
+
+00:00:27.912 --> 00:00:31.316
+Six months later, that prompt is four thousand tokens long.
+
+00:00:31.616 --> 00:00:33.504
+And weird things start happening.
+
+00:00:34.154 --> 00:00:40.371
+People asking about invoices get answers in the upbeat tone of the sales team.
+
+00:00:40.671 --> 00:00:43.848
+People returning a product get tracking instructions.
+
+00:00:44.148 --> 00:00:47.577
+Carla fixes one topic and quietly breaks another.
+
+00:00:47.877 --> 00:00:52.369
+And nobody can tell which paragraph of the prompt caused which answer.
+
+00:00:53.019 --> 00:00:57.327
+In this lesson, you'll see how to fix that with a pattern called routing.
+
+00:00:57.627 --> 00:01:00.602
+And, just as important, when it isn't worth it.
+
+00:01:01.802 --> 00:01:04.182
+Carla's problem isn't the model.
+
+00:01:04.482 --> 00:01:09.040
+It's that a single prompt is trying to be five specialists at once.
+
+00:01:09.340 --> 00:01:14.203
+Every message shows up carrying the rules of all five, and the model has to guess
+
+00:01:14.203 --> 00:01:15.824
+which ones apply right now.
+
+00:01:16.474 --> 00:01:21.638
+The way out is to pull apart two things that got mixed together: figuring out what
+
+00:01:21.638 --> 00:01:23.906
+this is about, and actually helping.
+
+00:01:24.556 --> 00:01:27.419
+Think of the front desk in an office building.
+
+00:01:27.719 --> 00:01:30.029
+The person there doesn't solve your problem.
+
+00:01:30.329 --> 00:01:34.668
+They look at you, figure out what you need, and point you to the right door.
+
+00:01:34.968 --> 00:01:39.719
+Behind that door, whoever helps you knows one subject, and knows it well.
+
+00:01:40.369 --> 00:01:41.446
+That's routing.
+
+00:01:41.746 --> 00:01:44.666
+A short step that only classifies the message.
+
+00:01:44.966 --> 00:01:48.899
+Then your code, a simple if statement, picks the path.
+
+00:01:49.199 --> 00:01:55.032
+And each path gets its own prompt, its own tools, and, when it makes sense, even its
+
+00:01:55.032 --> 00:01:55.727
+own model.
+
+00:01:56.927 --> 00:01:59.487
+Let's follow one message from start to finish.
+
+00:01:59.787 --> 00:02:04.578
+It arrives as is, raw, with no support instructions applied yet.
+
+00:02:05.228 --> 00:02:10.444
+Step one: a small model, fast and cheap, reads the message and answers just two
+
+00:02:10.444 --> 00:02:10.906
+things.
+
+00:02:11.206 --> 00:02:13.530
+What's the topic, and how sure is it.
+
+00:02:13.830 --> 00:02:19.471
+And it answers in a structured format, with fixed fields, not free text that someone
+
+00:02:19.471 --> 00:02:21.016
+has to interpret later.
+
+00:02:21.666 --> 00:02:27.315
+Step two, and this is the heart of the pattern: your code picks the door, not the
+
+00:02:27.315 --> 00:02:27.733
+model.
+
+00:02:28.033 --> 00:02:30.987
+No routing rule lives inside a prompt.
+
+00:02:31.287 --> 00:02:34.676
+It's an if statement you can read, test and version.
+
+00:02:35.326 --> 00:02:38.327
+Step three: every door has its specialist.
+
+00:02:38.627 --> 00:02:42.138
+Billing goes to the billing prompt, with the invoice tools.
+
+00:02:42.438 --> 00:02:44.335
+Orders go to the orders prompt.
+
+00:02:44.635 --> 00:02:49.461
+And anything that doesn't fit, or came back with low confidence, goes to a person.
+
+00:02:50.111 --> 00:02:54.410
+And the conversation record, the trace, keeps which route was taken.
+
+00:02:54.710 --> 00:02:56.394
+That'll matter in a minute.
+
+00:02:57.594 --> 00:03:00.569
+Now a real message, from the store's chat.
+
+00:03:00.869 --> 00:03:05.784
+The customer writes: my September invoice is wrong, and you still haven't shipped
+
+00:03:05.784 --> 00:03:07.604
+order eighty-eight thirty-one.
+
+00:03:08.254 --> 00:03:10.687
+The classifier answers: it's billing.
+
+00:03:10.987 --> 00:03:13.602
+But only sixty-two percent sure.
+
+00:03:14.252 --> 00:03:16.549
+It makes sense that it hesitates.
+
+00:03:16.849 --> 00:03:19.249
+There are two topics in one sentence.
+
+00:03:19.549 --> 00:03:23.085
+And that's exactly why you set a confidence threshold.
+
+00:03:23.385 --> 00:03:25.125
+Carla picked seventy percent.
+
+00:03:25.425 --> 00:03:27.169
+Below that, the code doesn't gamble.
+
+00:03:27.469 --> 00:03:30.038
+It hands the conversation to a human.
+
+00:03:30.688 --> 00:03:35.426
+Without that threshold, the billing route would answer about the invoice and ignore
+
+00:03:35.426 --> 00:03:36.339
+the stuck order.
+
+00:03:36.639 --> 00:03:40.115
+The customer would walk away with half the problem solved.
+
+00:03:40.765 --> 00:03:47.350
+A clean message, like I need a copy of my September invoice, comes back as billing
+
+00:03:47.350 --> 00:03:49.036
+with high confidence.
+
+00:03:49.336 --> 00:03:54.601
+Then the billing prompt takes over, with the invoice tools and without the returns
+
+00:03:54.601 --> 00:03:54.986
+tools.
+
+00:03:55.286 --> 00:04:00.046
+It can't pitch a new plan, because it doesn't even know the deals tool exists.
+
+00:04:01.246 --> 00:04:02.719
+Here's one for you.
+
+00:04:03.019 --> 00:04:08.957
+The classifier reads the message I need a copy of my invoice, and says: that's an
+
+00:04:08.957 --> 00:04:11.230
+order, ninety-one percent sure.
+
+00:04:11.530 --> 00:04:15.076
+The code trusts it and sends it down the orders route.
+
+00:04:15.376 --> 00:04:16.520
+Where's the bug?
+
+00:04:19.570 --> 00:04:21.176
+The bug is in the classifier.
+
+00:04:21.476 --> 00:04:24.307
+Confidence was high and the route was wrong.
+
+00:04:24.607 --> 00:04:29.702
+Raising the threshold won't help, because the problem isn't doubt, it's a confident
+
+00:04:29.702 --> 00:04:30.193
+mistake.
+
+00:04:30.493 --> 00:04:35.237
+And teaching the orders route to talk about invoices would just rebuild the single
+
+00:04:35.237 --> 00:04:35.990
+giant prompt.
+
+00:04:36.640 --> 00:04:41.652
+The fix is to correct the classifier's examples and add that message to your test
+
+00:04:41.652 --> 00:04:41.900
+set.
+
+00:04:42.200 --> 00:04:47.578
+And notice: you only catch this fast because the route was recorded in the trace.
+
+00:04:48.778 --> 00:04:51.856
+Routing has a cost, so it's not for everyone.
+
+00:04:52.156 --> 00:04:57.840
+If your assistant only handles one topic, a well written prompt does the job.
+
+00:04:58.140 --> 00:04:59.713
+There's no door to pick.
+
+00:05:00.363 --> 00:05:06.089
+If your categories change every week and you don't have real messages to test the
+
+00:05:06.089 --> 00:05:07.857
+classifier yet, hold off.
+
+00:05:08.157 --> 00:05:12.597
+Start with one prompt and structured output, and let the categories settle.
+
+00:05:13.247 --> 00:05:18.839
+And if the challenge is the model choosing between dozens of tools in the middle of
+
+00:05:18.839 --> 00:05:21.533
+a long task, that's a different problem.
+
+00:05:21.833 --> 00:05:25.978
+The tool router fits better there, and it has its own lesson.
+
+00:05:26.628 --> 00:05:30.563
+Now, the most common mistake teams make with this pattern.
+
+00:05:30.863 --> 00:05:36.101
+They get excited and create too many routes: billing, invoices, refunds, payments.
+
+00:05:36.401 --> 00:05:41.178
+But real messages don't respect those borders, and the classifier starts mixing them
+
+00:05:41.178 --> 00:05:41.349
+up.
+
+00:05:41.999 --> 00:05:47.204
+The rule of thumb: start with a few routes, matched to the teams that actually
+
+00:05:47.204 --> 00:05:47.605
+exist.
+
+00:05:47.905 --> 00:05:50.703
+Billing, orders, and everything else.
+
+00:05:51.003 --> 00:05:55.494
+Only split a route when your tests show two different problems that really need
+
+00:05:55.494 --> 00:05:56.801
+different instructions.
+
+00:05:58.001 --> 00:06:02.311
+Routing costs you one extra call per message, on the small model.
+
+00:06:02.611 --> 00:06:07.647
+In return, each specialist prompt stays short, and the input cost of your answers
+
+00:06:07.647 --> 00:06:08.269
+goes down.
+
+00:06:08.919 --> 00:06:10.076
+What should you measure?
+
+00:06:10.376 --> 00:06:12.234
+The classifier, on its own.
+
+00:06:12.534 --> 00:06:17.282
+It's the easiest part to test and the one that hurts most when it's wrong.
+
+00:06:17.582 --> 00:06:21.988
+Measure accuracy per category, and don't stop at the average.
+
+00:06:22.288 --> 00:06:27.866
+A rare category can be wrong every single time without moving the overall number.
+
+00:06:28.516 --> 00:06:33.421
+An example: the classifier gets ninety-one out of a hundred messages right.
+
+00:06:33.721 --> 00:06:34.573
+Sounds great.
+
+00:06:34.873 --> 00:06:39.047
+But look at the misses, and six invoice questions went to orders.
+
+00:06:39.347 --> 00:06:44.134
+That ninety-one percent was hiding the fact that billing and orders still get
+
+00:06:44.134 --> 00:06:44.694
+confused.
+
+00:06:45.344 --> 00:06:47.497
+In production, watch two signals.
+
+00:06:47.797 --> 00:06:53.082
+If the mix of routes shifts a lot from one day to the next, a new topic probably
+
+00:06:53.082 --> 00:06:54.997
+showed up that nobody mapped.
+
+00:06:55.297 --> 00:07:00.298
+And if the handoff rate to humans climbs, either the classifier got worse, or your
+
+00:07:00.298 --> 00:07:02.006
+business has a real problem.
+
+00:07:02.656 --> 00:07:07.961
+And one security point a lot of people get wrong: a route is not access control.
+
+00:07:08.261 --> 00:07:13.127
+The classifier is a model, and a cleverly written message can push the route.
+
+00:07:13.427 --> 00:07:18.551
+If the billing route has a refund tool, it's your backend that decides whether this
+
+00:07:18.551 --> 00:07:21.329
+user can get a refund, based on who they are.
+
+00:07:21.629 --> 00:07:22.982
+Never the router.
+
+00:07:24.182 --> 00:07:27.562
+On the page, you'll find the same flow in four versions.
+
+00:07:27.862 --> 00:07:29.409
+They all do three things.
+
+00:07:29.709 --> 00:07:34.727
+First, they ask the small model for an answer with two fields: the topic and the
+
+00:07:34.727 --> 00:07:35.417
+confidence.
+
+00:07:36.067 --> 00:07:38.180
+Then an if statement decides.
+
+00:07:38.480 --> 00:07:43.474
+Low confidence, or a topic that's not on the list, goes to a person.
+
+00:07:44.124 --> 00:07:49.619
+And finally they call the bigger model, with that topic's prompt and nothing else.
+
+00:07:50.269 --> 00:07:54.221
+What changes between the versions is who handles everything else.
+
+00:07:54.521 --> 00:08:00.387
+With the provider's SDK, in Python or TypeScript, you see every line, but retries
+
+00:08:00.387 --> 00:08:02.052
+and tracing are on you.
+
+00:08:02.352 --> 00:08:06.302
+LangChain lets you switch providers without rewriting the decision.
+
+00:08:06.602 --> 00:08:11.551
+And LangGraph turns each route into a path in a graph, which shows up in the trace
+
+00:08:11.551 --> 00:08:13.422
+and can resume halfway through.
+
+00:08:14.622 --> 00:08:19.877
+So here's the one thing to take with you: when one prompt tries to be several
+
+00:08:19.877 --> 00:08:23.221
+specialists, split the deciding from the helping.
+
+00:08:23.521 --> 00:08:28.555
+A small model says what it's about, your code picks the door, and each door gets
+
+00:08:28.555 --> 00:08:29.750
+only what it needs.
+
+00:08:30.400 --> 00:08:35.632
+In the next lesson, a smell that comes from the opposite instinct: giving a model
+
+00:08:35.632 --> 00:08:37.763
+freedom the task never asked for.
+
+00:08:38.063 --> 00:08:40.059
+Agent where a chain would do.
+
+00:08:40.359 --> 00:08:41.188
+See you there.

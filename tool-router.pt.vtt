@@ -1,0 +1,493 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:05.090
+O Fábio cuida do assistente de back office de uma distribuidora.
+
+00:00:05.390 --> 00:00:09.750
+O agente concilia pagamentos, emite notas, consulta estoque,
+
+00:00:09.750 --> 00:00:12.148
+abre chamados com transportadoras
+
+00:00:12.148 --> 00:00:14.401
+e responde dúvidas de comissão.
+
+00:00:15.051 --> 00:00:17.861
+Depois de fundir as ferramentas duplicadas,
+
+00:00:17.861 --> 00:00:19.495
+sobraram trinta e quatro.
+
+00:00:19.795 --> 00:00:21.983
+Todas legítimas, todas diferentes.
+
+00:00:22.283 --> 00:00:24.729
+E alguém usa cada uma delas.
+
+00:00:25.379 --> 00:00:27.592
+Mas o agente ainda erra.
+
+00:00:27.892 --> 00:00:29.915
+Num pedido de conciliação,
+
+00:00:29.915 --> 00:00:33.416
+ele chama check stock em vez de find payment.
+
+00:00:33.716 --> 00:00:35.919
+As duas recebem um código de pedido,
+
+00:00:35.919 --> 00:00:37.755
+e as descrições começam igual.
+
+00:00:38.055 --> 00:00:41.324
+O trace mostra o modelo hesitando entre ferramentas
+
+00:00:41.324 --> 00:00:43.182
+que nem deviam estar na mesa.
+
+00:00:43.832 --> 00:00:44.936
+E tem a conta.
+
+00:00:45.236 --> 00:00:48.831
+Toda chamada leva as trinta e quatro definições.
+
+00:00:49.131 --> 00:00:52.712
+Num loop de seis turnos, elas vão para o modelo seis vezes.
+
+00:00:53.362 --> 00:00:55.074
+O Fábio não pode tirar ferramentas.
+
+00:00:55.374 --> 00:00:59.309
+O que ele pode mudar é quantas o modelo vê de cada vez.
+
+00:00:59.609 --> 00:01:00.687
+É esta aula.
+
+00:01:01.887 --> 00:01:04.589
+Organize as ferramentas em grupos por assunto.
+
+00:01:04.889 --> 00:01:11.340
+Conciliação, notas, estoque e logística, cada um no seu grupo.
+
+00:01:11.640 --> 00:01:13.685
+Antes de o loop do agente começar,
+
+00:01:13.685 --> 00:01:17.234
+uma etapa curta decide de quais grupos esta tarefa precisa.
+
+00:01:17.534 --> 00:01:20.453
+E o agente principal roda só com esses grupos.
+
+00:01:21.103 --> 00:01:24.215
+O movimento central é tirar uma escolha do modelo
+
+00:01:24.215 --> 00:01:26.502
+grande e colocar numa etapa pequena,
+
+00:01:26.502 --> 00:01:27.645
+barata e testável.
+
+00:01:27.945 --> 00:01:30.071
+O agente principal para de responder
+
+00:01:30.071 --> 00:01:31.724
+qual destas trinta e quatro,
+
+00:01:31.724 --> 00:01:33.908
+e passa a responder qual destas oito.
+
+00:01:34.208 --> 00:01:35.979
+E sempre existe um caminho de volta.
+
+00:01:36.279 --> 00:01:40.770
+Se o agente descobre que precisa de outro grupo, ele pode pedir.
+
+00:01:41.970 --> 00:01:42.818
+A tarefa chega,
+
+00:01:42.818 --> 00:01:45.589
+como texto de uma pessoa ou um evento do sistema.
+
+00:01:46.239 --> 00:01:49.309
+Um modelo pequeno lê a tarefa e a lista de grupos,
+
+00:01:49.309 --> 00:01:51.334
+uma linha de descrição para cada.
+
+00:01:51.984 --> 00:01:55.244
+O catálogo guarda os grupos e as ferramentas de cada grupo,
+
+00:01:55.244 --> 00:01:55.852
+versionado.
+
+00:01:56.502 --> 00:02:00.459
+O roteador devolve os grupos escolhidos, e a confiança dele.
+
+00:02:01.109 --> 00:02:04.037
+O agente principal roda com as ferramentas desses grupos,
+
+00:02:04.037 --> 00:02:06.606
+mais uma ferramenta extra, para pedir outro grupo.
+
+00:02:07.256 --> 00:02:09.271
+As ferramentas rodam normalmente.
+
+00:02:09.921 --> 00:02:10.880
+E a resposta sai,
+
+00:02:10.880 --> 00:02:13.700
+com o trace registrando quais grupos foram usados.
+
+00:02:14.900 --> 00:02:16.229
+Chega uma tarefa.
+
+00:02:16.529 --> 00:02:21.283
+Concilie o pagamento do pedido 88231 com o extrato de ontem e,
+
+00:02:21.283 --> 00:02:23.506
+se bater, dê baixa no boleto.
+
+00:02:23.806 --> 00:02:27.498
+O roteador recebe a tarefa e quatro linhas, uma por grupo.
+
+00:02:28.148 --> 00:02:28.828
+Financeiro:
+
+00:02:28.828 --> 00:02:30.621
+use para conciliar pagamentos
+
+00:02:30.621 --> 00:02:32.847
+com extratos e dar baixa em boletos.
+
+00:02:33.497 --> 00:02:37.878
+Notas, estoque e logística, cada um com o seu uso.
+
+00:02:38.528 --> 00:02:42.742
+Ele devolve: financeiro, com 92% de confiança.
+
+00:02:43.042 --> 00:02:46.552
+O agente principal roda com as sete ferramentas de financeiro,
+
+00:02:46.552 --> 00:02:47.797
+mais a de pedir grupo.
+
+00:02:48.097 --> 00:02:51.470
+A ferramenta de estoque que causava a confusão nem aparece.
+
+00:02:51.770 --> 00:02:53.818
+E uma ferramenta que não está na lista não
+
+00:02:53.818 --> 00:02:55.477
+tem como ser escolhida por engano.
+
+00:02:56.127 --> 00:02:58.974
+Agora a conta, com números ilustrativos.
+
+00:02:59.274 --> 00:03:01.487
+Digamos que cada definição de ferramenta
+
+00:03:01.487 --> 00:03:03.590
+ocupa uns duzentos e cinquenta tokens.
+
+00:03:03.890 --> 00:03:06.173
+As trinta e quatro somam uns oito mil
+
+00:03:06.173 --> 00:03:08.147
+e quinhentos tokens por chamada.
+
+00:03:08.797 --> 00:03:10.431
+Num loop de seis turnos,
+
+00:03:10.431 --> 00:03:13.905
+são uns cinquenta e um mil tokens só de definições.
+
+00:03:14.555 --> 00:03:18.070
+Com oito ferramentas, a mesma tarefa leva uns doze mil.
+
+00:03:18.370 --> 00:03:21.288
+O roteador custa uma chamada curta num modelo pequeno.
+
+00:03:21.588 --> 00:03:22.786
+Ele paga uma vez.
+
+00:03:23.086 --> 00:03:25.492
+A economia acontece em todo turno.
+
+00:03:26.692 --> 00:03:27.856
+Uma pergunta para você.
+
+00:03:28.156 --> 00:03:30.915
+Uma semana depois de colocar o roteador no ar,
+
+00:03:30.915 --> 00:03:33.973
+o painel mostra que em 40% das tarefas de cobrança,
+
+00:03:33.973 --> 00:03:37.032
+o agente pede o grupo de notas no meio da execução.
+
+00:03:37.332 --> 00:03:39.002
+Qual é a correção mais direta?
+
+00:03:42.052 --> 00:03:46.186
+Incluir notas na seleção inicial das tarefas de cobrança,
+
+00:03:46.186 --> 00:03:50.102
+ajustando a descrição do roteador ou os exemplos dele.
+
+00:03:50.402 --> 00:03:53.515
+Um grupo pedido com frequência, no mesmo tipo de tarefa,
+
+00:03:53.515 --> 00:03:56.516
+quer dizer que a seleção inicial está estreita demais.
+
+00:03:56.816 --> 00:04:00.164
+Expansão é saída de emergência, não o caminho normal.
+
+00:04:00.814 --> 00:04:02.695
+Tirar a ferramenta de pedir grupo,
+
+00:04:02.695 --> 00:04:04.465
+porque ela deixa o agente lento,
+
+00:04:04.465 --> 00:04:07.010
+deixaria essas tarefas sem a ferramenta certa.
+
+00:04:07.310 --> 00:04:10.999
+E juntar todos os grupos num só desfaz o padrão.
+
+00:04:11.299 --> 00:04:15.781
+Cobrança e notas aparecem juntas, então entram juntas.
+
+00:04:16.981 --> 00:04:21.136
+Se o agente tem poucas ferramentas, consolide primeiro.
+
+00:04:21.436 --> 00:04:23.141
+Foi a última aula.
+
+00:04:23.791 --> 00:04:26.906
+Se as tarefas cruzam todos os assuntos o tempo todo,
+
+00:04:26.906 --> 00:04:28.943
+o roteador sempre escolheria tudo.
+
+00:04:29.593 --> 00:04:32.944
+Se o seu provedor oferece busca de ferramentas sob demanda,
+
+00:04:32.944 --> 00:04:36.579
+e o seu único problema é custo de token, esse mecanismo resolve,
+
+00:04:36.579 --> 00:04:37.943
+sem uma etapa extra sua.
+
+00:04:38.593 --> 00:04:41.353
+E se o canal de entrada já diz o assunto,
+
+00:04:41.353 --> 00:04:43.709
+como uma fila ou um tipo de evento,
+
+00:04:43.709 --> 00:04:45.661
+use uma regra fixa no código.
+
+00:04:45.961 --> 00:04:50.084
+Sem modelo, custo zero, e zero erro de classificação.
+
+00:04:50.734 --> 00:04:52.324
+Agora as armadilhas comuns.
+
+00:04:52.624 --> 00:04:55.191
+Agrupar por sistema, não por tarefa.
+
+00:04:55.491 --> 00:04:58.029
+Tudo que fala com o ERP vira um grupo
+
+00:04:58.029 --> 00:05:00.018
+de vinte e cinco ferramentas.
+
+00:05:00.318 --> 00:05:02.314
+Agrupe pelo que a pessoa quer fazer.
+
+00:05:02.614 --> 00:05:05.737
+Como conciliar, emitir ou despachar um pedido.
+
+00:05:06.387 --> 00:05:08.541
+Descrever o conteúdo, não o uso.
+
+00:05:08.841 --> 00:05:10.716
+Ferramentas de financeiro não ajuda o roteador.
+
+00:05:11.016 --> 00:05:13.904
+Use para conciliar pagamentos com extratos ajuda,
+
+00:05:13.904 --> 00:05:16.614
+porque bate com o jeito que as tarefas chegam.
+
+00:05:17.264 --> 00:05:19.545
+Um conjunto padrão com efeito colateral.
+
+00:05:19.845 --> 00:05:22.530
+Confiança baixa quer dizer que o roteador está em dúvida.
+
+00:05:22.830 --> 00:05:25.111
+O padrão seguro é só leitura.
+
+00:05:25.411 --> 00:05:27.427
+Não tudo, por via das dúvidas.
+
+00:05:28.077 --> 00:05:29.807
+E esquecer a saída de emergência.
+
+00:05:30.107 --> 00:05:31.921
+Sem um jeito de pedir grupo,
+
+00:05:31.921 --> 00:05:34.124
+um erro do roteador vira um agente
+
+00:05:34.124 --> 00:05:36.456
+que responde sem a ferramenta certa.
+
+00:05:36.756 --> 00:05:38.426
+Ou inventa o dado.
+
+00:05:39.626 --> 00:05:43.320
+A falha mais cara aqui é a silenciosa.
+
+00:05:43.620 --> 00:05:46.708
+O grupo certo ficou de fora, e o agente não pediu.
+
+00:05:47.008 --> 00:05:50.687
+Ele responde não encontrei o pagamento, com toda a calma.
+
+00:05:50.987 --> 00:05:53.261
+Por isso a cobertura é o que mais importa.
+
+00:05:53.561 --> 00:05:56.614
+Em quantas tarefas os grupos escolhidos incluem
+
+00:05:56.614 --> 00:05:59.342
+toda ferramenta que a solução correta usa?
+
+00:05:59.992 --> 00:06:03.683
+Mas cobertura e tamanho puxam para lados opostos.
+
+00:06:03.983 --> 00:06:07.541
+Um roteador que sempre escolhe tudo tem cobertura perfeita,
+
+00:06:07.541 --> 00:06:08.868
+e não serve para nada.
+
+00:06:09.168 --> 00:06:10.283
+Acompanhe os dois juntos.
+
+00:06:10.933 --> 00:06:13.316
+E vigie a taxa de expansão por grupo.
+
+00:06:13.616 --> 00:06:15.965
+Um grupo pedido com frequência deve entrar
+
+00:06:15.965 --> 00:06:18.315
+na seleção inicial daquele tipo de tarefa.
+
+00:06:18.965 --> 00:06:21.467
+Dá para montar o dataset do roteador
+
+00:06:21.467 --> 00:06:23.552
+com os traces que você já tem.
+
+00:06:23.852 --> 00:06:26.095
+Para cada tarefa resolvida com sucesso,
+
+00:06:26.095 --> 00:06:28.913
+os grupos esperados são os grupos das ferramentas
+
+00:06:28.913 --> 00:06:30.523
+que o agente chamou de fato.
+
+00:06:30.823 --> 00:06:33.958
+Inclua de propósito tarefas que cruzam assuntos,
+
+00:06:33.958 --> 00:06:36.309
+como emita a nota e agende a coleta.
+
+00:06:36.609 --> 00:06:39.985
+E vagas, como veja o que aconteceu com este pedido.
+
+00:06:40.285 --> 00:06:42.021
+E quando acrescentar uma ferramenta,
+
+00:06:42.021 --> 00:06:43.565
+rode de novo o eval do roteador.
+
+00:06:43.865 --> 00:06:46.442
+Uma descrição de grupo alterada pode desviar
+
+00:06:46.442 --> 00:06:48.844
+tarefas que antes iam para o lugar certo.
+
+00:06:49.494 --> 00:06:51.066
+E um ponto de segurança.
+
+00:06:51.366 --> 00:06:53.211
+O roteador diminui a superfície.
+
+00:06:53.511 --> 00:06:55.454
+Ferramentas com efeito colateral só aparecem
+
+00:06:55.454 --> 00:06:56.735
+nas rotas que precisam delas.
+
+00:06:57.035 --> 00:06:59.162
+Uma pergunta sobre prazo de entrega
+
+00:06:59.162 --> 00:07:01.169
+não tem como disparar um estorno.
+
+00:07:01.469 --> 00:07:04.023
+Mas não trate isso como controle de acesso.
+
+00:07:04.323 --> 00:07:07.695
+Um texto malicioso dentro da tarefa consegue convencer
+
+00:07:07.695 --> 00:07:09.819
+o roteador a escolher outro grupo,
+
+00:07:09.819 --> 00:07:12.130
+e o agente pode pedir grupos sozinho.
+
+00:07:12.430 --> 00:07:15.540
+Permissão de verdade mora na ferramenta e no backend.
+
+00:07:15.840 --> 00:07:19.354
+Quem é o usuário, o que ele pode fazer e qual o limite de valor.
+
+00:07:20.554 --> 00:07:23.024
+Então, a ideia para levar.
+
+00:07:23.324 --> 00:07:24.962
+Quando toda ferramenta é legítima,
+
+00:07:24.962 --> 00:07:26.696
+mas nenhuma tarefa precisa de todas,
+
+00:07:26.696 --> 00:07:29.538
+escolha a caixa de ferramentas antes de o trabalho começar.
+
+00:07:29.838 --> 00:07:31.936
+Uma etapa pequena escolhe os grupos,
+
+00:07:31.936 --> 00:07:35.607
+o agente trabalha com uma lista curta e um jeito de pedir mais,
+
+00:07:35.607 --> 00:07:37.879
+e você mede cobertura e tamanho juntos.
+
+00:07:38.529 --> 00:07:39.523
+Na próxima aula,
+
+00:07:39.523 --> 00:07:43.000
+a gente sai das ferramentas e vai para a conversa em si,
+
+00:07:43.000 --> 00:07:46.229
+e o que acontece quando ela fica longa: context rot.
+
+00:07:46.529 --> 00:07:47.319
+Até lá.

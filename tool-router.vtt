@@ -1,0 +1,379 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:05.090
+Fábio runs the back office assistant at a distributor.
+
+00:00:05.390 --> 00:00:10.935
+The agent reconciles payments, issues invoices, checks stock, opens tickets with
+
+00:00:10.935 --> 00:00:14.401
+carriers, and answers questions about commissions.
+
+00:00:15.051 --> 00:00:19.495
+After merging the duplicate tools last quarter, thirty-four of them remained.
+
+00:00:19.795 --> 00:00:21.983
+All legitimate, all different.
+
+00:00:22.283 --> 00:00:24.729
+And someone uses every one of them.
+
+00:00:25.379 --> 00:00:27.592
+But the agent still makes mistakes.
+
+00:00:27.892 --> 00:00:33.416
+On a reconciliation request, it calls check stock, instead of find payment.
+
+00:00:33.716 --> 00:00:37.755
+Both take an order code, and their descriptions start the same way.
+
+00:00:38.055 --> 00:00:42.824
+The trace shows the model hesitating between tools that shouldn't even be on the
+
+00:00:42.824 --> 00:00:43.182
+table.
+
+00:00:43.832 --> 00:00:44.936
+And there's the bill.
+
+00:00:45.236 --> 00:00:48.831
+Every call carries all thirty-four definitions.
+
+00:00:49.131 --> 00:00:52.712
+In a six turn loop, they go to the model six times.
+
+00:00:53.362 --> 00:00:55.074
+Fábio can't remove tools.
+
+00:00:55.374 --> 00:00:59.309
+What he can change is how many the model sees at a time.
+
+00:00:59.609 --> 00:01:00.687
+That's this lesson.
+
+00:01:01.887 --> 00:01:04.589
+Organize the tools into groups by topic.
+
+00:01:04.889 --> 00:01:11.340
+Reconciliation, invoices, stock, and logistics, each in its own group.
+
+00:01:11.640 --> 00:01:17.234
+Before the agent loop starts, a short step decides which groups this task needs.
+
+00:01:17.534 --> 00:01:20.453
+And the main agent runs with only those groups.
+
+00:01:21.103 --> 00:01:25.917
+The key move is taking one choice away from the big model, and putting it in a
+
+00:01:25.917 --> 00:01:27.645
+small, cheap, testable step.
+
+00:01:27.945 --> 00:01:32.656
+The main agent stops answering which of these thirty-four, and starts answering
+
+00:01:32.656 --> 00:01:33.908
+which of these eight.
+
+00:01:34.208 --> 00:01:35.979
+And there's always a way back.
+
+00:01:36.279 --> 00:01:40.770
+If the agent discovers it needs another group, it can ask for it.
+
+00:01:41.970 --> 00:01:45.589
+The task arrives, as a person's text or a system event.
+
+00:01:46.239 --> 00:01:51.334
+A small model reads the task, and the list of groups, one description line each.
+
+00:01:51.984 --> 00:01:55.852
+The catalog stores the groups and each group's tools, versioned.
+
+00:01:56.502 --> 00:02:00.459
+The router returns the chosen groups, and its confidence.
+
+00:02:01.109 --> 00:02:05.761
+The main agent runs with those groups' tools, plus one extra tool, to ask for
+
+00:02:05.761 --> 00:02:06.606
+another group.
+
+00:02:07.256 --> 00:02:09.271
+Tools execute as usual.
+
+00:02:09.921 --> 00:02:13.700
+And the answer goes out, with the trace recording which groups were used.
+
+00:02:14.900 --> 00:02:16.229
+A task comes in.
+
+00:02:16.529 --> 00:02:20.875
+Reconcile the payment for order eighty-eight two thirty-one with yesterday's
+
+00:02:20.875 --> 00:02:23.506
+statement, and if it matches, settle the bill.
+
+00:02:23.806 --> 00:02:27.498
+The router gets the task, and four lines, one per group.
+
+00:02:28.148 --> 00:02:32.847
+Billing: use to reconcile payments against statements, and settle bills.
+
+00:02:33.497 --> 00:02:37.878
+Invoices, stock and logistics, each with its own use.
+
+00:02:38.528 --> 00:02:42.742
+It returns: billing, with ninety-two percent confidence.
+
+00:02:43.042 --> 00:02:47.797
+The main agent runs with the seven billing tools, plus the one to request a group.
+
+00:02:48.097 --> 00:02:51.470
+The stock tool that caused the confusion never shows up.
+
+00:02:51.770 --> 00:02:55.477
+And a tool that isn't on the list can't be picked by mistake.
+
+00:02:56.127 --> 00:02:58.974
+Now the math, with illustrative numbers.
+
+00:02:59.274 --> 00:03:03.590
+Say each tool definition takes about two hundred fifty tokens.
+
+00:03:03.890 --> 00:03:08.147
+The thirty-four add up to roughly eight thousand five hundred tokens per call.
+
+00:03:08.797 --> 00:03:13.905
+Over a six turn loop, that's about fifty-one thousand tokens of definitions alone.
+
+00:03:14.555 --> 00:03:18.070
+With eight tools, the same task carries about twelve thousand.
+
+00:03:18.370 --> 00:03:21.288
+The router costs one short call on a small model.
+
+00:03:21.588 --> 00:03:22.786
+It pays once.
+
+00:03:23.086 --> 00:03:25.492
+The savings happen on every turn.
+
+00:03:26.692 --> 00:03:27.856
+Here's one for you.
+
+00:03:28.156 --> 00:03:33.025
+A week after launching the router, the dashboard shows that in forty percent of
+
+00:03:33.025 --> 00:03:37.032
+collections tasks, the agent asks for the invoices group mid-run.
+
+00:03:37.332 --> 00:03:39.002
+What's the most direct fix?
+
+00:03:42.052 --> 00:03:47.578
+Include invoices in the initial selection for collections tasks, by adjusting the
+
+00:03:47.578 --> 00:03:50.102
+router's description or its examples.
+
+00:03:50.402 --> 00:03:56.040
+A group requested often, for the same task type, means the initial selection is too
+
+00:03:56.040 --> 00:03:56.516
+narrow.
+
+00:03:56.816 --> 00:04:00.164
+Expansion is an escape hatch, not the normal route.
+
+00:04:00.814 --> 00:04:05.665
+Removing the request tool, because it makes the agent slow, would leave those tasks
+
+00:04:05.665 --> 00:04:07.010
+without the right tool.
+
+00:04:07.310 --> 00:04:10.999
+And merging all groups back into one undoes the pattern.
+
+00:04:11.299 --> 00:04:15.781
+Collections and invoices show up together, so they go in together.
+
+00:04:16.981 --> 00:04:21.136
+If the agent has few tools, consolidate first.
+
+00:04:21.436 --> 00:04:23.141
+That was the last lesson.
+
+00:04:23.791 --> 00:04:28.943
+If tasks cross every topic all the time, the router would always pick everything.
+
+00:04:29.593 --> 00:04:34.543
+If your provider offers tool search on demand, and your only problem is token cost,
+
+00:04:34.543 --> 00:04:37.943
+that mechanism solves it, without an extra step of yours.
+
+00:04:38.593 --> 00:04:44.040
+And if the input channel already tells you the topic, like a queue or an event type,
+
+00:04:44.040 --> 00:04:45.661
+use a fixed rule in code.
+
+00:04:45.961 --> 00:04:50.084
+No model, zero cost, and zero classification errors.
+
+00:04:50.734 --> 00:04:52.324
+Now the common traps.
+
+00:04:52.624 --> 00:04:55.191
+Grouping by system, not by task.
+
+00:04:55.491 --> 00:05:00.018
+Everything that talks to the management system becomes a twenty-five tool group.
+
+00:05:00.318 --> 00:05:02.314
+Group by what the person wants to do.
+
+00:05:02.614 --> 00:05:05.737
+Like reconcile, issue, or ship an order.
+
+00:05:06.387 --> 00:05:08.541
+Describing contents, not use.
+
+00:05:08.841 --> 00:05:10.716
+Billing tools doesn't help the router.
+
+00:05:11.016 --> 00:05:16.158
+Use to reconcile payments against statements does, because it matches how tasks
+
+00:05:16.158 --> 00:05:16.614
+arrive.
+
+00:05:17.264 --> 00:05:19.545
+A default set with side effects.
+
+00:05:19.845 --> 00:05:22.530
+Low confidence means the router is unsure.
+
+00:05:22.830 --> 00:05:25.111
+The safe default is read only.
+
+00:05:25.411 --> 00:05:27.427
+Not everything, just in case.
+
+00:05:28.077 --> 00:05:29.807
+And forgetting the escape hatch.
+
+00:05:30.107 --> 00:05:35.038
+Without a way to request a group, a router mistake becomes an agent that answers
+
+00:05:35.038 --> 00:05:36.456
+without the right tool.
+
+00:05:36.756 --> 00:05:38.426
+Or makes up the data.
+
+00:05:39.626 --> 00:05:43.320
+The most expensive failure here is the silent one.
+
+00:05:43.620 --> 00:05:46.708
+The right group was left out, and the agent didn't ask.
+
+00:05:47.008 --> 00:05:50.687
+It answers I couldn't find the payment, with total calm.
+
+00:05:50.987 --> 00:05:53.261
+That's why coverage matters most.
+
+00:05:53.561 --> 00:05:59.342
+In how many tasks do the chosen groups include every tool the correct solution uses?
+
+00:05:59.992 --> 00:06:03.683
+But coverage and size pull in opposite directions.
+
+00:06:03.983 --> 00:06:08.868
+A router that always picks everything has perfect coverage, and is useless.
+
+00:06:09.168 --> 00:06:10.283
+Track both together.
+
+00:06:10.933 --> 00:06:13.316
+And watch the expansion rate per group.
+
+00:06:13.616 --> 00:06:18.315
+A group requested often should join the initial selection for that task type.
+
+00:06:18.965 --> 00:06:23.552
+You can build the router's dataset from traces you already have.
+
+00:06:23.852 --> 00:06:28.932
+For every task solved successfully, the expected groups are the groups of the tools
+
+00:06:28.932 --> 00:06:30.523
+the agent actually called.
+
+00:06:30.823 --> 00:06:35.863
+Include tasks that cross topics on purpose, like issue the invoice and book the
+
+00:06:35.863 --> 00:06:36.309
+pickup.
+
+00:06:36.609 --> 00:06:39.985
+And vague ones, like see what happened with this order.
+
+00:06:40.285 --> 00:06:43.565
+And when you add a new tool, rerun the router's eval.
+
+00:06:43.865 --> 00:06:48.844
+A changed group description can divert tasks that used to go to the right place.
+
+00:06:49.494 --> 00:06:51.066
+And one security point.
+
+00:06:51.366 --> 00:06:53.211
+The router shrinks the surface.
+
+00:06:53.511 --> 00:06:56.735
+Side effect tools only appear on routes that need them.
+
+00:06:57.035 --> 00:07:01.169
+A question about delivery dates has no way to trigger a refund.
+
+00:07:01.469 --> 00:07:04.023
+But don't treat it as access control.
+
+00:07:04.323 --> 00:07:09.794
+Malicious text inside the task can talk the router into a different group, and the
+
+00:07:09.794 --> 00:07:12.130
+agent can ask for groups by itself.
+
+00:07:12.430 --> 00:07:15.540
+Real permission lives in the tool and in the backend.
+
+00:07:15.840 --> 00:07:19.354
+Who the user is, what they can do, and the amount limit.
+
+00:07:20.554 --> 00:07:23.024
+So here's the idea to take with you.
+
+00:07:23.324 --> 00:07:28.534
+When every tool is legitimate but no task needs them all, choose the toolbox before
+
+00:07:28.534 --> 00:07:29.538
+the work starts.
+
+00:07:29.838 --> 00:07:34.699
+A small step picks the groups, the agent works with a short list and a way to ask
+
+00:07:34.699 --> 00:07:37.879
+for more, and you measure coverage and size together.
+
+00:07:38.529 --> 00:07:43.773
+In the next lesson, we move from the tools to the conversation itself, and what
+
+00:07:43.773 --> 00:07:46.229
+happens as it gets long: context rot.
+
+00:07:46.529 --> 00:07:47.319
+See you there.

@@ -1,0 +1,397 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:06.516
+The marketing team has an agent that turns a brief into a published post.
+
+00:00:06.816 --> 00:00:11.615
+It researches the topic, writes the draft, reviews it against the brand guide, and
+
+00:00:11.615 --> 00:00:13.078
+publishes it to the blog.
+
+00:00:13.378 --> 00:00:17.404
+All in the same loop, with the same context, and the same tools.
+
+00:00:18.054 --> 00:00:21.456
+Here's how it was configured, more or less word for word.
+
+00:00:21.756 --> 00:00:23.564
+You are the content agent.
+
+00:00:23.864 --> 00:00:28.783
+Research, write, review rigorously, and publish only when it's excellent.
+
+00:00:29.433 --> 00:00:30.409
+And the tools.
+
+00:00:30.709 --> 00:00:36.847
+Web search, fetch a page, read the brand guide, write and edit the draft, check
+
+00:00:36.847 --> 00:00:37.702
+plagiarism.
+
+00:00:38.002 --> 00:00:43.354
+And also publish the post, post to social media, update the CRM, and send the
+
+00:00:43.354 --> 00:00:44.118
+newsletter.
+
+00:00:44.768 --> 00:00:50.376
+One Friday, the agent published a draft with a competitor's figures, copied from a
+
+00:00:50.376 --> 00:00:52.360
+page it read during research.
+
+00:00:52.660 --> 00:00:54.655
+The review step was in the prompt.
+
+00:00:54.955 --> 00:01:00.326
+But it was the same model, with the same context full of web pages, reviewing its
+
+00:01:00.326 --> 00:01:04.304
+own text, with the publish tool within reach the whole time.
+
+00:01:04.604 --> 00:01:09.250
+In this lesson, you'll learn to see this smell, and where to make the cut.
+
+00:01:10.450 --> 00:01:11.271
+Here's the shape.
+
+00:01:11.571 --> 00:01:13.633
+The whole task goes to one agent.
+
+00:01:14.283 --> 00:01:18.889
+It holds every tool, and a prompt that tries to describe every role.
+
+00:01:19.539 --> 00:01:25.690
+Untrusted content from the research enters the same context that will decide whether
+
+00:01:25.690 --> 00:01:26.495
+to publish.
+
+00:01:27.145 --> 00:01:31.692
+Whoever reviews is whoever wrote, looking at the same material.
+
+00:01:32.342 --> 00:01:35.974
+And the side effect tool is available from the very first step.
+
+00:01:36.624 --> 00:01:37.723
+How do you spot it?
+
+00:01:38.023 --> 00:01:40.572
+One agent handles steps of different kinds.
+
+00:01:40.872 --> 00:01:46.097
+Research, production, review, and execution, all mixed together.
+
+00:01:46.747 --> 00:01:51.290
+Every tool, read and side effect alike, is available at every step.
+
+00:01:51.940 --> 00:01:54.883
+The system prompt describes several roles.
+
+00:01:55.183 --> 00:01:58.230
+You are researcher, writer, and reviewer.
+
+00:01:58.880 --> 00:02:03.161
+Review happens in the same context that produced the work.
+
+00:02:03.461 --> 00:02:08.453
+And by the end of the task, that context still carries all the raw material from the
+
+00:02:08.453 --> 00:02:08.810
+start.
+
+00:02:09.460 --> 00:02:14.474
+And a problem in one step forces changes to the prompt for all of them.
+
+00:02:15.674 --> 00:02:16.723
+It starts small.
+
+00:02:17.023 --> 00:02:19.066
+The agent only wrote drafts.
+
+00:02:19.366 --> 00:02:21.501
+Publishing was just one more tool.
+
+00:02:22.151 --> 00:02:23.681
+One agent looks simpler.
+
+00:02:23.981 --> 00:02:26.408
+One prompt, one loop, one deploy.
+
+00:02:26.708 --> 00:02:29.317
+Splitting looks like needless complexity.
+
+00:02:29.967 --> 00:02:31.782
+Good models cope in the demo.
+
+00:02:32.082 --> 00:02:34.770
+On short tasks, the single agent works fine.
+
+00:02:35.070 --> 00:02:38.386
+The problem only shows up at scale, or in odd cases.
+
+00:02:39.036 --> 00:02:41.013
+And nobody draws the boundaries.
+
+00:02:41.313 --> 00:02:45.647
+Without someone asking which steps really exist, they blend together.
+
+00:02:46.847 --> 00:02:48.649
+The first cost is quality.
+
+00:02:48.949 --> 00:02:52.809
+Review in the same context tends to agree with what was produced.
+
+00:02:53.109 --> 00:02:57.169
+The model rereads its own reasoning, not the result with fresh eyes.
+
+00:02:57.819 --> 00:02:59.170
+Then security.
+
+00:02:59.470 --> 00:03:05.407
+Untrusted content read during research sits in the same context as the side effect
+
+00:03:05.407 --> 00:03:05.841
+tools.
+
+00:03:06.141 --> 00:03:12.069
+That's the recipe for an attack where instructions hide inside the pages an agent
+
+00:03:12.069 --> 00:03:12.508
+reads.
+
+00:03:12.808 --> 00:03:18.002
+A mega agent that researches and publishes in the same context is the classic
+
+00:03:18.002 --> 00:03:18.474
+target.
+
+00:03:19.124 --> 00:03:20.301
+Then context.
+
+00:03:20.601 --> 00:03:23.389
+The end of the task carries the clutter of the start.
+
+00:03:23.689 --> 00:03:24.925
+That's context rot.
+
+00:03:25.575 --> 00:03:26.521
+And maintenance.
+
+00:03:26.821 --> 00:03:32.532
+Changing how review works means editing the prompt that also researches and writes.
+
+00:03:32.832 --> 00:03:34.903
+And each change affects everything.
+
+00:03:35.553 --> 00:03:38.373
+Picture the same pattern in an online store.
+
+00:03:38.673 --> 00:03:44.562
+An agent that answers delivery questions, looks up the order, and issues refunds.
+
+00:03:44.862 --> 00:03:49.509
+A simple where is my package still has the refund tool on the list.
+
+00:03:49.809 --> 00:03:55.783
+Text in a product description, or a creative user, pushes the model toward the side
+
+00:03:55.783 --> 00:03:56.287
+effect.
+
+00:03:57.487 --> 00:03:58.730
+Here's one for you.
+
+00:03:59.030 --> 00:04:02.211
+The content agent researches, writes and publishes.
+
+00:04:02.511 --> 00:04:04.583
+You can make one change this week.
+
+00:04:04.883 --> 00:04:07.052
+Which cut reduces the most risk?
+
+00:04:10.102 --> 00:04:14.766
+Take the publish tool out of the model's loop, and publish in a code step, with
+
+00:04:14.766 --> 00:04:15.297
+approval.
+
+00:04:15.597 --> 00:04:20.392
+A side effect tool available during research is the risk that already broke on
+
+00:04:20.392 --> 00:04:20.822
+Friday.
+
+00:04:21.122 --> 00:04:23.843
+Isolating the effect is the smallest cut.
+
+00:04:24.143 --> 00:04:27.276
+Research and writing can wait for the next slice.
+
+00:04:27.926 --> 00:04:33.160
+Adding a second role whose only job is to review rigorously, in the same context
+
+00:04:33.160 --> 00:04:35.646
+with the same tools, isolates nothing.
+
+00:04:35.946 --> 00:04:39.117
+The reviewer still sees the pages, and can still publish.
+
+00:04:39.417 --> 00:04:44.482
+And telling the agent to forget the pages after the draft doesn't remove a single
+
+00:04:44.482 --> 00:04:45.983
+token, or a single tool.
+
+00:04:47.183 --> 00:04:49.208
+There are two refactorings.
+
+00:04:49.508 --> 00:04:54.576
+Extract subagent, when there are steps with their own tools and context, like
+
+00:04:54.576 --> 00:04:55.893
+research and review.
+
+00:04:56.193 --> 00:04:59.969
+Each becomes a subagent that returns only its result.
+
+00:05:00.269 --> 00:05:05.332
+And introduce a router, when the agent handles different kinds of requests, each
+
+00:05:05.332 --> 00:05:06.851
+needing different tools.
+
+00:05:07.151 --> 00:05:12.381
+Often, the final step, publish, pay or send, doesn't even need a model.
+
+00:05:12.681 --> 00:05:15.143
+It becomes code, behind approval.
+
+00:05:15.793 --> 00:05:19.040
+Here's the smallest cut that already reduces harm.
+
+00:05:19.340 --> 00:05:24.645
+Research reads the web in an isolated context, and returns cited facts.
+
+00:05:24.945 --> 00:05:26.293
+Not raw pages.
+
+00:05:26.943 --> 00:05:30.786
+Writing gets the brief plus those facts, without the pages.
+
+00:05:31.436 --> 00:05:35.296
+Review gets the draft plus the brand guide, without the writer's reasoning.
+
+00:05:35.946 --> 00:05:41.425
+And publishing is code, with a person in the loop, if the channel is public.
+
+00:05:42.075 --> 00:05:43.473
+But don't overcorrect.
+
+00:05:43.773 --> 00:05:45.584
+The opposite is a smell too.
+
+00:05:45.884 --> 00:05:48.660
+A pipeline of five agents with job titles.
+
+00:05:48.960 --> 00:05:53.677
+A researcher, an analyst, a writer, a reviewer, and an editor.
+
+00:05:53.977 --> 00:05:58.360
+Each takes the previous one's text, and returns nearly the same text.
+
+00:05:58.660 --> 00:06:03.290
+It costs five times as much, with no real split of tools or context.
+
+00:06:03.590 --> 00:06:07.756
+That smell has a name of its own, decorative multi-agent.
+
+00:06:08.056 --> 00:06:12.773
+Split where the nature of the work changes, not where the org chart wants a job
+
+00:06:12.773 --> 00:06:13.131
+title.
+
+00:06:14.331 --> 00:06:16.137
+Three cases to sharpen the eye.
+
+00:06:16.437 --> 00:06:21.958
+A support agent answers questions, looks up orders, and issues refunds, with one
+
+00:06:21.958 --> 00:06:23.891
+prompt and one set of tools.
+
+00:06:24.191 --> 00:06:28.135
+Refunds above a hundred dollars go to a person.
+
+00:06:28.435 --> 00:06:29.945
+Is it a mega agent?
+
+00:06:30.245 --> 00:06:30.747
+Yes.
+
+00:06:31.047 --> 00:06:35.608
+The approval covers big amounts, but the question answering path still has the
+
+00:06:35.608 --> 00:06:37.069
+refund tool within reach.
+
+00:06:37.369 --> 00:06:39.658
+A router would separate the paths.
+
+00:06:40.308 --> 00:06:44.128
+A research agent reads sixty pages and writes a report.
+
+00:06:44.428 --> 00:06:45.947
+No side effects at all.
+
+00:06:46.247 --> 00:06:50.109
+But the report sometimes ignores sources read early on.
+
+00:06:50.409 --> 00:06:53.872
+That's a milder version, mixed with context rot.
+
+00:06:54.172 --> 00:06:58.279
+Split the reading into subagents that return cited summaries.
+
+00:06:58.929 --> 00:07:04.711
+And an engineer using a terminal assistant to edit a repository, approving every
+
+00:07:04.711 --> 00:07:06.084
+change it proposes.
+
+00:07:06.384 --> 00:07:10.291
+Read and write tools in one agent, under continuous supervision.
+
+00:07:10.591 --> 00:07:11.214
+That's fine.
+
+00:07:11.514 --> 00:07:16.751
+The smell hurts when the same loop reads the web, and fires a side effect, with
+
+00:07:16.751 --> 00:07:17.811
+nobody watching.
+
+00:07:19.011 --> 00:07:21.090
+So here's the idea to take with you.
+
+00:07:21.390 --> 00:07:27.777
+When one agent researches, writes, reviews and acts, every step inherits every risk.
+
+00:07:28.077 --> 00:07:33.303
+Separate the reading from the acting, give review fresh eyes, and turn the final
+
+00:07:33.303 --> 00:07:35.655
+side effect into code with approval.
+
+00:07:35.955 --> 00:07:38.419
+That's usually the cut that matters most.
+
+00:07:39.069 --> 00:07:44.091
+In the next lesson, we'll make the main cut step by step: extract subagent.
+
+00:07:44.391 --> 00:07:45.210
+See you there.

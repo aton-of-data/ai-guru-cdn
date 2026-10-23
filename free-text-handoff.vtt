@@ -1,0 +1,373 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.397
+Now that you can measure, we start fixing.
+
+00:00:04.697 --> 00:00:09.923
+First, a smell that almost every team building on models has, and almost nobody
+
+00:00:09.923 --> 00:00:11.510
+notices until month-end.
+
+00:00:12.160 --> 00:00:16.340
+A company extracts data from supplier contracts with two steps.
+
+00:00:16.640 --> 00:00:20.081
+The first one reads the contract and lists the main data.
+
+00:00:20.381 --> 00:00:25.192
+The second takes that text and fills in the record in the company's management
+
+00:00:25.192 --> 00:00:25.624
+system.
+
+00:00:26.274 --> 00:00:28.573
+And between the two steps, there's this.
+
+00:00:28.873 --> 00:00:33.866
+A regular expression that looks for the word Total, a colon, and a number.
+
+00:00:34.516 --> 00:00:36.126
+It worked for three months.
+
+00:00:36.426 --> 00:00:41.475
+Then one day, the model started writing total contract value, instead of just total.
+
+00:00:41.775 --> 00:00:44.075
+The regular expression found nothing.
+
+00:00:44.375 --> 00:00:45.900
+The total became empty.
+
+00:00:46.200 --> 00:00:51.176
+And one hundred forty contracts went into the system with no amount, before anyone
+
+00:00:51.176 --> 00:00:51.662
+noticed.
+
+00:00:52.312 --> 00:00:53.360
+Nothing broke.
+
+00:00:53.660 --> 00:00:55.556
+No exception, no alert.
+
+00:00:55.856 --> 00:00:57.838
+The data was just empty.
+
+00:00:58.138 --> 00:01:03.320
+In this lesson, you'll learn to recognize this smell, why it's so tempting, and the
+
+00:01:03.320 --> 00:01:06.753
+one refactoring that removes the whole class of errors.
+
+00:01:07.953 --> 00:01:09.142
+Here's the shape of it.
+
+00:01:09.442 --> 00:01:13.096
+The first step produces text meant for a person to read.
+
+00:01:13.746 --> 00:01:17.020
+And that text is the only interface between the two steps.
+
+00:01:17.670 --> 00:01:22.891
+Code, or sometimes the next model, tries to guess where each piece of data is.
+
+00:01:23.541 --> 00:01:25.951
+When the guess is right, everything works.
+
+00:01:26.601 --> 00:01:31.230
+When the model changes how it writes, the data disappears, with no alarm.
+
+00:01:31.880 --> 00:01:32.876
+How do you spot it?
+
+00:01:33.176 --> 00:01:38.600
+One step returns prose, and the next step uses a regular expression, a split, or
+
+00:01:38.600 --> 00:01:40.701
+find the line that starts with.
+
+00:01:41.351 --> 00:01:44.613
+The code tolerates several names for the same field.
+
+00:01:44.913 --> 00:01:47.334
+Total, total value, grand total.
+
+00:01:47.984 --> 00:01:53.819
+The second step is another model call, whose only job is to understand the first
+
+00:01:53.819 --> 00:01:54.767
+one's format.
+
+00:01:55.417 --> 00:01:59.364
+Changing one word in a prompt breaks a parser in another file.
+
+00:02:00.014 --> 00:02:04.198
+And missing fields silently become empty, instead of raising an error.
+
+00:02:05.398 --> 00:02:08.671
+It usually starts with a prototype in a chat window.
+
+00:02:08.971 --> 00:02:14.228
+Someone tested the prompt, liked the text answer, and pasted it into the code.
+
+00:02:14.528 --> 00:02:16.568
+In a chat, text is the product.
+
+00:02:16.868 --> 00:02:19.564
+In a pipeline, text is a live wire.
+
+00:02:20.214 --> 00:02:21.674
+Text feels flexible.
+
+00:02:21.974 --> 00:02:26.645
+You don't have to decide names, types, or what's required before starting.
+
+00:02:26.945 --> 00:02:28.692
+A schema makes you decide.
+
+00:02:29.342 --> 00:02:31.219
+And it works, for a while.
+
+00:02:31.519 --> 00:02:35.468
+Models often repeat the format, until the day they don't.
+
+00:02:35.768 --> 00:02:39.701
+The model changed, the prompt changed, or just the input did.
+
+00:02:40.001 --> 00:02:43.333
+A contract that says amount instead of total.
+
+00:02:43.983 --> 00:02:46.829
+And here's the trap for someone starting out.
+
+00:02:47.129 --> 00:02:52.703
+Asking for JSON in the prompt, reply with JSON only, and thinking that settled it.
+
+00:02:53.003 --> 00:02:54.185
+That's still text.
+
+00:02:54.485 --> 00:02:58.638
+The model can wrap it in formatting, add a comma, or leave out a key.
+
+00:02:59.838 --> 00:03:02.109
+The worst cost is silent bad data.
+
+00:03:02.409 --> 00:03:04.033
+Nothing breaks.
+
+00:03:04.333 --> 00:03:08.619
+One hundred forty contracts with no total raise no exception.
+
+00:03:08.919 --> 00:03:11.980
+Finance only sees the hole at month-end close.
+
+00:03:12.630 --> 00:03:15.248
+Then there's the coupling nobody can see.
+
+00:03:15.548 --> 00:03:20.462
+The first step's prompt becomes part of the second step's contract, and nobody knows
+
+00:03:20.462 --> 00:03:20.638
+it.
+
+00:03:20.938 --> 00:03:26.255
+The parser lives in another file, another repository, maybe another team.
+
+00:03:26.905 --> 00:03:28.106
+Then fear.
+
+00:03:28.406 --> 00:03:31.507
+Any prompt tweak or model swap becomes a risk.
+
+00:03:31.807 --> 00:03:36.608
+The team stops improving the extractor, because finance's regular expression will
+
+00:03:36.608 --> 00:03:36.964
+break.
+
+00:03:37.614 --> 00:03:38.954
+And wasted tokens.
+
+00:03:39.254 --> 00:03:43.212
+Prose meant for a parser spends output on words nobody reads.
+
+00:03:43.512 --> 00:03:47.150
+The total contract value, taxes included, is.
+
+00:03:47.450 --> 00:03:50.549
+Dozens of tokens a single field doesn't need.
+
+00:03:51.749 --> 00:03:53.144
+Here's one for you.
+
+00:03:53.444 --> 00:03:58.028
+The team asked for JSON in the prompt, with the keys total and date, and the code
+
+00:03:58.028 --> 00:03:58.594
+parses it.
+
+00:03:58.894 --> 00:04:04.773
+Once a week, the run breaks on an extra comma, or a formatting fence around the
+
+00:04:04.773 --> 00:04:05.294
+object.
+
+00:04:05.594 --> 00:04:08.542
+Which next step removes the whole class of error?
+
+00:04:11.592 --> 00:04:16.276
+Use the API's structured output, with a schema, and validate the fields in code.
+
+00:04:16.576 --> 00:04:21.883
+Format stops being a request to the model, and becomes a guarantee from the API.
+
+00:04:22.533 --> 00:04:25.809
+Retrying until it parses hides the instability.
+
+00:04:26.109 --> 00:04:31.274
+And on the day the variation is a string where a number belongs, the parse succeeds,
+
+00:04:31.274 --> 00:04:32.811
+and the bad data goes in.
+
+00:04:33.111 --> 00:04:38.143
+Adding three examples of valid JSON lowers the rate, but never to zero.
+
+00:04:38.443 --> 00:04:42.046
+You'd still depend on the model obeying a format instruction.
+
+00:04:43.246 --> 00:04:47.921
+The treatment is a refactoring called replace free text with structured output.
+
+00:04:48.221 --> 00:04:51.064
+The contract between the steps becomes explicit.
+
+00:04:51.714 --> 00:04:57.600
+The supplier's tax ID, the invoice's access key, which may be missing, the total,
+
+00:04:57.600 --> 00:05:00.653
+typed as money, and the list of due dates.
+
+00:05:01.303 --> 00:05:03.106
+The API guarantees the shape.
+
+00:05:03.406 --> 00:05:06.819
+The code reads the total field, not a sentence.
+
+00:05:07.119 --> 00:05:11.283
+A phrase like total contract value simply has nowhere to go anymore.
+
+00:05:11.583 --> 00:05:15.099
+And a missing required field becomes an error right away.
+
+00:05:15.399 --> 00:05:20.561
+The document goes to human review, instead of entering the system as zero.
+
+00:05:21.211 --> 00:05:22.867
+And often there's a bonus.
+
+00:05:23.167 --> 00:05:28.506
+If the second step only existed to turn the text into fields, it can go away.
+
+00:05:28.806 --> 00:05:31.356
+The first call already returns the fields.
+
+00:05:32.006 --> 00:05:34.573
+But a schema doesn't replace an eval.
+
+00:05:34.873 --> 00:05:39.931
+A correct shape can still carry the tax ID of a company that isn't the issuer.
+
+00:05:40.231 --> 00:05:43.122
+The eval measures whether the value is right.
+
+00:05:43.422 --> 00:05:47.726
+The schema guarantees the value arrived as a value.
+
+00:05:48.926 --> 00:05:50.268
+When can you ignore it?
+
+00:05:50.568 --> 00:05:52.839
+When the destination is a person.
+
+00:05:53.139 --> 00:05:56.949
+A chat reply or an email to a customer should be text.
+
+00:05:57.249 --> 00:05:59.650
+The smell is text between machines.
+
+00:06:00.300 --> 00:06:01.888
+When the text is the product.
+
+00:06:02.188 --> 00:06:05.460
+One step writes an article draft, and another reviews it.
+
+00:06:05.760 --> 00:06:09.462
+Passing text between them is perfectly legitimate.
+
+00:06:09.762 --> 00:06:15.023
+Structure what code actually uses, like the list of problems found, or whether it
+
+00:06:15.023 --> 00:06:15.867
+was approved.
+
+00:06:16.167 --> 00:06:17.641
+Not the article itself.
+
+00:06:18.291 --> 00:06:20.483
+And a throwaway prototype is fine.
+
+00:06:20.783 --> 00:06:25.754
+The day the parser goes into the real system, the schema goes in with it.
+
+00:06:26.404 --> 00:06:28.648
+One last case, to sharpen the eye.
+
+00:06:28.948 --> 00:06:34.099
+A ticket classifier answers with a single word, billing, order or other, and code
+
+00:06:34.099 --> 00:06:35.244
+compares the text.
+
+00:06:35.544 --> 00:06:40.362
+Sometimes it returns billing with a capital letter and a period, and the ticket
+
+00:06:40.362 --> 00:06:41.886
+lands in the wrong queue.
+
+00:06:42.186 --> 00:06:43.299
+Is that this smell?
+
+00:06:43.599 --> 00:06:44.249
+Yes.
+
+00:06:44.549 --> 00:06:49.299
+Even one word is free text, if your code depends on its exact form.
+
+00:06:49.599 --> 00:06:54.624
+A schema with a closed list of values fixes it, with just one field.
+
+00:06:55.824 --> 00:06:57.809
+So here's the idea to take with you.
+
+00:06:58.109 --> 00:06:59.404
+Text is for people.
+
+00:06:59.704 --> 00:07:04.819
+When one step hands data to code, or to another step, the contract has to be a
+
+00:07:04.819 --> 00:07:06.327
+schema, not a sentence.
+
+00:07:06.627 --> 00:07:11.666
+Otherwise your system works until the day the model finds a nicer way to say total.
+
+00:07:12.316 --> 00:07:17.296
+In the next lesson, we'll do the refactoring itself, step by step, with an eval
+
+00:07:17.296 --> 00:07:21.015
+before and after: replace free text with structured output.
+
+00:07:21.315 --> 00:07:22.145
+See you there.

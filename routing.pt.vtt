@@ -1,0 +1,520 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.395
+A Carla cuida do bot de atendimento de uma loja online.
+
+00:00:04.695 --> 00:00:08.480
+No começo, o bot só falava de prazo de entrega.
+
+00:00:08.780 --> 00:00:09.457
+Simples.
+
+00:00:10.107 --> 00:00:12.870
+Depois pediram para ele mandar segunda via de fatura.
+
+00:00:13.170 --> 00:00:15.254
+Depois, trocas e devoluções.
+
+00:00:15.554 --> 00:00:19.576
+E cada assunto novo ganhou um pedaço no prompt principal,
+
+00:00:19.576 --> 00:00:23.315
+as instruções que o modelo lê antes de toda conversa.
+
+00:00:23.615 --> 00:00:27.262
+Coisas como: se o cliente perguntar de cobrança, faça assim.
+
+00:00:27.912 --> 00:00:31.316
+Seis meses depois, esse prompt tem quatro mil tokens.
+
+00:00:31.616 --> 00:00:33.504
+E coisas estranhas começam a acontecer.
+
+00:00:34.154 --> 00:00:37.521
+Quem pergunta de fatura recebe resposta
+
+00:00:37.521 --> 00:00:40.371
+no tom animado do time de vendas.
+
+00:00:40.671 --> 00:00:43.848
+Quem quer devolver um produto recebe instrução de rastreio.
+
+00:00:44.148 --> 00:00:47.577
+A Carla corrige um assunto e, sem perceber, estraga outro.
+
+00:00:47.877 --> 00:00:50.259
+E ninguém sabe dizer qual parágrafo
+
+00:00:50.259 --> 00:00:52.369
+do prompt causou qual resposta.
+
+00:00:53.019 --> 00:00:53.651
+Nesta aula,
+
+00:00:53.651 --> 00:00:55.431
+você vai ver como resolver isso
+
+00:00:55.431 --> 00:00:57.327
+com um padrão chamado roteamento.
+
+00:00:57.627 --> 00:01:00.602
+E, tão importante quanto, quando ele não vale a pena.
+
+00:01:01.802 --> 00:01:04.182
+O problema da Carla não é o modelo.
+
+00:01:04.482 --> 00:01:07.007
+É um único prompt tentando ser cinco
+
+00:01:07.007 --> 00:01:09.040
+especialistas ao mesmo tempo.
+
+00:01:09.340 --> 00:01:12.714
+Toda mensagem chega carregando as regras dos cinco,
+
+00:01:12.714 --> 00:01:15.824
+e o modelo tem que adivinhar quais valem agora.
+
+00:01:16.474 --> 00:01:20.310
+A saída é separar duas coisas que se misturaram:
+
+00:01:20.310 --> 00:01:23.906
+entender do que se trata e, de fato, atender.
+
+00:01:24.556 --> 00:01:27.419
+Pense na portaria de um prédio comercial.
+
+00:01:27.719 --> 00:01:30.029
+Quem está ali não resolve o seu problema.
+
+00:01:30.329 --> 00:01:31.330
+Olha para você,
+
+00:01:31.330 --> 00:01:34.668
+entende o que você precisa e aponta a porta certa.
+
+00:01:34.968 --> 00:01:38.769
+Atrás da porta, quem te atende entende de um assunto só,
+
+00:01:38.769 --> 00:01:39.719
+e entende bem.
+
+00:01:40.369 --> 00:01:41.446
+Isso é roteamento.
+
+00:01:41.746 --> 00:01:44.666
+Uma etapa curta que só classifica a mensagem.
+
+00:01:44.966 --> 00:01:48.899
+Depois o seu código, um if comum, escolhe o caminho.
+
+00:01:49.199 --> 00:01:53.102
+E cada caminho tem o seu prompt, as suas ferramentas e,
+
+00:01:53.102 --> 00:01:55.727
+quando faz sentido, até o seu modelo.
+
+00:01:56.927 --> 00:01:59.487
+Vamos seguir uma mensagem do começo ao fim.
+
+00:01:59.787 --> 00:02:01.517
+Ela chega como está, crua,
+
+00:02:01.517 --> 00:02:04.578
+sem nenhuma instrução de atendimento aplicada.
+
+00:02:05.228 --> 00:02:08.410
+Primeiro passo: um modelo pequeno, rápido e barato,
+
+00:02:08.410 --> 00:02:10.906
+lê a mensagem e responde só duas coisas.
+
+00:02:11.206 --> 00:02:13.530
+Qual é o assunto e quanta certeza ele tem.
+
+00:02:13.830 --> 00:02:17.356
+E responde num formato estruturado, com campos fixos,
+
+00:02:17.356 --> 00:02:21.016
+não num texto livre que alguém vai ter que interpretar.
+
+00:02:21.666 --> 00:02:24.506
+Segundo passo, e este é o coração do padrão:
+
+00:02:24.506 --> 00:02:27.733
+quem escolhe a porta é o seu código, não o modelo.
+
+00:02:28.033 --> 00:02:30.987
+Nenhuma regra de roteamento mora dentro de um prompt.
+
+00:02:31.287 --> 00:02:34.676
+É um if que você consegue ler, testar e versionar.
+
+00:02:35.326 --> 00:02:38.327
+Terceiro passo: cada porta tem o seu especialista.
+
+00:02:38.627 --> 00:02:40.683
+Cobrança vai para o prompt de financeiro,
+
+00:02:40.683 --> 00:02:42.138
+com as ferramentas de fatura.
+
+00:02:42.438 --> 00:02:44.335
+Pedidos vão para o prompt de pedidos.
+
+00:02:44.635 --> 00:02:48.120
+E o que não se encaixa, ou voltou com pouca certeza,
+
+00:02:48.120 --> 00:02:49.461
+vai para uma pessoa.
+
+00:02:50.111 --> 00:02:54.410
+E o registro da conversa, o trace, guarda qual rota foi usada.
+
+00:02:54.710 --> 00:02:56.394
+Isso vai importar daqui a pouco.
+
+00:02:57.594 --> 00:03:00.569
+Agora uma mensagem real, do chat da loja.
+
+00:03:00.869 --> 00:03:04.758
+O cliente escreve: minha fatura de setembro veio errada,
+
+00:03:04.758 --> 00:03:07.604
+e vocês ainda não enviaram o pedido 8831.
+
+00:03:08.254 --> 00:03:10.687
+O classificador responde: é cobrança.
+
+00:03:10.987 --> 00:03:13.602
+Mas com só 62% de certeza.
+
+00:03:14.252 --> 00:03:16.549
+Faz sentido ele hesitar.
+
+00:03:16.849 --> 00:03:19.249
+São dois assuntos numa frase só.
+
+00:03:19.549 --> 00:03:23.085
+E é exatamente para isso que existe um limite de confiança.
+
+00:03:23.385 --> 00:03:25.125
+A Carla escolheu 70%.
+
+00:03:25.425 --> 00:03:27.169
+Abaixo disso, o código não arrisca.
+
+00:03:27.469 --> 00:03:30.038
+Passa a conversa para uma pessoa.
+
+00:03:30.688 --> 00:03:31.704
+Sem esse limite,
+
+00:03:31.704 --> 00:03:33.990
+a rota de cobrança responderia sobre
+
+00:03:33.990 --> 00:03:36.339
+a fatura e ignoraria o pedido parado.
+
+00:03:36.639 --> 00:03:40.115
+O cliente sairia com metade do problema resolvido.
+
+00:03:40.765 --> 00:03:45.778
+Uma mensagem limpa, como preciso da segunda via de setembro,
+
+00:03:45.778 --> 00:03:49.036
+volta como cobrança e com certeza alta.
+
+00:03:49.336 --> 00:03:51.556
+Aí o prompt de financeiro assume,
+
+00:03:51.556 --> 00:03:54.986
+com as ferramentas de fatura e sem as de devolução.
+
+00:03:55.286 --> 00:03:57.223
+Ele não tem como oferecer um plano,
+
+00:03:57.223 --> 00:04:00.046
+porque nem sabe que a ferramenta de ofertas existe.
+
+00:04:01.246 --> 00:04:02.719
+Uma pergunta para você.
+
+00:04:03.019 --> 00:04:06.151
+O classificador lê a mensagem preciso
+
+00:04:06.151 --> 00:04:08.775
+da segunda via da fatura e diz:
+
+00:04:08.775 --> 00:04:11.230
+é pedido, com 91% de certeza.
+
+00:04:11.530 --> 00:04:15.076
+O código confia e manda para a rota de pedidos.
+
+00:04:15.376 --> 00:04:16.520
+Onde está o defeito?
+
+00:04:19.570 --> 00:04:21.176
+O defeito está no classificador.
+
+00:04:21.476 --> 00:04:24.307
+A certeza era alta e a rota estava errada.
+
+00:04:24.607 --> 00:04:28.742
+Subir o limite não ajuda, porque o problema não é dúvida,
+
+00:04:28.742 --> 00:04:30.193
+é um erro confiante.
+
+00:04:30.493 --> 00:04:33.624
+E ensinar a rota de pedidos a falar de fatura
+
+00:04:33.624 --> 00:04:35.990
+só reconstruiria o prompt gigante.
+
+00:04:36.640 --> 00:04:39.243
+A correção é ajustar os exemplos do classificador
+
+00:04:39.243 --> 00:04:41.900
+e colocar essa mensagem no seu conjunto de testes.
+
+00:04:42.200 --> 00:04:42.863
+E repare:
+
+00:04:42.863 --> 00:04:45.147
+você só pega isso rápido porque
+
+00:04:45.147 --> 00:04:47.578
+a rota ficou registrada no trace.
+
+00:04:48.778 --> 00:04:51.856
+Roteamento tem custo, então não serve para todo mundo.
+
+00:04:52.156 --> 00:04:55.504
+Se o seu assistente só trata de um assunto,
+
+00:04:55.504 --> 00:04:57.840
+um prompt bem escrito resolve.
+
+00:04:58.140 --> 00:04:59.713
+Não há porta para escolher.
+
+00:05:00.363 --> 00:05:03.968
+Se as categorias mudam toda semana e você ainda não
+
+00:05:03.968 --> 00:05:07.362
+tem mensagens reais para testar o classificador,
+
+00:05:07.362 --> 00:05:07.857
+espere.
+
+00:05:08.157 --> 00:05:10.584
+Comece com um prompt e saída estruturada,
+
+00:05:10.584 --> 00:05:12.597
+e deixe as categorias se firmarem.
+
+00:05:13.247 --> 00:05:16.863
+E se o desafio é o modelo escolher entre dezenas
+
+00:05:16.863 --> 00:05:20.102
+de ferramentas no meio de uma tarefa longa,
+
+00:05:20.102 --> 00:05:21.533
+o problema é outro.
+
+00:05:21.833 --> 00:05:24.659
+Ali encaixa melhor o roteador de ferramentas,
+
+00:05:24.659 --> 00:05:25.978
+que tem aula própria.
+
+00:05:26.628 --> 00:05:30.563
+Agora, o erro mais comum com este padrão.
+
+00:05:30.863 --> 00:05:34.642
+O time se empolga e cria rotas demais: cobrança, faturas,
+
+00:05:34.642 --> 00:05:36.101
+reembolso, pagamentos.
+
+00:05:36.401 --> 00:05:38.965
+Só que as mensagens reais não respeitam essas fronteiras,
+
+00:05:38.965 --> 00:05:41.349
+e o classificador começa a confundir uma com a outra.
+
+00:05:41.999 --> 00:05:44.802
+A regra prática: comece com poucas rotas,
+
+00:05:44.802 --> 00:05:47.605
+coladas nos times que existem de verdade.
+
+00:05:47.905 --> 00:05:50.703
+Financeiro, pedidos e o resto.
+
+00:05:51.003 --> 00:05:53.312
+Só divida uma rota quando os testes mostrarem
+
+00:05:53.312 --> 00:05:54.646
+dois problemas diferentes,
+
+00:05:54.646 --> 00:05:56.801
+que pedem instruções realmente diferentes.
+
+00:05:58.001 --> 00:06:01.187
+O roteamento custa uma chamada a mais por mensagem,
+
+00:06:01.187 --> 00:06:02.311
+no modelo pequeno.
+
+00:06:02.611 --> 00:06:05.703
+Em troca, cada prompt especializado fica curto,
+
+00:06:05.703 --> 00:06:08.269
+e o custo de entrada das respostas cai.
+
+00:06:08.919 --> 00:06:10.076
+O que medir?
+
+00:06:10.376 --> 00:06:12.234
+O classificador, separado do resto.
+
+00:06:12.534 --> 00:06:17.282
+É a parte mais fácil de testar e a que mais estraga quando erra.
+
+00:06:17.582 --> 00:06:21.988
+Meça o acerto por categoria, e não pare na média.
+
+00:06:22.288 --> 00:06:27.866
+Uma categoria rara pode errar sempre sem mexer no número geral.
+
+00:06:28.516 --> 00:06:33.421
+Um exemplo: o classificador acerta 91 de 100 mensagens.
+
+00:06:33.721 --> 00:06:34.573
+Parece ótimo.
+
+00:06:34.873 --> 00:06:36.223
+Mas, olhando os erros,
+
+00:06:36.223 --> 00:06:39.047
+seis dúvidas de fatura foram parar em pedidos.
+
+00:06:39.347 --> 00:06:44.694
+Os 91% escondiam que cobrança e pedidos ainda se confundem.
+
+00:06:45.344 --> 00:06:47.497
+Em produção, observe dois sinais.
+
+00:06:47.797 --> 00:06:51.517
+Se a distribuição das rotas muda muito de um dia para o outro,
+
+00:06:51.517 --> 00:06:54.997
+provavelmente apareceu um assunto novo que ninguém mapeou.
+
+00:06:55.297 --> 00:06:57.813
+E se a taxa de passagem para humanos sobe,
+
+00:06:57.813 --> 00:06:59.370
+ou o classificador piorou,
+
+00:06:59.370 --> 00:07:02.006
+ou o seu negócio tem um problema de verdade.
+
+00:07:02.656 --> 00:07:05.839
+E um ponto de segurança que muita gente erra:
+
+00:07:05.839 --> 00:07:07.961
+rota não é controle de acesso.
+
+00:07:08.261 --> 00:07:09.964
+O classificador é um modelo,
+
+00:07:09.964 --> 00:07:13.127
+e uma mensagem bem montada consegue empurrar a rota.
+
+00:07:13.427 --> 00:07:16.420
+Se a rota de cobrança tem a ferramenta de estorno,
+
+00:07:16.420 --> 00:07:19.953
+é o seu backend que decide se aquele usuário pode estornar,
+
+00:07:19.953 --> 00:07:21.329
+com base em quem ele é.
+
+00:07:21.629 --> 00:07:22.982
+Nunca o roteador.
+
+00:07:24.182 --> 00:07:27.562
+Na página, você encontra o mesmo fluxo em quatro versões.
+
+00:07:27.862 --> 00:07:29.409
+Todas fazem três coisas.
+
+00:07:29.709 --> 00:07:33.940
+Primeiro, pedem ao modelo pequeno uma resposta com dois campos:
+
+00:07:33.940 --> 00:07:35.417
+o assunto e a certeza.
+
+00:07:36.067 --> 00:07:38.180
+Depois, um if decide.
+
+00:07:38.480 --> 00:07:43.474
+Pouca certeza, ou assunto fora da lista, vai para uma pessoa.
+
+00:07:44.124 --> 00:07:46.615
+E, por fim, chamam o modelo maior,
+
+00:07:46.615 --> 00:07:49.619
+com o prompt daquele assunto e mais nada.
+
+00:07:50.269 --> 00:07:54.221
+O que muda entre as versões é quem cuida do resto.
+
+00:07:54.521 --> 00:07:58.061
+Com o SDK do provedor, em Python ou TypeScript,
+
+00:07:58.061 --> 00:08:02.052
+você vê cada linha, mas retry e trace ficam com você.
+
+00:08:02.352 --> 00:08:06.302
+O LangChain deixa trocar de provedor sem reescrever a decisão.
+
+00:08:06.602 --> 00:08:10.421
+E o LangGraph transforma cada rota num caminho do grafo,
+
+00:08:10.421 --> 00:08:13.422
+que aparece no trace e pode retomar no meio.
+
+00:08:14.622 --> 00:08:16.731
+Então, a ideia para levar:
+
+00:08:16.731 --> 00:08:20.625
+quando um prompt tenta ser vários especialistas,
+
+00:08:20.625 --> 00:08:23.221
+separe a decisão do atendimento.
+
+00:08:23.521 --> 00:08:25.797
+Um modelo pequeno diz do que se trata,
+
+00:08:25.797 --> 00:08:27.534
+o seu código escolhe a porta,
+
+00:08:27.534 --> 00:08:29.750
+e cada porta recebe só o que precisa.
+
+00:08:30.400 --> 00:08:34.248
+Na próxima aula, um smell que nasce do instinto contrário:
+
+00:08:34.248 --> 00:08:37.763
+dar ao modelo uma liberdade que a tarefa nunca pediu.
+
+00:08:38.063 --> 00:08:40.059
+Agent where a chain would do.
+
+00:08:40.359 --> 00:08:41.188
+Até lá.

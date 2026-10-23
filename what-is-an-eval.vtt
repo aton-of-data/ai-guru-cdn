@@ -1,0 +1,436 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:05.324
+The back office team has an invoice extractor that works well.
+
+00:00:05.624 --> 00:00:09.954
+One day, someone notices the prompt says: extract the total amount.
+
+00:00:10.254 --> 00:00:15.455
+And they change it to: extract the total amount, with two decimal places.
+
+00:00:16.105 --> 00:00:17.777
+It looks harmless.
+
+00:00:18.077 --> 00:00:20.072
+The deploy goes out on a Friday.
+
+00:00:20.722 --> 00:00:22.726
+On Monday, finance complains.
+
+00:00:23.026 --> 00:00:27.066
+Invoices with a discount are coming in at the gross amount.
+
+00:00:27.366 --> 00:00:31.434
+A one sentence change altered how the model read the field.
+
+00:00:31.734 --> 00:00:36.483
+And nobody could have known beforehand, because the only test was opening three
+
+00:00:36.483 --> 00:00:38.046
+files and looking at them.
+
+00:00:38.696 --> 00:00:41.301
+With regular code, you'd have a unit test.
+
+00:00:41.601 --> 00:00:47.335
+With a model, the same input can produce different answers, and correct isn't always
+
+00:00:47.335 --> 00:00:48.359
+an exact match.
+
+00:00:48.659 --> 00:00:51.530
+The test built for that world is called an eval.
+
+00:00:51.830 --> 00:00:56.887
+In this first lesson of the evals and reliability trail, you'll learn what one is
+
+00:00:56.887 --> 00:01:01.818
+made of, how to grade it, and how to read its numbers without fooling yourself.
+
+00:01:03.018 --> 00:01:05.528
+An eval is a test for model output.
+
+00:01:05.828 --> 00:01:07.223
+It has three parts.
+
+00:01:07.873 --> 00:01:08.927
+A set of cases.
+
+00:01:09.227 --> 00:01:12.067
+Inputs, each with the expected result.
+
+00:01:12.717 --> 00:01:15.161
+A way to run the system on all of them.
+
+00:01:15.811 --> 00:01:19.778
+And a grading rule, that turns each output into a score.
+
+00:01:20.978 --> 00:01:26.174
+The cases come from real data, anonymized, with the expected answer labeled.
+
+00:01:26.824 --> 00:01:31.281
+The whole system runs, with the same prompt, model and tools as production.
+
+00:01:31.931 --> 00:01:36.019
+Each case produces an output, stored together with the prompt version.
+
+00:01:36.669 --> 00:01:40.000
+Grading compares the output with the expected result.
+
+00:01:40.650 --> 00:01:42.274
+Each case gets a score.
+
+00:01:42.574 --> 00:01:45.990
+Pass or fail, or a value from zero to one.
+
+00:01:46.640 --> 00:01:51.326
+And the report shows the overall rate, the rate per category, and the difference
+
+00:01:51.326 --> 00:01:52.849
+from the previous version.
+
+00:01:53.499 --> 00:01:57.396
+Friday's three files failed at step one, and at step six.
+
+00:01:57.696 --> 00:02:00.263
+Three examples by eye aren't a set.
+
+00:02:00.563 --> 00:02:02.628
+And looking isn't a grading rule.
+
+00:02:02.928 --> 00:02:08.271
+On Monday, the team discovered a kind of invoice, one with a discount, that wasn't
+
+00:02:08.271 --> 00:02:09.314
+among the three.
+
+00:02:10.514 --> 00:02:12.347
+There are three ways to grade.
+
+00:02:12.647 --> 00:02:14.038
+Exact match.
+
+00:02:14.338 --> 00:02:19.167
+Code compares field by field, or checks that the output fits a schema.
+
+00:02:19.467 --> 00:02:24.813
+Use it when there's a right answer, like a classification, an extraction, or a
+
+00:02:24.813 --> 00:02:25.841
+database query.
+
+00:02:26.141 --> 00:02:31.249
+On the invoice extractor, the total is an exact match against the labeled number.
+
+00:02:31.899 --> 00:02:33.196
+A rule in code.
+
+00:02:33.496 --> 00:02:36.805
+Small functions in your code check properties of the output.
+
+00:02:37.105 --> 00:02:43.068
+Has a citation, stays under a hundred words, never names a competitor.
+
+00:02:43.368 --> 00:02:47.676
+Use it when the text varies, but there are objective criteria.
+
+00:02:48.326 --> 00:02:50.250
+And a model as judge.
+
+00:02:50.550 --> 00:02:54.109
+Another model scores the output, with a written rubric.
+
+00:02:54.409 --> 00:02:56.635
+Use it for open-ended quality.
+
+00:02:56.935 --> 00:02:58.785
+Tone, helpfulness.
+
+00:02:59.435 --> 00:03:02.747
+The rule is to start with the simplest one that does the job.
+
+00:03:03.047 --> 00:03:06.054
+Exact match is cheap, fast, and never wrong.
+
+00:03:06.354 --> 00:03:09.598
+A judge costs money, and it needs evaluating too.
+
+00:03:09.898 --> 00:03:14.124
+It inherits the model's variation, and it can agree with the mistake.
+
+00:03:14.774 --> 00:03:16.554
+Here's a case where that matters.
+
+00:03:16.854 --> 00:03:20.904
+A tone eval for emails used only a model as judge.
+
+00:03:21.204 --> 00:03:26.568
+And the judge approved emails that promised a discount the store doesn't offer.
+
+00:03:26.868 --> 00:03:28.418
+A bigger judge wouldn't fix it.
+
+00:03:28.718 --> 00:03:31.283
+It can still find the promise helpful.
+
+00:03:31.583 --> 00:03:33.291
+Add rules in code first.
+
+00:03:33.591 --> 00:03:37.479
+Don't invent a price, don't name a competitor.
+
+00:03:37.779 --> 00:03:40.478
+Then use the judge on what remains.
+
+00:03:41.678 --> 00:03:43.101
+Here's one for you.
+
+00:03:43.401 --> 00:03:46.480
+The extractor gets forty-eight of fifty cases right.
+
+00:03:46.780 --> 00:03:51.452
+Both misses are discounted invoices, the only two of that kind in the set.
+
+00:03:51.752 --> 00:03:54.436
+The team celebrates ninety-six percent.
+
+00:03:54.736 --> 00:03:56.288
+What is that number hiding?
+
+00:03:59.338 --> 00:04:01.556
+It's hiding the rate per category.
+
+00:04:01.856 --> 00:04:06.255
+On the kind of invoice finance fears most, the rate is zero for two.
+
+00:04:06.555 --> 00:04:12.016
+The overall number diluted exactly the case that breaks the accounting system.
+
+00:04:12.666 --> 00:04:14.898
+And calling it noise doesn't help.
+
+00:04:15.198 --> 00:04:20.568
+It might be noise overall, and it's still a hundred percent failure on discounts.
+
+00:04:20.868 --> 00:04:24.057
+You need more of those cases, not a pat on the back.
+
+00:04:24.357 --> 00:04:28.910
+Fill that slice, fix it, and only then look at the overall number.
+
+00:04:30.110 --> 00:04:31.882
+There are three sizes of eval.
+
+00:04:32.182 --> 00:04:33.253
+A unit case.
+
+00:04:33.553 --> 00:04:36.513
+A bug seen in production becomes a case.
+
+00:04:36.813 --> 00:04:39.474
+It's the equivalent of a regression test.
+
+00:04:40.124 --> 00:04:41.710
+An eval dataset.
+
+00:04:42.010 --> 00:04:46.502
+From fifty to a few hundred cases covering your product's categories.
+
+00:04:46.802 --> 00:04:48.552
+It runs on every change.
+
+00:04:49.202 --> 00:04:51.060
+And a public benchmark.
+
+00:04:51.360 --> 00:04:54.727
+Well known sets that measure models in general.
+
+00:04:55.027 --> 00:04:57.243
+They help you pick a candidate model.
+
+00:04:57.543 --> 00:04:59.869
+They don't tell you whether your system works.
+
+00:05:00.169 --> 00:05:05.961
+If product wants to swap models because a public benchmark rose two points, and your
+
+00:05:05.961 --> 00:05:09.271
+internal eval dropped one point, your eval wins.
+
+00:05:09.571 --> 00:05:10.951
+You don't ship a benchmark.
+
+00:05:11.251 --> 00:05:12.807
+You ship your classifier.
+
+00:05:13.457 --> 00:05:15.171
+And here's the beginner trap.
+
+00:05:15.471 --> 00:05:17.707
+Treating the dataset as a dead list.
+
+00:05:18.007 --> 00:05:20.393
+The best cases are born in production.
+
+00:05:20.693 --> 00:05:22.683
+The invoice finance sent back.
+
+00:05:22.983 --> 00:05:25.880
+The ticket the classifier routed to the wrong team.
+
+00:05:26.180 --> 00:05:29.071
+Each incident becomes one more line in the file.
+
+00:05:29.371 --> 00:05:32.786
+Six months later, that file is worth more than the prompt.
+
+00:05:33.086 --> 00:05:35.655
+You can rewrite a prompt in an afternoon.
+
+00:05:35.955 --> 00:05:38.421
+A good dataset takes months to gather.
+
+00:05:39.621 --> 00:05:43.128
+Because output varies, a single run can mislead.
+
+00:05:43.428 --> 00:05:48.929
+For important cases, run three to five times, and look at the pass rate, not one
+
+00:05:48.929 --> 00:05:49.961
+round's result.
+
+00:05:50.611 --> 00:05:55.953
+A drop from ninety-two to ninety percent on fifty cases is a single case.
+
+00:05:56.253 --> 00:05:57.399
+It may be noise.
+
+00:05:58.049 --> 00:06:01.834
+And fifty typical cases won't cover a rare category.
+
+00:06:02.134 --> 00:06:07.636
+If discounted invoices are five percent of volume, and you sampled twenty files from
+
+00:06:07.636 --> 00:06:10.910
+the top of the folder, that kind may never get in.
+
+00:06:11.210 --> 00:06:12.090
+Stratify.
+
+00:06:12.390 --> 00:06:17.869
+Include some of every category the business fears, instead of only what shows up
+
+00:06:17.869 --> 00:06:18.280
+first.
+
+00:06:19.480 --> 00:06:22.810
+On the page there's an eval that runs in a few seconds.
+
+00:06:23.110 --> 00:06:27.535
+Five customer messages, each labeled billing, order or other.
+
+00:06:28.185 --> 00:06:33.575
+The model classifies each one, and code counts how many match the label exactly.
+
+00:06:34.225 --> 00:06:39.669
+Now change the prompt to: answer with the category and a short justification.
+
+00:06:39.969 --> 00:06:44.594
+Run it again, and all five fail, even though the category at the front of the
+
+00:06:44.594 --> 00:06:45.676
+sentence is right.
+
+00:06:46.326 --> 00:06:48.097
+That's not the model getting worse.
+
+00:06:48.397 --> 00:06:50.979
+Your grading is coupled to the old format.
+
+00:06:51.279 --> 00:06:54.388
+The eval and the prompt are the same contract.
+
+00:06:54.688 --> 00:07:00.281
+If the output gains a reason, grading reads the category field, not the sentence.
+
+00:07:00.581 --> 00:07:01.590
+That's the point.
+
+00:07:01.890 --> 00:07:07.701
+An eval turns I think it got better into a number, and shows you right away what a
+
+00:07:07.701 --> 00:07:08.623
+change broke.
+
+00:07:09.823 --> 00:07:11.066
+So what changes?
+
+00:07:11.366 --> 00:07:15.920
+No prompt, model or tool change ships without running the eval first.
+
+00:07:16.570 --> 00:07:20.835
+Trying five questions by hand before a deploy isn't an eval.
+
+00:07:21.135 --> 00:07:23.746
+That's a smell called vibe check eval.
+
+00:07:24.396 --> 00:07:29.724
+And the eval has to run on its own, in your pipeline, or with a single command.
+
+00:07:30.024 --> 00:07:32.845
+That pattern is called an eval harness.
+
+00:07:33.495 --> 00:07:35.778
+One last case.
+
+00:07:36.078 --> 00:07:39.632
+Your pipeline runs eighty cases on every pull request.
+
+00:07:39.932 --> 00:07:44.228
+Someone also tried four more questions in a chat on Friday, and shipped.
+
+00:07:44.528 --> 00:07:45.899
+The pipeline passed.
+
+00:07:46.199 --> 00:07:48.582
+And finance still came back with a complaint.
+
+00:07:48.882 --> 00:07:49.954
+Where did it leak?
+
+00:07:50.254 --> 00:07:51.683
+In those four questions.
+
+00:07:51.983 --> 00:07:56.520
+If they were different from the eighty, they should have become cases before the
+
+00:07:56.520 --> 00:07:56.860
+merge.
+
+00:07:57.160 --> 00:08:01.070
+If they weren't, the chat added nothing but false confidence.
+
+00:08:02.270 --> 00:08:04.255
+So here's the idea to take with you.
+
+00:08:04.555 --> 00:08:06.744
+An eval is how you stop guessing.
+
+00:08:07.044 --> 00:08:12.420
+Real cases with the right answer, the real system running on them, and a grade that
+
+00:08:12.420 --> 00:08:14.493
+doesn't depend on anyone's mood.
+
+00:08:14.793 --> 00:08:20.448
+Read it per category, run it on every change, and feed it with every incident.
+
+00:08:21.098 --> 00:08:26.266
+In the next lesson, we'll look at what happens when a team doesn't have one: the
+
+00:08:26.266 --> 00:08:27.299
+untested prompt.
+
+00:08:27.599 --> 00:08:28.429
+See you there.

@@ -1,0 +1,481 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.009
+O Eduardo cuida da busca sobre o manual interno
+
+00:00:04.009 --> 00:00:05.804
+de uma operadora de plano de saúde.
+
+00:00:06.104 --> 00:00:09.699
+Alguém cortou os documentos a cada quinhentos tokens,
+
+00:00:09.699 --> 00:00:11.192
+ignorando a estrutura.
+
+00:00:11.492 --> 00:00:13.652
+E um dos pedaços diz só isto.
+
+00:00:14.302 --> 00:00:17.413
+O prazo é de 21 dias úteis a partir do pedido,
+
+00:00:17.413 --> 00:00:20.726
+e pode ser prorrogado uma vez, com justificativa.
+
+00:00:21.026 --> 00:00:24.023
+Nos casos do item 3.2.
+
+00:00:24.673 --> 00:00:26.702
+Prazo de quê?
+
+00:00:27.002 --> 00:00:27.604
+Para quem?
+
+00:00:27.904 --> 00:00:29.628
+De qual versão do manual?
+
+00:00:29.928 --> 00:00:32.227
+A busca acha esse trecho para o prazo
+
+00:00:32.227 --> 00:00:33.904
+de autorização de cirurgia.
+
+00:00:34.204 --> 00:00:36.854
+Mas também para o prazo de reembolso,
+
+00:00:36.854 --> 00:00:40.221
+porque o trecho nunca diz de que assunto trata.
+
+00:00:40.521 --> 00:00:45.347
+E o modelo responde com confiança, e às vezes erra o assunto.
+
+00:00:45.997 --> 00:00:46.596
+Nesta aula,
+
+00:00:46.596 --> 00:00:48.610
+você vai aprender a cortar documentos
+
+00:00:48.610 --> 00:00:51.223
+de um jeito que cada pedaço possa ser entendido,
+
+00:00:51.223 --> 00:00:52.421
+e encontrado, sozinho.
+
+00:00:53.621 --> 00:00:54.881
+Pense numa ficha de arquivo.
+
+00:00:55.181 --> 00:00:57.563
+Uma boa ficha não diz só o que tem dentro.
+
+00:00:57.863 --> 00:01:01.817
+Diz de qual pasta, de qual gaveta e de que ano ela veio.
+
+00:01:02.117 --> 00:01:05.213
+O padrão faz duas mudanças, as duas na hora de indexar.
+
+00:01:05.863 --> 00:01:07.651
+Primeiro, cortar pela estrutura.
+
+00:01:07.951 --> 00:01:09.735
+Títulos, seções, cláusulas,
+
+00:01:09.735 --> 00:01:12.577
+itens de lista e tabelas são as fronteiras.
+
+00:01:12.877 --> 00:01:15.175
+Um pedaço nunca começa no meio da frase,
+
+00:01:15.175 --> 00:01:17.646
+e nunca separa uma tabela do seu cabeçalho.
+
+00:01:17.946 --> 00:01:21.539
+Ainda existe um tamanho máximo, mas ele é o limite, não a regra.
+
+00:01:22.189 --> 00:01:24.628
+Segundo, anexar o contexto.
+
+00:01:24.928 --> 00:01:28.408
+Cada pedaço ganha um cabeçalho com o caminho, documento,
+
+00:01:28.408 --> 00:01:31.827
+capítulo e seção, a versão e, opcionalmente, uma frase,
+
+00:01:31.827 --> 00:01:34.437
+escrita por um modelo, que situa o trecho.
+
+00:01:35.087 --> 00:01:38.725
+Esse cabeçalho entra no texto indexado, para a busca.
+
+00:01:39.025 --> 00:01:43.454
+E no texto que vai para o modelo, para a resposta e a citação.
+
+00:01:44.654 --> 00:01:49.182
+O documento chega, em PDF, página web ou texto puro.
+
+00:01:49.832 --> 00:01:52.198
+Um parser encontra os títulos, as seções,
+
+00:01:52.198 --> 00:01:53.525
+as listas e as tabelas.
+
+00:01:54.175 --> 00:01:57.901
+O corte segue essa estrutura, dentro do tamanho máximo.
+
+00:01:58.551 --> 00:02:01.405
+Um modelo pequeno lê o documento e o trecho,
+
+00:02:01.405 --> 00:02:04.517
+e escreve uma frase dizendo onde ele se encaixa.
+
+00:02:05.167 --> 00:02:09.529
+Cada pedaço vira um cabeçalho, com caminho, versão e essa frase,
+
+00:02:09.529 --> 00:02:11.029
+mais o texto original.
+
+00:02:11.679 --> 00:02:13.609
+E o pedaço completo é indexado,
+
+00:02:13.609 --> 00:02:16.100
+para busca por palavra e busca vetorial.
+
+00:02:17.300 --> 00:02:19.832
+Agora o mesmo trecho, depois do padrão.
+
+00:02:20.132 --> 00:02:23.016
+Três coisas mudaram, e cada uma ensina algo.
+
+00:02:23.666 --> 00:02:24.272
+O caminho.
+
+00:02:24.572 --> 00:02:27.310
+Autorizações, depois cirurgia eletiva,
+
+00:02:27.310 --> 00:02:30.768
+agora entra no embedding e na busca por palavra.
+
+00:02:31.068 --> 00:02:34.602
+Uma pergunta de reembolso não parece mais tão parecida.
+
+00:02:35.252 --> 00:02:36.471
+A frase de contexto.
+
+00:02:36.771 --> 00:02:41.419
+Ela traduz o trecho vago para o vocabulário da pergunta.
+
+00:02:41.719 --> 00:02:45.255
+Autorização, cirurgia, plano.
+
+00:02:45.905 --> 00:02:47.353
+E a cláusula vizinha.
+
+00:02:47.653 --> 00:02:51.651
+Se a seção cabe no limite, o item 3.2 vai junto.
+
+00:02:51.951 --> 00:02:55.698
+Se não cabe, o cabeçalho ainda aponta para a seção 4.3,
+
+00:02:55.698 --> 00:02:59.037
+e a citação não finge que o trecho está completo.
+
+00:02:59.687 --> 00:03:00.842
+Quanto custa?
+
+00:03:01.142 --> 00:03:04.456
+Digamos oitocentos tokens de corpo e oitenta de cabeçalho.
+
+00:03:04.756 --> 00:03:07.570
+Cinco pedaços por pergunta vão de quatro mil
+
+00:03:07.570 --> 00:03:10.001
+tokens para quatro mil e quatrocentos.
+
+00:03:10.301 --> 00:03:12.431
+O custo de verdade fica na ingestão,
+
+00:03:12.431 --> 00:03:14.265
+uma chamada pequena por pedaço,
+
+00:03:14.265 --> 00:03:16.217
+com o documento inteiro em cache.
+
+00:03:16.517 --> 00:03:17.856
+Não na pergunta.
+
+00:03:18.506 --> 00:03:21.324
+E pôr o caminho no começo ajuda duas vezes.
+
+00:03:21.624 --> 00:03:23.224
+A busca acha o assunto certo.
+
+00:03:23.524 --> 00:03:28.137
+E o modelo, que lê melhor o começo de um contexto do que o meio,
+
+00:03:28.137 --> 00:03:30.588
+vê primeiro de onde o trecho veio.
+
+00:03:31.788 --> 00:03:32.878
+Uma pergunta para você.
+
+00:03:33.178 --> 00:03:38.071
+Você ligou a frase de contexto, mas gerou lendo só o pedaço,
+
+00:03:38.071 --> 00:03:39.376
+não o documento.
+
+00:03:39.676 --> 00:03:40.367
+No eval,
+
+00:03:40.367 --> 00:03:45.468
+a pergunta de reembolso ainda traz o trecho de autorização.
+
+00:03:45.768 --> 00:03:46.270
+Por quê?
+
+00:03:49.320 --> 00:03:52.159
+Porque a frase é tão vaga quanto o pedaço.
+
+00:03:52.459 --> 00:03:55.311
+O modelo que escreveu também nunca viu o capítulo.
+
+00:03:55.611 --> 00:04:00.014
+Então ele escreve algo como, este trecho fala de um prazo.
+
+00:04:00.664 --> 00:04:04.717
+A frase existe para injetar o contexto que o pedaço perdeu.
+
+00:04:05.017 --> 00:04:08.742
+Sem o documento nessa chamada, não tem contexto para injetar.
+
+00:04:09.042 --> 00:04:12.413
+Por isso a chamada leva o documento inteiro, em cache,
+
+00:04:12.413 --> 00:04:14.535
+e reaproveita em todos os pedaços.
+
+00:04:15.735 --> 00:04:18.549
+Documentos curtos que cabem num pedaço só.
+
+00:04:18.849 --> 00:04:20.672
+Uma política de trabalho remoto de duas
+
+00:04:20.672 --> 00:04:22.168
+páginas não precisa ser cortada.
+
+00:04:22.468 --> 00:04:25.587
+Título e versão no começo bastam.
+
+00:04:25.887 --> 00:04:29.909
+Cortar só inventa fronteiras, e pode partir a regra no meio.
+
+00:04:30.559 --> 00:04:34.052
+Texto sem estrutura, como transcrição.
+
+00:04:34.352 --> 00:04:36.112
+Não tem título para seguir.
+
+00:04:36.412 --> 00:04:39.809
+Corte por assunto, ou por janelas com sobreposição.
+
+00:04:40.459 --> 00:04:43.558
+E material que cabe inteiro no contexto.
+
+00:04:43.858 --> 00:04:46.119
+É o smell de duas aulas atrás.
+
+00:04:46.419 --> 00:04:48.691
+Não corte o que o modelo poderia ler.
+
+00:04:49.341 --> 00:04:50.932
+Agora as armadilhas comuns.
+
+00:04:51.232 --> 00:04:54.106
+Cortar por caractere e chamar de estrutural.
+
+00:04:54.406 --> 00:04:57.407
+Se a fronteira ignora o título da tabela,
+
+00:04:57.407 --> 00:04:59.164
+você só mudou o tamanho.
+
+00:04:59.814 --> 00:05:02.706
+Que foi exatamente o que aconteceu na operadora.
+
+00:05:03.006 --> 00:05:06.212
+As linhas com os números dos prazos caíram num pedaço.
+
+00:05:06.512 --> 00:05:11.739
+O cabeçalho, com as colunas, autorização, reembolso, recurso,
+
+00:05:11.739 --> 00:05:13.281
+ficou no anterior.
+
+00:05:13.581 --> 00:05:18.020
+Então o bot começou a citar 21 sem dizer qual prazo.
+
+00:05:18.320 --> 00:05:22.417
+Uma tabela vira um pedaço próprio, com título e colunas.
+
+00:05:23.067 --> 00:05:26.046
+E deixar versões revogadas no índice.
+
+00:05:26.346 --> 00:05:29.314
+Um cabeçalho que diz versão seis não impede
+
+00:05:29.314 --> 00:05:31.523
+a busca de trazer a versão seis.
+
+00:05:31.823 --> 00:05:34.392
+Filtre por vigência na hora da consulta
+
+00:05:34.392 --> 00:05:37.093
+e remova o documento antigo ao reindexar.
+
+00:05:37.393 --> 00:05:40.365
+Isso se resolve no índice, não no prompt.
+
+00:05:41.565 --> 00:05:42.594
+O que medir.
+
+00:05:42.894 --> 00:05:48.361
+Recall e precisão da busca, antes e depois, no mesmo eval.
+
+00:05:49.011 --> 00:05:51.738
+Monte perguntas gêmeas de propósito.
+
+00:05:52.038 --> 00:05:55.726
+O prazo de reembolso e o prazo de autorização.
+
+00:05:56.026 --> 00:05:58.438
+Se o trecho de reembolso fica fora dos cinco
+
+00:05:58.438 --> 00:06:00.467
+primeiros na pergunta de autorização,
+
+00:06:00.467 --> 00:06:02.660
+o cabeçalho está fazendo o seu trabalho.
+
+00:06:03.310 --> 00:06:04.660
+Confira as citações.
+
+00:06:04.960 --> 00:06:08.272
+A seção citada na resposta tem que ser a certa.
+
+00:06:08.922 --> 00:06:12.454
+E crie um alerta para a taxa de caminho vazio na ingestão.
+
+00:06:12.754 --> 00:06:16.019
+Se trinta por cento dos pedaços saem sem caminho,
+
+00:06:16.019 --> 00:06:18.551
+o parser quebrou num tipo novo de PDF.
+
+00:06:18.851 --> 00:06:21.644
+Não tape com a frase gerada.
+
+00:06:21.944 --> 00:06:24.523
+Corrija a conversão e reindexe.
+
+00:06:25.173 --> 00:06:26.491
+Um ponto de segurança.
+
+00:06:26.791 --> 00:06:29.682
+Um pedaço pode carregar dado pessoal, o nome de um beneficiário,
+
+00:06:29.682 --> 00:06:30.766
+o número da carteirinha.
+
+00:06:31.066 --> 00:06:36.423
+Pela LGPD, o índice é mais um lugar onde esse dado mora.
+
+00:06:36.723 --> 00:06:39.629
+Se a sua política proíbe mandar esses documentos
+
+00:06:39.629 --> 00:06:42.413
+para o modelo que escreve a frase de contexto,
+
+00:06:42.413 --> 00:06:46.106
+fique no cabeçalho estrutural, montado só com título e seção.
+
+00:06:47.306 --> 00:06:49.475
+Na página, tem duas abas.
+
+00:06:49.775 --> 00:06:52.640
+A de TypeScript faz só a parte estrutural.
+
+00:06:52.940 --> 00:06:55.460
+Ela corta o documento pelos títulos,
+
+00:06:55.460 --> 00:06:58.610
+guarda o caminho conforme desce e põe título,
+
+00:06:58.610 --> 00:07:01.410
+caminho e versão no topo de cada pedaço.
+
+00:07:01.710 --> 00:07:03.408
+Nenhuma chamada a modelo.
+
+00:07:04.058 --> 00:07:06.847
+A de Python acrescenta a frase de contexto.
+
+00:07:07.147 --> 00:07:09.512
+Ela manda o documento inteiro como um bloco
+
+00:07:09.512 --> 00:07:11.712
+em cache e pergunta a um modelo pequeno,
+
+00:07:11.712 --> 00:07:12.647
+para cada pedaço,
+
+00:07:12.647 --> 00:07:15.342
+de que assunto e de que caso aquele trecho trata.
+
+00:07:15.992 --> 00:07:17.974
+E essa é a ordem para adotar.
+
+00:07:18.274 --> 00:07:20.036
+Comece pelo cabeçalho estrutural.
+
+00:07:20.336 --> 00:07:23.804
+É barato, e já resolve boa parte do problema.
+
+00:07:24.454 --> 00:07:27.031
+Ligue a frase gerada só se o eval
+
+00:07:27.031 --> 00:07:29.841
+de confusão de assunto ainda falhar.
+
+00:07:31.041 --> 00:07:33.244
+Então, a ideia para levar.
+
+00:07:33.544 --> 00:07:36.635
+Um pedaço cortado às cegas é uma frase sem endereço.
+
+00:07:36.935 --> 00:07:39.763
+Corte pela estrutura do próprio documento
+
+00:07:39.763 --> 00:07:41.763
+e dê a cada pedaço o caminho,
+
+00:07:41.763 --> 00:07:45.969
+a versão e, quando ajuda, uma frase dizendo do que ele trata.
+
+00:07:46.269 --> 00:07:49.667
+Aí a busca e o modelo sabem onde estão.
+
+00:07:50.317 --> 00:07:53.476
+Esse caminho no cabeçalho é feito de palavras exatas,
+
+00:07:53.476 --> 00:07:56.815
+e palavra exata é o que a busca por palavra-chave adora.
+
+00:07:57.115 --> 00:07:58.046
+Na próxima aula,
+
+00:07:58.046 --> 00:08:01.130
+a gente junta busca por palavra-chave com embeddings:
+
+00:08:01.130 --> 00:08:01.945
+hybrid search.
+
+00:08:02.245 --> 00:08:03.262
+Até lá.

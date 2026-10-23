@@ -1,0 +1,553 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.734
+O agente de código da Renata cuida de tarefas longas.
+
+00:00:05.034 --> 00:00:06.608
+Duas ou três horas.
+
+00:00:06.908 --> 00:00:09.490
+Migrar um módulo, atualizar dependências,
+
+00:00:09.490 --> 00:00:11.254
+consertar um lote de testes.
+
+00:00:11.904 --> 00:00:14.542
+No começo de uma tarefa, ele é preciso.
+
+00:00:14.842 --> 00:00:16.842
+Depois de cento e cinquenta turnos,
+
+00:00:16.842 --> 00:00:20.099
+o contexto carrega centenas de resultados de ferramentas.
+
+00:00:20.399 --> 00:00:23.901
+Arquivos inteiros, saídas de teste com milhares de linhas,
+
+00:00:23.901 --> 00:00:25.653
+buscas que não deram em nada.
+
+00:00:26.303 --> 00:00:27.056
+Perto do fim,
+
+00:00:27.056 --> 00:00:30.418
+o agente começa a editar arquivos que já tinha consertado.
+
+00:00:31.068 --> 00:00:35.460
+Reaplicando mudanças que tinham sido revertidas.
+
+00:00:36.110 --> 00:00:39.238
+E esquecendo a restrição combinada no começo.
+
+00:00:39.538 --> 00:00:41.412
+Não mexa na API pública.
+
+00:00:41.712 --> 00:00:45.468
+Em algumas tarefas, a janela estoura, e a execução falha.
+
+00:00:46.118 --> 00:00:48.456
+Começar uma sessão nova não ajuda.
+
+00:00:48.756 --> 00:00:53.108
+O agente perderia o plano, as decisões e o que já foi feito.
+
+00:00:53.408 --> 00:00:54.019
+Nesta aula,
+
+00:00:54.019 --> 00:00:57.072
+você vai aprender a manter um agente lúcido numa tarefa
+
+00:00:57.072 --> 00:01:00.015
+mais longa do que a janela de contexto dele comporta.
+
+00:01:01.215 --> 00:01:03.591
+Trate o contexto como memória de trabalho,
+
+00:01:03.591 --> 00:01:04.949
+com manutenção contínua.
+
+00:01:05.249 --> 00:01:07.781
+Três operações, em ordem de custo.
+
+00:01:08.431 --> 00:01:09.015
+Podar.
+
+00:01:09.315 --> 00:01:11.331
+Apague o conteúdo de resultados antigos
+
+00:01:11.331 --> 00:01:13.089
+de ferramenta que já foram usados,
+
+00:01:13.089 --> 00:01:15.261
+como um arquivo lido oitenta turnos atrás.
+
+00:01:15.561 --> 00:01:16.926
+A chamada fica registrada.
+
+00:01:17.226 --> 00:01:18.612
+O conteúdo sai.
+
+00:01:19.262 --> 00:01:20.158
+Resumir.
+
+00:01:20.458 --> 00:01:22.807
+Quando o contexto passa de um limite,
+
+00:01:22.807 --> 00:01:26.489
+troque a parte antiga por um resumo que guarda o objetivo,
+
+00:01:26.489 --> 00:01:29.601
+as decisões, o estado atual e os próximos passos.
+
+00:01:30.251 --> 00:01:31.472
+E externalizar.
+
+00:01:31.772 --> 00:01:35.438
+Fatos que precisam sobreviver a qualquer resumo, como o plano,
+
+00:01:35.438 --> 00:01:38.158
+as restrições e a lista de arquivos alterados,
+
+00:01:38.158 --> 00:01:40.937
+vão para um arquivo ou estado fora do contexto.
+
+00:01:41.237 --> 00:01:43.687
+O agente lê quando precisa.
+
+00:01:44.337 --> 00:01:47.761
+O gatilho é um limite de tokens, conferido antes de cada turno.
+
+00:01:48.061 --> 00:01:50.686
+Os turnos mais recentes sempre ficam inteiros.
+
+00:01:50.986 --> 00:01:52.941
+E a divisão de trabalho é esta.
+
+00:01:53.241 --> 00:01:55.261
+O código decide quando cortar.
+
+00:01:55.561 --> 00:01:57.799
+O modelo só escreve o resumo.
+
+00:01:58.999 --> 00:02:00.705
+O agente trabalha normalmente.
+
+00:02:01.355 --> 00:02:04.550
+Antes de cada turno, o código mede o contexto.
+
+00:02:05.200 --> 00:02:07.025
+A primeira medida é barata.
+
+00:02:07.325 --> 00:02:10.190
+Apagar o conteúdo dos resultados antigos de ferramenta.
+
+00:02:10.840 --> 00:02:13.674
+Se a poda bastou, o loop segue.
+
+00:02:14.324 --> 00:02:14.811
+Se não,
+
+00:02:14.811 --> 00:02:18.776
+um modelo resume tudo o que vem antes dos últimos turnos.
+
+00:02:19.426 --> 00:02:22.521
+E os fatos críticos moram fora do contexto,
+
+00:02:22.521 --> 00:02:24.969
+num arquivo de notas ou no estado.
+
+00:02:25.269 --> 00:02:26.863
+O resumo aponta para eles.
+
+00:02:28.063 --> 00:02:29.233
+De volta à Renata.
+
+00:02:29.533 --> 00:02:31.618
+No turno três, ela combinou:
+
+00:02:31.618 --> 00:02:34.969
+não mude a API pública do módulo de cobrança.
+
+00:02:35.269 --> 00:02:39.118
+No turno oitenta, o agente leu o arquivo da API de cobrança,
+
+00:02:39.118 --> 00:02:42.581
+uns dois mil e quatrocentos tokens, e rodou os testes,
+
+00:02:42.581 --> 00:02:44.826
+uns mil e oitocentos tokens de log.
+
+00:02:45.126 --> 00:02:46.795
+No turno cento e cinquenta,
+
+00:02:46.795 --> 00:02:49.454
+esses resultados ainda vão em toda chamada,
+
+00:02:49.454 --> 00:02:51.185
+junto com dezenas de outros.
+
+00:02:51.835 --> 00:02:55.227
+Com números ilustrativos, no turno cento e cinquenta,
+
+00:02:55.227 --> 00:02:58.684
+a entrada já passa de sessenta mil tokens por chamada.
+
+00:02:58.984 --> 00:03:03.067
+Sem poda, os próximos cinquenta turnos reenviam esse volume.
+
+00:03:03.367 --> 00:03:05.850
+Uns três milhões de tokens de entrada,
+
+00:03:05.850 --> 00:03:07.549
+só para terminar a tarefa.
+
+00:03:08.199 --> 00:03:10.947
+A poda troca o conteúdo antigo por uma linha.
+
+00:03:11.247 --> 00:03:13.757
+O histórico ainda diz que a leitura aconteceu.
+
+00:03:14.057 --> 00:03:16.774
+Os dois mil e quatrocentos tokens saem.
+
+00:03:17.074 --> 00:03:20.503
+E se o agente precisar do arquivo de novo, ele lê de novo.
+
+00:03:20.803 --> 00:03:23.790
+Isso é mais barato que carregar o arquivo por cinquenta turnos.
+
+00:03:24.440 --> 00:03:27.408
+Quando a poda não basta, entra o resumo.
+
+00:03:27.708 --> 00:03:30.251
+Aqui está um schema que se sustenta no eval da Renata.
+
+00:03:30.551 --> 00:03:31.211
+O objetivo.
+
+00:03:31.511 --> 00:03:32.422
+As decisões.
+
+00:03:32.722 --> 00:03:33.563
+O que está feito.
+
+00:03:33.863 --> 00:03:35.030
+O estado atual.
+
+00:03:35.330 --> 00:03:36.364
+Os próximos passos.
+
+00:03:37.014 --> 00:03:38.041
+E esta linha.
+
+00:03:38.341 --> 00:03:39.221
+Restrições.
+
+00:03:39.521 --> 00:03:42.093
+Não mudar a API pública.
+
+00:03:43.293 --> 00:03:44.417
+Uma pergunta para você.
+
+00:03:44.717 --> 00:03:46.263
+Depois de uma compactação,
+
+00:03:46.263 --> 00:03:49.057
+o agente da Renata muda uma assinatura pública.
+
+00:03:49.357 --> 00:03:50.859
+O resumo tinha o objetivo,
+
+00:03:50.859 --> 00:03:53.170
+o que estava feito e os próximos passos.
+
+00:03:53.470 --> 00:03:54.930
+Mas nenhum campo de restrições.
+
+00:03:55.230 --> 00:03:56.193
+Qual é a correção?
+
+00:03:59.243 --> 00:04:01.656
+Colocar restrições no schema do resumo,
+
+00:04:01.656 --> 00:04:04.131
+e num arquivo de notas fora do contexto.
+
+00:04:04.431 --> 00:04:06.956
+Tudo o que precisa sobreviver a todo corte
+
+00:04:06.956 --> 00:04:08.760
+precisa de um lugar no resumo,
+
+00:04:08.760 --> 00:04:10.263
+e de uma cópia fora dele.
+
+00:04:10.563 --> 00:04:14.033
+Objetivo e próximos passos não guardam um não faça.
+
+00:04:14.683 --> 00:04:17.540
+Subir o limite para a compactação nunca
+
+00:04:17.540 --> 00:04:19.737
+rodar só adia o apodrecimento.
+
+00:04:20.037 --> 00:04:24.035
+E um modelo maior não lembra do que você tirou do contexto.
+
+00:04:24.335 --> 00:04:25.268
+Sem aquele campo,
+
+00:04:25.268 --> 00:04:27.684
+o compactador te ajuda a esquecer justamente
+
+00:04:27.684 --> 00:04:29.934
+a única coisa que não pode ser esquecida.
+
+00:04:31.134 --> 00:04:32.230
+Tarefas curtas.
+
+00:04:32.530 --> 00:04:35.647
+A etapa de compactação custa mais do que economiza.
+
+00:04:36.297 --> 00:04:38.913
+Leitura pesada numa subtarefa bem delimitada.
+
+00:04:39.213 --> 00:04:40.826
+Isole num subagente.
+
+00:04:41.126 --> 00:04:43.679
+Às vezes os dois padrões andam juntos.
+
+00:04:43.979 --> 00:04:46.730
+O isolamento mantém o material pesado fora.
+
+00:04:47.030 --> 00:04:49.444
+A compactação limpa o que já entrou.
+
+00:04:50.094 --> 00:04:53.494
+Conteúdo que precisa ser lido inteiro para a resposta,
+
+00:04:53.494 --> 00:04:56.517
+como um contrato revisado cláusula por cláusula.
+
+00:04:56.817 --> 00:04:59.749
+Resumir ali perde o que importa.
+
+00:05:00.399 --> 00:05:01.825
+E um chat de atendimento curto.
+
+00:05:02.125 --> 00:05:04.275
+Digamos que ele termina em oito turnos,
+
+00:05:04.275 --> 00:05:07.473
+e um colega quer compactar a cada quatro, para economizar.
+
+00:05:07.773 --> 00:05:09.458
+Não faça.
+
+00:05:09.758 --> 00:05:10.923
+O histórico cabe,
+
+00:05:10.923 --> 00:05:14.212
+e um resumo só arrisca perder o pedido original,
+
+00:05:14.212 --> 00:05:17.296
+como o número do pedido na primeira mensagem.
+
+00:05:17.596 --> 00:05:20.823
+Guarde esses fatos como estado explícito.
+
+00:05:21.473 --> 00:05:22.958
+Agora as armadilhas comuns.
+
+00:05:23.258 --> 00:05:25.113
+Resumir cedo demais.
+
+00:05:25.413 --> 00:05:28.706
+Compactar a cada poucos turnos gasta uma chamada
+
+00:05:28.706 --> 00:05:31.313
+e apaga detalhe que ainda seria usado.
+
+00:05:31.613 --> 00:05:32.391
+Meça primeiro.
+
+00:05:32.691 --> 00:05:34.832
+Corte quando a curva de tokens doer.
+
+00:05:35.482 --> 00:05:37.392
+Um schema sem restrições.
+
+00:05:37.692 --> 00:05:39.163
+Esse a gente acabou de ver.
+
+00:05:39.463 --> 00:05:42.052
+O seu eval de retenção precisa de um caso assim.
+
+00:05:42.702 --> 00:05:45.130
+Cortar no meio de uma chamada de ferramenta.
+
+00:05:45.430 --> 00:05:48.248
+Separe o pedido de ferramenta do resultado dele,
+
+00:05:48.248 --> 00:05:50.771
+e a próxima requisição à API fica inválida.
+
+00:05:51.071 --> 00:05:53.273
+O corte começa num turno do usuário.
+
+00:05:53.923 --> 00:05:56.054
+E jogar o histórico bruto fora.
+
+00:05:56.354 --> 00:05:58.119
+Você vai precisar dele para depurar
+
+00:05:58.119 --> 00:05:59.884
+um resumo que inventou uma decisão.
+
+00:06:00.184 --> 00:06:04.160
+A compactação muda o que o modelo vê, não o que você guarda.
+
+00:06:05.360 --> 00:06:07.545
+Uma pergunta que os times sempre fazem.
+
+00:06:07.845 --> 00:06:08.971
+Depois da poda,
+
+00:06:08.971 --> 00:06:13.776
+o agente relê um arquivo que já tinha lido oitenta turnos atrás.
+
+00:06:14.076 --> 00:06:15.021
+Isso é bug?
+
+00:06:15.321 --> 00:06:15.989
+Não.
+
+00:06:16.289 --> 00:06:18.491
+O conteúdo podado sumiu de propósito.
+
+00:06:18.791 --> 00:06:21.971
+Se o arquivo ainda importa, a ferramenta é chamada de novo.
+
+00:06:22.271 --> 00:06:25.235
+E o resumo também não deve copiar arquivos inteiros.
+
+00:06:25.535 --> 00:06:28.744
+Ele guarda decisões e estado, não código.
+
+00:06:29.394 --> 00:06:30.988
+Como avaliar?
+
+00:06:31.288 --> 00:06:32.536
+Retenção, primeiro.
+
+00:06:32.836 --> 00:06:36.217
+Faça perguntas sobre fatos do começo da tarefa,
+
+00:06:36.217 --> 00:06:37.800
+depois da compactação.
+
+00:06:38.100 --> 00:06:40.138
+É o eval que a maioria pula.
+
+00:06:40.438 --> 00:06:44.802
+Sem ele, a compactação funciona no custo e falha no produto.
+
+00:06:45.452 --> 00:06:48.081
+Depois, a taxa de conclusão, e o retrabalho.
+
+00:06:48.381 --> 00:06:51.157
+Arquivos editados duas vezes, pelo mesmo motivo.
+
+00:06:51.807 --> 00:06:54.437
+Depois, tokens por turno, ao longo da execução.
+
+00:06:54.737 --> 00:06:57.669
+A curva deve ter dentes, não subir para sempre.
+
+00:06:57.969 --> 00:06:59.647
+E se os tokens antes e depois
+
+00:06:59.647 --> 00:07:01.673
+de uma compactação quase não mudam,
+
+00:07:01.673 --> 00:07:04.972
+as mensagens antigas nunca foram substituídas de verdade.
+
+00:07:05.622 --> 00:07:06.799
+E o cache de prompt.
+
+00:07:07.099 --> 00:07:10.027
+Mudar o começo do contexto pode zerar ele.
+
+00:07:10.327 --> 00:07:13.125
+Acompanhe os tokens de cache depois de cada compactação.
+
+00:07:13.775 --> 00:07:16.622
+Alguns provedores já fazem parte disso por você.
+
+00:07:16.922 --> 00:07:18.584
+Compactação no servidor,
+
+00:07:18.584 --> 00:07:21.770
+em que a API resume o contexto antigo sozinha.
+
+00:07:22.070 --> 00:07:23.344
+Ou edição de contexto,
+
+00:07:23.344 --> 00:07:25.660
+em que a API limpa os resultados antigos
+
+00:07:25.660 --> 00:07:27.745
+de ferramenta antes de o modelo ver.
+
+00:07:28.045 --> 00:07:30.323
+Prefira esses quando cobrirem o seu caso.
+
+00:07:30.623 --> 00:07:32.202
+E uma nota de privacidade.
+
+00:07:32.502 --> 00:07:35.925
+O resumo e o arquivo de notas costumam ir para os logs.
+
+00:07:36.225 --> 00:07:38.864
+Se a conversa tem dados pessoais,
+
+00:07:38.864 --> 00:07:41.583
+a compactação cria mais uma cópia.
+
+00:07:41.883 --> 00:07:43.935
+Restrinja quem pode ler esses logs.
+
+00:07:45.135 --> 00:07:47.462
+Então, a ideia para levar.
+
+00:07:47.762 --> 00:07:50.428
+Uma tarefa longa precisa de uma memória com manutenção,
+
+00:07:50.428 --> 00:07:51.785
+não de uma pilha que cresce.
+
+00:07:52.085 --> 00:07:53.914
+Pode o que já foi usado,
+
+00:07:53.914 --> 00:07:58.563
+resuma o resto num schema que tenha lugar para todo não faça,
+
+00:07:58.563 --> 00:08:03.365
+e guarde os fatos críticos num arquivo que nenhum resumo apaga.
+
+00:08:03.665 --> 00:08:06.006
+Aí a terceira hora parece o terceiro minuto.
+
+00:08:06.656 --> 00:08:10.938
+Na próxima aula, um smell sobre o formato do próprio agente:
+
+00:08:10.938 --> 00:08:13.080
+um agente tentando fazer tudo.
+
+00:08:13.380 --> 00:08:14.512
+O mega agent.
+
+00:08:14.812 --> 00:08:15.575
+Até lá.

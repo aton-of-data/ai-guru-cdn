@@ -1,0 +1,403 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.293
+You met the invoice agent in the last lesson.
+
+00:00:04.593 --> 00:00:09.068
+It opens the supplier portal, clicks next page, and reads the list.
+
+00:00:09.368 --> 00:00:12.820
+One night the button stays visible and loads nothing.
+
+00:00:13.120 --> 00:00:18.846
+With no cap, the loop clicks thousands of times, and the only alarm is the bill.
+
+00:00:19.496 --> 00:00:21.688
+The smell told that story.
+
+00:00:21.988 --> 00:00:24.061
+This refactoring puts on the brake.
+
+00:00:24.361 --> 00:00:27.110
+And you'll see that the brake is only half of it.
+
+00:00:27.410 --> 00:00:30.325
+The other half is what the agent says when it stops.
+
+00:00:31.525 --> 00:00:36.270
+Give every run an explicit budget, of steps, time and cost.
+
+00:00:36.570 --> 00:00:38.281
+Check it before each turn.
+
+00:00:38.581 --> 00:00:42.165
+And define what the agent delivers when the budget runs out.
+
+00:00:43.365 --> 00:00:46.863
+Before, the only exit is the model stopping.
+
+00:00:47.163 --> 00:00:53.025
+The task goes to the model, then a tool, then the model again, then another tool.
+
+00:00:53.325 --> 00:00:55.614
+Until the model says it's done.
+
+00:00:56.264 --> 00:00:58.559
+After, your code has a second exit.
+
+00:00:58.859 --> 00:01:03.436
+The task arrives with a budget set by your policy, not by the model.
+
+00:01:04.086 --> 00:01:09.587
+Before each turn, code checks the steps, the elapsed time, and the accumulated cost.
+
+00:01:10.237 --> 00:01:15.627
+The model is called as usual, and the final answer is still a legitimate exit.
+
+00:01:15.927 --> 00:01:19.086
+Tools run, and their cost counts too, when there is one.
+
+00:01:19.736 --> 00:01:21.605
+The task ends within budget.
+
+00:01:22.255 --> 00:01:26.740
+Or it ends at the limit, with what was found so far, and the reason for stopping.
+
+00:01:27.390 --> 00:01:29.315
+In code, it's a small change.
+
+00:01:29.615 --> 00:01:32.774
+While true becomes: while the budget allows.
+
+00:01:33.074 --> 00:01:37.413
+With twenty-five steps, five minutes, and eighty cents of budget.
+
+00:01:38.063 --> 00:01:43.009
+After every call, the budget is charged with the usage the API reported.
+
+00:01:43.659 --> 00:01:47.384
+And when it runs out, the agent wraps up, with the reason.
+
+00:01:48.584 --> 00:01:51.553
+With the same illustrative numbers as last time.
+
+00:01:51.853 --> 00:01:56.508
+A normal run, ten turns, about fifty-two thousand tokens.
+
+00:01:57.158 --> 00:02:02.015
+A stuck run with no cap, two hundred turns, about eight point six million.
+
+00:02:02.665 --> 00:02:06.932
+And the same stuck run, with a cap of twenty-five, about two hundred thousand.
+
+00:02:07.232 --> 00:02:09.485
+The curve never gets to the millions.
+
+00:02:10.135 --> 00:02:12.640
+And here's the wrap-up on the broken portal.
+
+00:02:12.940 --> 00:02:14.501
+Not an empty exception.
+
+00:02:14.801 --> 00:02:19.317
+I read the first page, invoices one to twenty of three hundred forty.
+
+00:02:19.617 --> 00:02:23.930
+Next page returned okay, and the list didn't change, three times.
+
+00:02:24.230 --> 00:02:26.307
+I stopped for repetition.
+
+00:02:26.607 --> 00:02:29.074
+Pages two to seventeen are still missing.
+
+00:02:29.724 --> 00:02:32.320
+Operations finishes the job by hand.
+
+00:02:32.620 --> 00:02:34.858
+And the trace becomes an eval case.
+
+00:02:36.058 --> 00:02:38.973
+An agent loop has two sources of termination.
+
+00:02:39.273 --> 00:02:42.151
+The model's decision, and the code's decision.
+
+00:02:42.451 --> 00:02:45.240
+Without a budget, only the first exists.
+
+00:02:45.540 --> 00:02:48.706
+And it fails in exactly the bad cases.
+
+00:02:49.006 --> 00:02:54.464
+A tool that makes no progress, an impossible task, content that confuses.
+
+00:02:54.764 --> 00:02:59.932
+The budget puts a deterministic decision right next to the probabilistic one.
+
+00:03:00.582 --> 00:03:03.306
+The wrap-up is the half that's usually missing.
+
+00:03:03.606 --> 00:03:08.841
+A cap that only throws an exception trades a high cost for a lost task.
+
+00:03:09.141 --> 00:03:12.341
+A cap with a wrap-up delivers something useful.
+
+00:03:12.641 --> 00:03:17.969
+I read fourteen of the twenty files, the likely cause is this, I still need to
+
+00:03:17.969 --> 00:03:18.857
+confirm that.
+
+00:03:19.507 --> 00:03:22.644
+And the budget turns bad behavior into data.
+
+00:03:22.944 --> 00:03:26.306
+Every run that hits the cap is a case to understand.
+
+00:03:26.606 --> 00:03:28.199
+The cap reveals the problem.
+
+00:03:28.499 --> 00:03:32.039
+It doesn't exist so you can hide it by raising the number.
+
+00:03:33.239 --> 00:03:34.352
+Here's one for you.
+
+00:03:34.652 --> 00:03:39.215
+Among successful runs, ninety-five percent finish within fourteen steps.
+
+00:03:39.515 --> 00:03:42.503
+The team wants a cap of sixteen, to cut early.
+
+00:03:42.803 --> 00:03:45.014
+What do you expect to see in the eval?
+
+00:03:48.064 --> 00:03:50.177
+Cost at the maximum drops.
+
+00:03:50.477 --> 00:03:53.498
+And the completion rate of healthy tasks drops too.
+
+00:03:53.798 --> 00:03:58.900
+Five percent of the successful runs already go past fourteen steps, and some of
+
+00:03:58.900 --> 00:04:00.320
+those go past sixteen.
+
+00:04:00.620 --> 00:04:04.661
+You'd cut today's successes, to over-save on tomorrow's stuck run.
+
+00:04:05.311 --> 00:04:09.800
+A common starting point is two to three times that ninety-fifth percentile.
+
+00:04:10.100 --> 00:04:13.192
+The cap should catch the stuck runs, not the long ones.
+
+00:04:14.392 --> 00:04:15.745
+Now the mechanics.
+
+00:04:16.045 --> 00:04:17.876
+Step zero, measure.
+
+00:04:18.176 --> 00:04:23.400
+Run the agent's eval, and pull the distribution of steps, time and cost per task
+
+00:04:23.400 --> 00:04:24.445
+from the traces.
+
+00:04:25.095 --> 00:04:26.716
+Pick the caps from that data.
+
+00:04:27.016 --> 00:04:32.772
+If the ninety-fifth percentile is fourteen steps, and the healthy maximum is
+
+00:04:32.772 --> 00:04:36.028
+nineteen, a cap of twenty-five leaves room.
+
+00:04:36.328 --> 00:04:38.323
+A cap of two hundred doesn't.
+
+00:04:38.973 --> 00:04:41.631
+Check before each call, not after.
+
+00:04:41.931 --> 00:04:45.610
+Include the cost of paid tools, like search or a browser.
+
+00:04:45.910 --> 00:04:50.221
+And use the usage the API returns, not a stale price table.
+
+00:04:50.871 --> 00:04:53.557
+And charge subagents to the parent's budget.
+
+00:04:53.857 --> 00:04:55.640
+Pass the remaining budget down.
+
+00:04:55.940 --> 00:04:57.944
+Don't hand each child a fresh one.
+
+00:04:58.594 --> 00:04:59.523
+Write the wrap-up.
+
+00:04:59.823 --> 00:05:04.800
+One last short call with no tools, that summarizes what was done and what's left.
+
+00:05:05.100 --> 00:05:07.111
+Or a fixed message with the state.
+
+00:05:07.411 --> 00:05:10.639
+And the text has to say it stopped at the limit.
+
+00:05:11.289 --> 00:05:13.884
+Record the stop reason on the trace.
+
+00:05:14.184 --> 00:05:17.455
+Steps, time, cost, repetition, or done.
+
+00:05:18.105 --> 00:05:20.895
+Then add a detector for repetition.
+
+00:05:21.195 --> 00:05:26.511
+The same tool, with the same arguments, three times in a row, also ends the loop.
+
+00:05:27.161 --> 00:05:28.244
+And measure again.
+
+00:05:28.544 --> 00:05:30.610
+The completion rate must not drop.
+
+00:05:30.910 --> 00:05:33.479
+Cost at the worst cases should drop.
+
+00:05:33.779 --> 00:05:37.455
+And the tasks that stopped at the cap become eval cases.
+
+00:05:38.655 --> 00:05:39.737
+A few risks.
+
+00:05:40.037 --> 00:05:43.770
+A cap too low starts failing legitimate long tasks.
+
+00:05:44.070 --> 00:05:46.085
+You'll see it in the completion rate.
+
+00:05:46.735 --> 00:05:48.521
+A wrong cost estimate.
+
+00:05:48.821 --> 00:05:54.065
+If the math uses stale prices, or ignores cached tokens, the money cap doesn't
+
+00:05:54.065 --> 00:05:54.871
+protect you.
+
+00:05:55.521 --> 00:05:57.152
+A wrap-up that lies.
+
+00:05:57.452 --> 00:06:01.666
+A partial answer written as if it were complete misleads the user.
+
+00:06:02.316 --> 00:06:04.911
+A budget counted only in steps.
+
+00:06:05.211 --> 00:06:10.335
+One step that summarizes a two hundred thousand token file costs more than ten short
+
+00:06:10.335 --> 00:06:11.494
+steps put together.
+
+00:06:11.794 --> 00:06:13.774
+Limit tokens or money too.
+
+00:06:14.424 --> 00:06:16.936
+And a fresh budget for every child.
+
+00:06:17.236 --> 00:06:23.015
+Each subagent gets twenty new steps, with no depth limit, and the loop comes back,
+
+00:06:23.015 --> 00:06:24.002
+now as a tree.
+
+00:06:24.652 --> 00:06:26.384
+That last one hides well.
+
+00:06:26.684 --> 00:06:27.572
+Look at this loop.
+
+00:06:27.872 --> 00:06:29.722
+It has a cap of twenty steps.
+
+00:06:30.022 --> 00:06:30.994
+So it looks safe.
+
+00:06:31.644 --> 00:06:36.874
+But every delegate call opens a brand new twenty step loop, with no depth limit, and
+
+00:06:36.874 --> 00:06:37.933
+no shared budget.
+
+00:06:38.233 --> 00:06:41.928
+With three delegations per step, the total explodes.
+
+00:06:42.228 --> 00:06:45.609
+On top of that, the subagent's result is thrown away.
+
+00:06:45.909 --> 00:06:49.045
+And ending with a timeout exception leaves no state.
+
+00:06:49.695 --> 00:06:54.521
+The fix is to pass the same budget down to every child, and take away the delegate
+
+00:06:54.521 --> 00:06:56.287
+tool after a couple of levels.
+
+00:06:56.587 --> 00:07:01.825
+Then add each child's result to the parent's observations, and end with a wrap-up,
+
+00:07:01.825 --> 00:07:02.911
+not an exception.
+
+00:07:03.561 --> 00:07:04.536
+One more trap.
+
+00:07:04.836 --> 00:07:10.409
+A team writes the wrap-up as one last model call, with tools, asking it to finish
+
+00:07:10.409 --> 00:07:12.197
+the task with what it has.
+
+00:07:12.497 --> 00:07:17.665
+With tools, that extra turn is the loop again, without the cap you just hit.
+
+00:07:17.965 --> 00:07:21.452
+And the text it produces pretends to be a success.
+
+00:07:21.752 --> 00:07:24.937
+A wrap-up is short, has no tools, and admits the limit.
+
+00:07:26.137 --> 00:07:28.362
+So here's the idea to take with you.
+
+00:07:28.662 --> 00:07:34.371
+Steps, time and money, chosen from your own data, checked before every call, shared
+
+00:07:34.371 --> 00:07:35.747
+down the whole tree.
+
+00:07:36.047 --> 00:07:41.245
+And when the budget runs out, the agent says what it did, what's missing, and why it
+
+00:07:41.245 --> 00:07:41.740
+stopped.
+
+00:07:42.040 --> 00:07:45.387
+That's how a surprise bill becomes an eval case.
+
+00:07:46.037 --> 00:07:51.187
+In the next lesson, we'll look at the full pattern this refactoring points to: stop
+
+00:07:51.187 --> 00:07:55.406
+conditions, including when an agent should give up, or ask for help.
+
+00:07:55.706 --> 00:07:56.485
+See you there.

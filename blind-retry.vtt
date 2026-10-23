@@ -1,0 +1,355 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:03.280
+It's two in the morning.
+
+00:00:03.580 --> 00:00:07.716
+A finance assistant tries to schedule a Pix transfer for a customer.
+
+00:00:08.016 --> 00:00:09.140
+The bank says no.
+
+00:00:09.790 --> 00:00:12.947
+The code catches the error, waits a little, and tries again.
+
+00:00:13.247 --> 00:00:13.989
+And again.
+
+00:00:14.289 --> 00:00:18.413
+Four times, the same answer: the nighttime limit is exceeded.
+
+00:00:19.063 --> 00:00:23.608
+On the fifth attempt, the limit had just reset, and the transfer went through.
+
+00:00:23.908 --> 00:00:27.124
+But the customer had already been told it failed.
+
+00:00:27.424 --> 00:00:29.508
+So they paid again, through the bank's app.
+
+00:00:29.808 --> 00:00:31.091
+They paid twice.
+
+00:00:31.741 --> 00:00:33.169
+The retry worked.
+
+00:00:33.469 --> 00:00:34.938
+That's the problem.
+
+00:00:35.238 --> 00:00:40.628
+In this lesson, you'll learn to tell an error worth retrying from one that's a no,
+
+00:00:40.628 --> 00:00:43.850
+and why that difference has to live in your code.
+
+00:00:45.050 --> 00:00:46.067
+Here's the shape.
+
+00:00:46.367 --> 00:00:47.651
+The call goes out.
+
+00:00:48.301 --> 00:00:52.437
+Any error comes back, and every error is handled the same way.
+
+00:00:53.087 --> 00:00:57.690
+The same call is repeated, with the same arguments, without anyone asking why it
+
+00:00:57.690 --> 00:00:58.093
+failed.
+
+00:00:58.743 --> 00:01:04.308
+And when it finally passes, the effect may happen twice, or at the wrong time.
+
+00:01:04.958 --> 00:01:07.746
+The nighttime limit isn't a network blip.
+
+00:01:08.046 --> 00:01:10.840
+It's a business rule that means: not now.
+
+00:01:11.140 --> 00:01:17.537
+Insisting until the clock changes turns that no into an effect nobody asked for.
+
+00:01:18.187 --> 00:01:20.424
+This smell hides in two places.
+
+00:01:20.724 --> 00:01:24.647
+In code, it's a handler that catches any exception and loops.
+
+00:01:25.297 --> 00:01:27.347
+In an agent, it's the model.
+
+00:01:27.647 --> 00:01:32.933
+It reads the word error, and calls the same tool again, with the same arguments.
+
+00:01:33.233 --> 00:01:38.309
+In both cases, whatever decided to retry never classified the error.
+
+00:01:39.509 --> 00:01:44.117
+Wrapping a call in a retry loop is the best known recipe for flaky networks.
+
+00:01:44.417 --> 00:01:45.716
+It looks like protection.
+
+00:01:46.016 --> 00:01:51.477
+And the recipe leaks into errors it was never meant for: no balance, no permission,
+
+00:01:51.477 --> 00:01:52.398
+invalid input.
+
+00:01:53.048 --> 00:01:55.906
+Errors come back as text, with no type.
+
+00:01:56.206 --> 00:02:00.281
+Your code can't tell try again from this will never work.
+
+00:02:00.931 --> 00:02:02.792
+The agent learns to insist.
+
+00:02:03.092 --> 00:02:07.703
+If the tool only says error, it looks broken, and the model does the reasonable
+
+00:02:07.703 --> 00:02:08.053
+thing.
+
+00:02:08.353 --> 00:02:09.395
+It tries again.
+
+00:02:10.045 --> 00:02:12.646
+And nobody thought about idempotency.
+
+00:02:12.946 --> 00:02:16.206
+The tool was written as if every call were unique.
+
+00:02:16.506 --> 00:02:22.017
+Then a timeout that happened after the bank accepted the transfer becomes a second
+
+00:02:22.017 --> 00:02:22.621
+transfer.
+
+00:02:23.821 --> 00:02:26.511
+The worst cost is the duplicated effect.
+
+00:02:26.811 --> 00:02:29.312
+Two payments, two emails, two orders.
+
+00:02:29.612 --> 00:02:34.496
+With a payment, the refund becomes hours of support, and a customer who stops
+
+00:02:34.496 --> 00:02:35.321
+trusting you.
+
+00:02:35.971 --> 00:02:38.021
+Then the effect at the wrong time.
+
+00:02:38.321 --> 00:02:43.802
+A retry that recovers from a nighttime limit schedules a payment the user already
+
+00:02:43.802 --> 00:02:45.223
+treated as cancelled.
+
+00:02:45.873 --> 00:02:46.654
+Then waste.
+
+00:02:46.954 --> 00:02:51.503
+Picture ten thousand rejected requests a day, each tried five times.
+
+00:02:51.803 --> 00:02:55.068
+That's forty thousand extra calls, all useless.
+
+00:02:55.368 --> 00:03:00.211
+And hammering a struggling service can get you blocked, or make its outage worse.
+
+00:03:00.861 --> 00:03:02.839
+And the diagnosis gets confusing.
+
+00:03:03.139 --> 00:03:08.622
+The trace shows five failures and one success, and nobody reads the first message,
+
+00:03:08.622 --> 00:03:10.094
+the one that said why.
+
+00:03:11.294 --> 00:03:12.680
+Here's one for you.
+
+00:03:12.980 --> 00:03:15.147
+You've already fixed the obvious part.
+
+00:03:15.447 --> 00:03:20.948
+You only retry on timeouts and server errors, and you send an idempotency key.
+
+00:03:21.248 --> 00:03:23.848
+And a customer still got two billing emails.
+
+00:03:24.148 --> 00:03:25.584
+What do you look at first?
+
+00:03:28.634 --> 00:03:31.336
+Whether the key changes on every attempt.
+
+00:03:31.636 --> 00:03:37.890
+Idempotency only holds if the key stays the same across every attempt of the same
+
+00:03:37.890 --> 00:03:38.662
+operation.
+
+00:03:38.962 --> 00:03:44.044
+If each retry mints a new key, the email service did exactly what you asked.
+
+00:03:44.344 --> 00:03:45.784
+It sent two emails.
+
+00:03:46.434 --> 00:03:51.168
+Switching email providers doesn't help, and neither does raising the attempt cap.
+
+00:03:51.468 --> 00:03:53.258
+The duplicate already went through.
+
+00:03:53.558 --> 00:03:57.696
+The fix is a key that belongs to the operation, not to the attempt.
+
+00:03:58.896 --> 00:04:03.685
+The treatment is a refactoring called classify errors before retry.
+
+00:04:03.985 --> 00:04:07.573
+It has three parts, and skipping any of them leaves a hole.
+
+00:04:07.873 --> 00:04:09.393
+The first is to classify.
+
+00:04:10.043 --> 00:04:14.732
+A timeout, a server that's down, or a rate limit is transient.
+
+00:04:15.032 --> 00:04:20.701
+Retry, with backoff, a low cap, and if the server says how long to wait, wait that
+
+00:04:20.701 --> 00:04:21.047
+long.
+
+00:04:21.697 --> 00:04:23.786
+Invalid input is permanent.
+
+00:04:24.086 --> 00:04:28.411
+The request is wrong, and it will be wrong on the eighth attempt too.
+
+00:04:28.711 --> 00:04:34.457
+A classic beginner trap is retrying a bad request because the API sometimes flakes.
+
+00:04:34.757 --> 00:04:38.339
+Network flakes look like timeouts and server errors.
+
+00:04:38.639 --> 00:04:41.561
+A bad request means fix the request.
+
+00:04:42.211 --> 00:04:46.910
+No balance, a limit, or no permission is permanent, at least for now.
+
+00:04:47.210 --> 00:04:48.130
+Don't loop.
+
+00:04:48.430 --> 00:04:51.496
+Tell the user, or reschedule on purpose.
+
+00:04:52.146 --> 00:04:54.664
+And a timeout on a write is the tricky one.
+
+00:04:54.964 --> 00:04:56.430
+You don't know if it happened.
+
+00:04:56.730 --> 00:05:03.093
+Retry, but only with the same idempotency key, so the service can say: I already did
+
+00:05:03.093 --> 00:05:03.774
+this one.
+
+00:05:04.424 --> 00:05:08.786
+In an agent, the classification also has to reach the model.
+
+00:05:09.086 --> 00:05:11.770
+The tool returns an error it can use.
+
+00:05:12.070 --> 00:05:15.119
+A code, whether it's retryable, and what's missing.
+
+00:05:15.419 --> 00:05:18.815
+A bare error pushes the model straight back to the same call.
+
+00:05:19.465 --> 00:05:22.077
+And add a repetition detector in code.
+
+00:05:22.377 --> 00:05:27.326
+The same tool, with the same arguments, three times in a row, ends the loop.
+
+00:05:27.626 --> 00:05:30.886
+That catches the case where the model ignores the message.
+
+00:05:32.086 --> 00:05:34.068
+When is a simple retry fine?
+
+00:05:34.368 --> 00:05:39.415
+On a read with no side effect, retrying transient errors with a limit and backoff is
+
+00:05:39.415 --> 00:05:40.256
+good practice.
+
+00:05:40.556 --> 00:05:43.045
+A search that times out can run again.
+
+00:05:43.695 --> 00:05:49.380
+And the model provider's SDK that retries twice on rate limits and server errors
+
+00:05:49.380 --> 00:05:50.588
+isn't this smell.
+
+00:05:50.888 --> 00:05:51.885
+It's selective.
+
+00:05:52.185 --> 00:05:53.798
+Just check what it retries.
+
+00:05:54.098 --> 00:06:00.154
+An SDK that handles the network doesn't excuse a catch-all you wrapped around a
+
+00:06:00.154 --> 00:06:00.767
+payment.
+
+00:06:01.417 --> 00:06:04.881
+But notice: the smell doesn't need a duplicated effect.
+
+00:06:05.181 --> 00:06:11.043
+A read job that retries access denied and invalid file eight times has no side
+
+00:06:11.043 --> 00:06:11.569
+effect.
+
+00:06:11.869 --> 00:06:13.550
+It's still blind.
+
+00:06:13.850 --> 00:06:16.243
+It just burns quota instead of money.
+
+00:06:17.443 --> 00:06:19.428
+So here's the idea to take with you.
+
+00:06:19.728 --> 00:06:23.382
+A retry isn't a safety net you throw over everything.
+
+00:06:23.682 --> 00:06:28.727
+It's a decision you make about one kind of error, the kind that time actually fixes.
+
+00:06:29.027 --> 00:06:32.287
+Everything else needs an answer, not another attempt.
+
+00:06:32.587 --> 00:06:37.664
+And anything that changes the world carries a key that makes the second attempt
+
+00:06:37.664 --> 00:06:38.242
+harmless.
+
+00:06:38.892 --> 00:06:44.196
+In the next lesson, we'll do that refactoring step by step, on a real payment flow:
+
+00:06:44.196 --> 00:06:46.049
+classify errors before retry.
+
+00:06:46.349 --> 00:06:47.178
+See you there.

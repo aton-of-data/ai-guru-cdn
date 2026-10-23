@@ -1,0 +1,667 @@
+1
+00:00:01,600 --> 00:00:03,887
+Uma distribuidora brasileira lê notas
+
+2
+00:00:03,887 --> 00:00:05,989
+fiscais eletrônicas com um modelo.
+
+3
+00:00:06,289 --> 00:00:08,928
+Toda empresa no Brasil precisa emitir,
+
+4
+00:00:08,928 --> 00:00:10,804
+então são milhares por dia.
+
+5
+00:00:11,454 --> 00:00:13,392
+O prompt pede muita coisa.
+
+6
+00:00:13,692 --> 00:00:15,502
+Extrair os itens.
+
+7
+00:00:15,802 --> 00:00:16,267
+Somar,
+
+8
+00:00:16,267 --> 00:00:21,079
+aplicar o desconto e conferir o resultado com o total da nota.
+
+9
+00:00:21,379 --> 00:00:23,536
+Calcular o ICMS de cada item.
+
+10
+00:00:23,836 --> 00:00:25,115
+Converter as datas.
+
+11
+00:00:25,415 --> 00:00:28,643
+E checar se o CNPJ do emitente é válido.
+
+12
+00:00:29,293 --> 00:00:33,378
+A cada algumas centenas de notas, algo sai errado.
+
+13
+00:00:33,678 --> 00:00:36,184
+A soma erra por alguns centavos.
+
+14
+00:00:36,484 --> 00:00:39,046
+O imposto de um item é arredondado diferente.
+
+15
+00:00:39,346 --> 00:00:43,333
+Ou um CNPJ inválido é marcado como válido.
+
+16
+00:00:43,983 --> 00:00:45,725
+O time não acha um padrão.
+
+17
+00:00:46,025 --> 00:00:47,242
+Porque não existe.
+
+18
+00:00:47,542 --> 00:00:49,726
+É o modelo fazendo conta.
+
+19
+00:00:50,026 --> 00:00:53,596
+Nesta aula, você vai aprender a identificar esse smell,
+
+20
+00:00:53,596 --> 00:00:55,608
+por que ele se esconde tão bem,
+
+21
+00:00:55,608 --> 00:00:59,308
+e como dividir o trabalho para a conta sair certa sempre.
+
+22
+00:01:00,508 --> 00:01:02,860
+O que está acontecendo é isto.
+
+23
+00:01:03,160 --> 00:01:04,853
+O documento chega.
+
+24
+00:01:05,503 --> 00:01:09,042
+O modelo faz duas coisas diferentes numa chamada só.
+
+25
+00:01:09,342 --> 00:01:11,697
+Entender o documento, e fazer conta.
+
+26
+00:01:12,347 --> 00:01:16,066
+E a conta é gerada token a token, como texto,
+
+27
+00:01:16,066 --> 00:01:18,214
+sem garantia de ser exata.
+
+28
+00:01:18,864 --> 00:01:21,330
+Quase sempre, o resultado bate.
+
+29
+00:01:21,630 --> 00:01:23,672
+Esse quase é o problema todo.
+
+30
+00:01:24,322 --> 00:01:26,354
+Por que um modelo erraria uma conta simples?
+
+31
+00:01:26,654 --> 00:01:28,188
+Porque ele não soma.
+
+32
+00:01:28,488 --> 00:01:29,850
+Ele prevê o próximo token.
+
+33
+00:01:30,150 --> 00:01:34,032
+Um número como mil duzentos e oitenta e quatro, com centavos,
+
+34
+00:01:34,032 --> 00:01:37,915
+vira alguns tokens, e nem sempre cortados nos mesmos lugares.
+
+35
+00:01:38,215 --> 00:01:38,783
+Para somar,
+
+36
+00:01:38,783 --> 00:01:41,211
+o modelo escreve dígitos que parecem plausíveis
+
+37
+00:01:41,211 --> 00:01:42,503
+depois do que veio antes.
+
+38
+00:01:43,153 --> 00:01:46,336
+Na maior parte das vezes, plausível e correto são a mesma coisa.
+
+39
+00:01:46,636 --> 00:01:48,783
+Os modelos atuais acertam muito mais
+
+40
+00:01:48,783 --> 00:01:50,811
+conta que os de alguns anos atrás.
+
+41
+00:01:51,111 --> 00:01:53,284
+Mas muito mais não é sempre.
+
+42
+00:01:53,584 --> 00:01:56,074
+E um sistema fiscal precisa de sempre.
+
+43
+00:01:56,724 --> 00:01:57,635
+Como identificar?
+
+44
+00:01:57,935 --> 00:02:01,291
+O prompt pede para calcular, somar, converter,
+
+45
+00:02:01,291 --> 00:02:04,865
+formatar ou validar algo que tem uma regra exata.
+
+46
+00:02:05,515 --> 00:02:08,717
+Os erros são raros, pequenos e sem padrão.
+
+47
+00:02:09,017 --> 00:02:09,693
+Um centavo.
+
+48
+00:02:09,993 --> 00:02:10,644
+Um dígito.
+
+49
+00:02:10,944 --> 00:02:11,551
+Um dia.
+
+50
+00:02:12,201 --> 00:02:14,591
+O mesmo documento dá resultados diferentes
+
+51
+00:02:14,591 --> 00:02:15,956
+em execuções diferentes.
+
+52
+00:02:16,606 --> 00:02:19,492
+E em algum lugar do sistema tem um código
+
+53
+00:02:19,492 --> 00:02:21,744
+que refaz a conta para conferir,
+
+54
+00:02:21,744 --> 00:02:23,151
+e às vezes discorda.
+
+55
+00:02:23,451 --> 00:02:25,175
+Se você já escreveu a função,
+
+56
+00:02:25,175 --> 00:02:27,374
+por que o modelo também está fazendo?
+
+57
+00:02:28,574 --> 00:02:31,150
+Escrever uma frase no prompt é mais rápido
+
+58
+00:02:31,150 --> 00:02:33,297
+que escrever uma função com testes.
+
+59
+00:02:33,947 --> 00:02:36,508
+O modelo acerta no teste.
+
+60
+00:02:36,808 --> 00:02:40,239
+Com cinco notas de exemplo, a conta sai perfeita.
+
+61
+00:02:40,539 --> 00:02:42,462
+O erro aparece na escala.
+
+62
+00:02:43,112 --> 00:02:46,948
+A linha entre entender e calcular é borrada.
+
+63
+00:02:47,248 --> 00:02:50,878
+Extrair o total parece calcular o total.
+
+64
+00:02:51,178 --> 00:02:51,707
+Não é.
+
+65
+00:02:52,007 --> 00:02:54,716
+O primeiro é ler um número impresso.
+
+66
+00:02:55,016 --> 00:02:57,232
+O segundo é produzir um número novo.
+
+67
+00:02:57,882 --> 00:03:00,537
+E regras que ninguém quer manter.
+
+68
+00:03:00,837 --> 00:03:06,571
+Validar um CNPJ ou contar dias úteis exige código e teste.
+
+69
+00:03:06,871 --> 00:03:10,493
+Jogar no prompt parece pular esse trabalho.
+
+70
+00:03:11,693 --> 00:03:13,270
+O custo começa no dinheiro.
+
+71
+00:03:13,570 --> 00:03:17,610
+Um centavo errado numa nota gera retrabalho contábil.
+
+72
+00:03:17,910 --> 00:03:20,685
+Em escala, é problema com a Receita.
+
+73
+00:03:21,335 --> 00:03:22,504
+Depois, confiança.
+
+74
+00:03:22,804 --> 00:03:24,970
+Quando o erro é raro e aleatório,
+
+75
+00:03:24,970 --> 00:03:29,040
+ninguém confia em resultado nenhum, e tudo é conferido na mão.
+
+76
+00:03:29,690 --> 00:03:31,284
+Depois, tokens.
+
+77
+00:03:31,584 --> 00:03:33,853
+Token de saída costuma custar várias
+
+78
+00:03:33,853 --> 00:03:35,617
+vezes mais que o de entrada.
+
+79
+00:03:35,917 --> 00:03:37,337
+Você está pagando por uma conta
+
+80
+00:03:37,337 --> 00:03:39,032
+que uma linha de código faz de graça.
+
+81
+00:03:39,682 --> 00:03:41,416
+Depois, testes instáveis.
+
+82
+00:03:41,716 --> 00:03:45,146
+O mesmo caso passa e falha em execuções diferentes,
+
+83
+00:03:45,146 --> 00:03:48,509
+e o time aprende a ignorar o vermelho no pipeline.
+
+84
+00:03:49,159 --> 00:03:50,395
+E as regras mudam.
+
+85
+00:03:50,695 --> 00:03:56,484
+Desde julho de 2026, CNPJs novos podem ter letras.
+
+86
+00:03:56,784 --> 00:04:00,715
+Uma regra dessas precisa ser atualizada num lugar só, com teste.
+
+87
+00:04:01,015 --> 00:04:01,726
+No prompt,
+
+88
+00:04:01,726 --> 00:04:04,500
+você descobre a mudança quando o modelo
+
+89
+00:04:04,500 --> 00:04:06,705
+começa a recusar CNPJs válidos.
+
+90
+00:04:07,905 --> 00:04:09,379
+Uma pergunta para você.
+
+91
+00:04:09,679 --> 00:04:11,844
+O time trocou para um modelo maior.
+
+92
+00:04:12,144 --> 00:04:16,062
+A soma das notas agora falha uma vez a cada duas mil,
+
+93
+00:04:16,062 --> 00:04:18,354
+em vez de uma a cada trezentas.
+
+94
+00:04:18,654 --> 00:04:20,722
+O gerente quer dar como resolvido.
+
+95
+00:04:21,022 --> 00:04:21,920
+O que você responde?
+
+96
+00:04:24,970 --> 00:04:28,355
+Que a conta tem regra exata e deve sair do modelo.
+
+97
+00:04:28,655 --> 00:04:30,371
+Uma taxa melhor não é garantia.
+
+98
+00:04:30,671 --> 00:04:32,616
+O modelo maior erra menos,
+
+99
+00:04:32,616 --> 00:04:35,982
+mas continua produzindo dígitos por previsão.
+
+100
+00:04:36,282 --> 00:04:40,344
+Uma função de soma acerta sempre, e custa quase nada.
+
+101
+00:04:40,994 --> 00:04:44,657
+E um erro raro num valor fiscal é pior que um frequente,
+
+102
+00:04:44,657 --> 00:04:45,573
+de certo modo.
+
+103
+00:04:45,873 --> 00:04:49,522
+É mais caro de achar, justamente por ser raro.
+
+104
+00:04:49,822 --> 00:04:54,064
+Pedir para o modelo conferir a própria soma também não ajuda.
+
+105
+00:04:54,364 --> 00:04:58,020
+A conferência roda no mesmo mecanismo que errou.
+
+106
+00:04:59,220 --> 00:05:02,853
+O tratamento é uma refatoração chamada
+
+107
+00:05:02,853 --> 00:05:05,434
+replace LLM call with code.
+
+108
+00:05:05,734 --> 00:05:08,326
+E a regra para dividir o trabalho é simples.
+
+109
+00:05:08,626 --> 00:05:11,081
+O modelo copia o que está escrito no documento.
+
+110
+00:05:11,381 --> 00:05:13,284
+O código produz qualquer número novo.
+
+111
+00:05:13,934 --> 00:05:16,878
+Então a saída do modelo vira um dado estruturado
+
+112
+00:05:16,878 --> 00:05:18,718
+só com os valores que ele leu.
+
+113
+00:05:19,018 --> 00:05:23,661
+E repare que eles voltam como texto, exatamente como impressos,
+
+114
+00:05:23,661 --> 00:05:26,094
+com a vírgula decimal brasileira.
+
+115
+00:05:26,394 --> 00:05:29,590
+O CNPJ, a data, a quantidade de cada item,
+
+116
+00:05:29,590 --> 00:05:34,234
+o preço unitário e a alíquota, o desconto e o total impresso.
+
+117
+00:05:34,884 --> 00:05:38,620
+Aí o código converte, multiplica, soma e compara.
+
+118
+00:05:39,270 --> 00:05:41,838
+Cento e vinte caixas a três e quinze
+
+119
+00:05:41,838 --> 00:05:44,050
+dão trezentos e setenta e oito.
+
+120
+00:05:44,350 --> 00:05:46,552
+Trinta e seis fitas a sete e noventa dão
+
+121
+00:05:46,552 --> 00:05:48,700
+duzentos e oitenta e quatro e quarenta.
+
+122
+00:05:49,350 --> 00:05:50,942
+A soma, menos o desconto,
+
+123
+00:05:50,942 --> 00:05:53,552
+dá seiscentos e trinta e sete e quarenta.
+
+124
+00:05:53,852 --> 00:05:57,195
+Mas a nota imprime seiscentos e trinta e quatro e quarenta.
+
+125
+00:05:57,845 --> 00:06:01,355
+Antes, o modelo podia ter conferido e dito que batia.
+
+126
+00:06:01,655 --> 00:06:05,009
+Agora a diferença é um fato calculado.
+
+127
+00:06:05,309 --> 00:06:08,482
+A nota vai para revisão, com o motivo junto.
+
+128
+00:06:09,132 --> 00:06:10,567
+E dois detalhes importam.
+
+129
+00:06:10,867 --> 00:06:14,170
+Para dinheiro, use um tipo decimal, nunca ponto flutuante.
+
+130
+00:06:14,470 --> 00:06:18,212
+E a regra de arredondamento do imposto é decisão do time fiscal.
+
+131
+00:06:18,512 --> 00:06:20,989
+Agora ela está escrita num lugar que dá para testar.
+
+132
+00:06:21,639 --> 00:06:22,952
+Aí um colega sugere:
+
+133
+00:06:22,952 --> 00:06:27,021
+vamos pedir para o modelo devolver cada linha já multiplicada,
+
+134
+00:06:27,021 --> 00:06:28,531
+para economizar código.
+
+135
+00:06:28,831 --> 00:06:30,476
+Por que isso é um passo atrás?
+
+136
+00:06:30,776 --> 00:06:32,901
+Porque a multiplicação volta a ser
+
+137
+00:06:32,901 --> 00:06:34,902
+um número produzido pelo modelo.
+
+138
+00:06:35,202 --> 00:06:39,774
+A divisão só funciona se o modelo nunca produz um número novo.
+
+139
+00:06:40,074 --> 00:06:42,100
+Nem uma multiplicação simples.
+
+140
+00:06:43,300 --> 00:06:44,643
+Quando dá para ignorar?
+
+141
+00:06:44,943 --> 00:06:45,769
+Estimativas.
+
+142
+00:06:46,069 --> 00:06:48,438
+Mais ou menos quantas páginas tem esse
+
+143
+00:06:48,438 --> 00:06:50,434
+relatório não precisa ser exato.
+
+144
+00:06:51,084 --> 00:06:53,630
+Julgamento, sem regra exata.
+
+145
+00:06:53,930 --> 00:06:57,856
+Decidir se um comentário é ofensivo é trabalho do modelo.
+
+146
+00:06:58,156 --> 00:07:01,278
+Se ele discorda de si mesmo em casos limítrofes,
+
+147
+00:07:01,278 --> 00:07:03,359
+isso é esperado, não esse smell.
+
+148
+00:07:04,009 --> 00:07:05,413
+E protótipo.
+
+149
+00:07:05,713 --> 00:07:09,664
+Para ver se a extração funciona, deixar o modelo somar tudo bem.
+
+150
+00:07:09,964 --> 00:07:11,507
+Tire antes de produção.
+
+151
+00:07:12,157 --> 00:07:15,829
+E cuidado com o smell escondido dentro de uma conversa.
+
+152
+00:07:16,129 --> 00:07:19,623
+Um assistente responde clientes sobre prazo de entrega.
+
+153
+00:07:19,923 --> 00:07:23,908
+O prompt diz: some cinco dias úteis à data da compra.
+
+154
+00:07:24,208 --> 00:07:26,348
+Às vezes ele conta um feriado.
+
+155
+00:07:26,648 --> 00:07:31,198
+É um chat com o cliente, mas a conta lá dentro é determinística.
+
+156
+00:07:31,498 --> 00:07:35,178
+Listar os feriados no prompt mantém a conta no modelo,
+
+157
+00:07:35,178 --> 00:07:36,405
+só com mais texto.
+
+158
+00:07:36,705 --> 00:07:39,900
+Uma ferramenta de datas resolve, e o modelo explica o resultado.
+
+159
+00:07:41,100 --> 00:07:42,899
+Então, a ideia para levar.
+
+160
+00:07:43,199 --> 00:07:47,685
+Se a operação tem regra exata, ela não mora num prompt.
+
+161
+00:07:47,985 --> 00:07:50,445
+Deixe o modelo fazer o que só ele faz,
+
+162
+00:07:50,445 --> 00:07:52,192
+ler um documento bagunçado,
+
+163
+00:07:52,192 --> 00:07:54,976
+e deixe o código produzir todo número novo.
+
+164
+00:07:55,276 --> 00:07:59,435
+Aí uma diferença deixa de ser ruído e vira um alarme útil.
+
+165
+00:08:00,085 --> 00:08:04,333
+Na próxima aula, a gente faz essa refatoração passo a passo,
+
+166
+00:08:04,333 --> 00:08:08,370
+com testes que fixam a regra: replace LLM call with code.
+
+167
+00:08:08,670 --> 00:08:09,499
+Até lá.

@@ -1,0 +1,615 @@
+1
+00:00:01,600 --> 00:00:04,508
+Um assistente jurídico responde perguntas
+
+2
+00:00:04,508 --> 00:00:06,636
+sobre um contrato de serviços.
+
+3
+00:00:06,936 --> 00:00:08,049
+Dezoito páginas.
+
+4
+00:00:08,349 --> 00:00:10,412
+Uns doze mil tokens.
+
+5
+00:00:11,062 --> 00:00:14,275
+O time montou do jeito que os tutoriais ensinam.
+
+6
+00:00:14,575 --> 00:00:17,371
+Quebrar o contrato em pedaços pequenos,
+
+7
+00:00:17,371 --> 00:00:21,602
+virar cada pedaço um embedding, guardar num banco vetorial.
+
+8
+00:00:21,902 --> 00:00:22,943
+A cada pergunta,
+
+9
+00:00:22,943 --> 00:00:25,481
+buscar os quatro pedaços mais parecidos
+
+10
+00:00:25,481 --> 00:00:27,303
+e deixar o modelo responder.
+
+11
+00:00:27,953 --> 00:00:29,413
+Aí um usuário pergunta.
+
+12
+00:00:29,713 --> 00:00:33,672
+Posso rescindir sem multa se o fornecedor atrasar a entrega?
+
+13
+00:00:33,972 --> 00:00:36,486
+A busca traz a cláusula de rescisão.
+
+14
+00:00:36,786 --> 00:00:38,954
+Não traz a cláusula de multas,
+
+15
+00:00:38,954 --> 00:00:43,361
+que fica em outra página e fala em inadimplemento contratual,
+
+16
+00:00:43,361 --> 00:00:44,372
+não em atraso.
+
+17
+00:00:45,022 --> 00:00:47,908
+O modelo responde sim, sem multa.
+
+18
+00:00:48,208 --> 00:00:51,116
+A cláusula 14.3 diz o contrário.
+
+19
+00:00:51,416 --> 00:00:53,990
+E aqui está o detalhe que faz disso um smell.
+
+20
+00:00:54,290 --> 00:00:58,131
+O contrato inteiro cabia com folga no contexto do modelo.
+
+21
+00:00:58,431 --> 00:00:59,081
+Nesta aula,
+
+22
+00:00:59,081 --> 00:01:01,447
+você vai aprender a notar quando a busca
+
+23
+00:01:01,447 --> 00:01:03,930
+é uma aposta que você não precisava fazer.
+
+24
+00:01:05,130 --> 00:01:06,493
+O centro da questão é este.
+
+25
+00:01:06,793 --> 00:01:09,718
+A busca acha pedaços parecidos com a pergunta.
+
+26
+00:01:10,018 --> 00:01:12,531
+Ela não acha os pedaços de que você precisa para responder.
+
+27
+00:01:13,181 --> 00:01:17,301
+Atrasar a entrega soa perto de prazo e rescisão.
+
+28
+00:01:17,601 --> 00:01:20,514
+A cláusula de multas fala em inadimplemento,
+
+29
+00:01:20,514 --> 00:01:22,897
+e no espaço vetorial ela fica longe.
+
+30
+00:01:23,197 --> 00:01:26,163
+Então o modelo responde com um quinto do contrato,
+
+31
+00:01:26,163 --> 00:01:28,002
+e não sabe o que ficou de fora.
+
+32
+00:01:28,652 --> 00:01:30,652
+Quando o documento inteiro cabe,
+
+33
+00:01:30,652 --> 00:01:34,027
+deixe o modelo que leu tudo decidir o que é relevante.
+
+34
+00:01:34,327 --> 00:01:37,056
+Não uma busca que só leu a pergunta.
+
+35
+00:01:38,256 --> 00:01:39,955
+Vamos andar pelo pipeline.
+
+36
+00:01:40,605 --> 00:01:43,430
+Começa com um material pequeno e completo.
+
+37
+00:01:43,730 --> 00:01:46,071
+Um contrato, todas as cláusulas ali.
+
+38
+00:01:46,721 --> 00:01:47,784
+Depois ele é quebrado.
+
+39
+00:01:48,084 --> 00:01:51,522
+E a quebra separa cláusulas que dependem uma da outra.
+
+40
+00:01:51,822 --> 00:01:56,090
+A regra está na página quatro, a exceção na página onze.
+
+41
+00:01:56,740 --> 00:01:59,932
+Os pedaços viram vetores e vão para o banco.
+
+42
+00:02:00,582 --> 00:02:03,222
+A cada pergunta, a busca escolhe alguns.
+
+43
+00:02:03,522 --> 00:02:05,743
+E erra quando as palavras não batem,
+
+44
+00:02:05,743 --> 00:02:07,471
+mesmo quando o sentido bate.
+
+45
+00:02:08,121 --> 00:02:11,283
+E o modelo responde com uma fração do material,
+
+46
+00:02:11,283 --> 00:02:12,696
+com toda a confiança.
+
+47
+00:02:12,996 --> 00:02:17,097
+Nada no prompt diz a ele que a cláusula 14 existe.
+
+48
+00:02:17,747 --> 00:02:19,209
+Então, os sinais.
+
+49
+00:02:19,509 --> 00:02:22,313
+O conteúdo total é pequeno, dezenas de páginas,
+
+50
+00:02:22,313 --> 00:02:24,699
+e caberia inteiro na janela de contexto.
+
+51
+00:02:25,349 --> 00:02:26,281
+Tem chunking,
+
+52
+00:02:26,281 --> 00:02:30,442
+embeddings e banco vetorial para meia dúzia de documentos.
+
+53
+00:02:31,092 --> 00:02:35,004
+As respostas erradas vêm da busca perdendo o trecho certo.
+
+54
+00:02:35,304 --> 00:02:37,343
+Principalmente perguntas que juntam
+
+55
+00:02:37,343 --> 00:02:39,090
+partes distantes do documento.
+
+56
+00:02:39,740 --> 00:02:42,833
+E o time gasta mais tempo ajustando tamanho de pedaço
+
+57
+00:02:42,833 --> 00:02:45,167
+do que resolvendo o problema do usuário.
+
+58
+00:02:46,367 --> 00:02:48,887
+Ninguém monta isso por descuido.
+
+59
+00:02:49,187 --> 00:02:50,574
+Tem bons motivos.
+
+60
+00:02:51,224 --> 00:02:55,109
+RAG virou a resposta padrão para IA sobre documentos.
+
+61
+00:02:55,409 --> 00:02:58,632
+É a primeira arquitetura que todo tutorial mostra.
+
+62
+00:02:59,282 --> 00:03:00,605
+As janelas cresceram.
+
+63
+00:03:00,905 --> 00:03:04,415
+O que precisava de busca há poucos anos hoje cabe inteiro,
+
+64
+00:03:04,415 --> 00:03:05,020
+com sobra.
+
+65
+00:03:05,670 --> 00:03:07,828
+Foi pensado para uma escala futura.
+
+66
+00:03:08,128 --> 00:03:10,764
+E se forem mil contratos?
+
+67
+00:03:11,064 --> 00:03:12,263
+Talvez sejam.
+
+68
+00:03:12,563 --> 00:03:13,839
+Hoje é um.
+
+69
+00:03:14,489 --> 00:03:17,420
+E o custo do contexto foi mal calculado.
+
+70
+00:03:17,720 --> 00:03:21,364
+Mandar o documento inteiro em toda pergunta parece caro,
+
+71
+00:03:21,364 --> 00:03:23,576
+até você contar o cache de prompt.
+
+72
+00:03:24,776 --> 00:03:25,905
+Uma pergunta para você.
+
+73
+00:03:26,205 --> 00:03:29,586
+O assistente erra uma pergunta porque a cláusula
+
+74
+00:03:29,586 --> 00:03:31,770
+de exceção não voltou da busca.
+
+75
+00:03:32,070 --> 00:03:35,939
+Um colega propõe subir de quatro para oito pedaços por pergunta.
+
+76
+00:03:36,239 --> 00:03:38,431
+O contrato inteiro tem 24 pedaços.
+
+77
+00:03:38,731 --> 00:03:39,585
+O que você responde?
+
+78
+00:03:42,635 --> 00:03:44,451
+Oito pedaços resolve esta pergunta.
+
+79
+00:03:44,751 --> 00:03:46,971
+A próxima pode depender do nono.
+
+80
+00:03:47,271 --> 00:03:49,580
+Você continua apostando que a busca acerta,
+
+81
+00:03:49,580 --> 00:03:51,621
+para um material que já cabia inteiro.
+
+82
+00:03:52,271 --> 00:03:55,466
+E trocar o modelo de embedding também não resolve.
+
+83
+00:03:55,766 --> 00:03:59,779
+Um embedding melhor aproxima palavras parecidas.
+
+84
+00:04:00,079 --> 00:04:02,534
+Ele não liga uma cláusula a uma exceção
+
+85
+00:04:02,534 --> 00:04:04,927
+que não se parece nada com a pergunta.
+
+86
+00:04:05,227 --> 00:04:10,446
+Com doze mil tokens, mande tudo e meça no eval.
+
+87
+00:04:11,646 --> 00:04:14,464
+O tratamento é a refatoração da próxima aula.
+
+88
+00:04:14,764 --> 00:04:17,114
+Trocar RAG por contexto direto.
+
+89
+00:04:17,414 --> 00:04:20,473
+Mande o documento inteiro e use cache de prompt
+
+90
+00:04:20,473 --> 00:04:23,598
+para não pagar a leitura cheia em toda pergunta.
+
+91
+00:04:24,248 --> 00:04:27,182
+Um detalhe decide se o cache funciona.
+
+92
+00:04:27,482 --> 00:04:30,795
+O documento precisa ficar no começo do prompt,
+
+93
+00:04:30,795 --> 00:04:32,740
+igualzinho em toda chamada.
+
+94
+00:04:33,390 --> 00:04:34,974
+A pergunta vem depois.
+
+95
+00:04:35,274 --> 00:04:37,202
+Se a pergunta vem primeiro,
+
+96
+00:04:37,202 --> 00:04:41,202
+o começo do prompt muda toda vez e o cache nunca acerta.
+
+97
+00:04:41,852 --> 00:04:44,109
+Um time aprendeu isso do jeito difícil.
+
+98
+00:04:44,409 --> 00:04:46,336
+Trocou para o contrato inteiro,
+
+99
+00:04:46,336 --> 00:04:48,759
+e a conta subiu muito além do esperado.
+
+100
+00:04:49,059 --> 00:04:52,386
+O trace mostrou a pergunta na frente do contrato.
+
+101
+00:04:52,686 --> 00:04:54,738
+A correção não foi voltar para o RAG.
+
+102
+00:04:55,038 --> 00:04:56,423
+Foi mudar uma linha de lugar.
+
+103
+00:04:57,073 --> 00:04:58,966
+O que você ganha vale a pena.
+
+104
+00:04:59,266 --> 00:05:01,989
+O modelo vê as ligações entre as cláusulas.
+
+105
+00:05:02,289 --> 00:05:06,131
+Não tem chunking, nem índice, nem busca para ajustar.
+
+106
+00:05:06,431 --> 00:05:08,912
+E as citações ficam mais precisas,
+
+107
+00:05:08,912 --> 00:05:12,779
+porque o modelo vê cada cláusula com número e página.
+
+108
+00:05:13,979 --> 00:05:15,110
+Agora o outro lado.
+
+109
+00:05:15,410 --> 00:05:17,713
+Isso não é uma regra contra RAG.
+
+110
+00:05:18,363 --> 00:05:23,117
+Se o material não cabe, ou cresce rápido, você precisa de busca.
+
+111
+00:05:23,417 --> 00:05:27,074
+Uma base de quatro mil artigos que muda toda semana,
+
+112
+00:05:27,074 --> 00:05:29,607
+com busca híbrida, não é este smell.
+
+113
+00:05:29,907 --> 00:05:32,482
+Ali, a busca se paga.
+
+114
+00:05:33,132 --> 00:05:35,219
+O controle de acesso é o caso sutil.
+
+115
+00:05:35,519 --> 00:05:38,490
+Um manual de RH de trinta páginas cabe fácil.
+
+116
+00:05:38,790 --> 00:05:42,869
+Mas se cada funcionário só pode ver a seção do próprio cargo,
+
+117
+00:05:42,869 --> 00:05:45,210
+mandar tudo mostra ao modelo seções
+
+118
+00:05:45,210 --> 00:05:47,149
+que essa pessoa não pode ver.
+
+119
+00:05:47,449 --> 00:05:51,295
+Busca filtrada, ou um contexto montado por cargo no código,
+
+120
+00:05:51,295 --> 00:05:53,380
+é como você garante a permissão.
+
+121
+00:05:54,030 --> 00:05:56,568
+E se o cache não se aplica ao seu tráfego,
+
+122
+00:05:56,568 --> 00:05:58,804
+e o volume de perguntas é muito alto,
+
+123
+00:05:58,804 --> 00:06:01,584
+calcule o custo por pergunta antes de decidir.
+
+124
+00:06:02,234 --> 00:06:05,068
+E o erro comum também vai no sentido contrário.
+
+125
+00:06:05,368 --> 00:06:09,247
+Um manual de quarenta páginas, perguntas sobre seções isoladas,
+
+126
+00:06:09,247 --> 00:06:11,587
+busca quase sempre certa, custo baixo.
+
+127
+00:06:11,887 --> 00:06:15,092
+Material pequeno, sozinho, não é motivo para refazer.
+
+128
+00:06:15,392 --> 00:06:17,739
+Rode as duas versões no eval.
+
+129
+00:06:18,039 --> 00:06:22,299
+Se o contexto direto acerta mais pelo mesmo custo, troque.
+
+130
+00:06:22,599 --> 00:06:25,664
+Se empatar, fique com a que é mais simples de manter.
+
+131
+00:06:26,864 --> 00:06:27,938
+O que observar.
+
+132
+00:06:28,238 --> 00:06:32,042
+No eval, marque cada resposta errada pela causa.
+
+133
+00:06:32,342 --> 00:06:35,052
+O trecho certo estava no prompt ou não?
+
+134
+00:06:35,352 --> 00:06:39,743
+Se a maioria dos erros é trecho que nunca chegou, é este smell,
+
+135
+00:06:39,743 --> 00:06:40,510
+em números.
+
+136
+00:06:41,160 --> 00:06:43,115
+Mantenha um conjunto de perguntas
+
+137
+00:06:43,115 --> 00:06:45,365
+que precisam de duas seções distantes,
+
+138
+00:06:45,365 --> 00:06:46,846
+como a regra e a exceção.
+
+139
+00:06:47,146 --> 00:06:50,096
+São essas que o chunking quebra primeiro.
+
+140
+00:06:50,746 --> 00:06:54,501
+E depois da troca, olhe a taxa de acerto do cache no trace.
+
+141
+00:06:54,801 --> 00:06:57,106
+Uma taxa perto de zero quer dizer que algo
+
+142
+00:06:57,106 --> 00:06:58,918
+no começo do prompt está mudando.
+
+143
+00:06:59,218 --> 00:07:02,866
+Uma data, o nome do usuário, ou a pergunta no lugar errado.
+
+144
+00:07:04,066 --> 00:07:06,216
+Então, a ideia para levar.
+
+145
+00:07:06,516 --> 00:07:08,841
+Busca é uma aposta de que ela vai
+
+146
+00:07:08,841 --> 00:07:11,024
+achar o que a resposta precisa.
+
+147
+00:07:11,324 --> 00:07:13,224
+Quando o documento cabe na janela,
+
+148
+00:07:13,224 --> 00:07:15,180
+você não precisa fazer essa aposta.
+
+149
+00:07:15,480 --> 00:07:17,340
+Dê ao modelo o documento inteiro
+
+150
+00:07:17,340 --> 00:07:19,316
+e deixe ele decidir o que importa.
+
+151
+00:07:19,966 --> 00:07:23,711
+Na próxima aula, a gente faz a refatoração passo a passo,
+
+152
+00:07:23,711 --> 00:07:26,273
+com segurança e o cache no lugar certo:
+
+153
+00:07:26,273 --> 00:07:28,309
+trocar RAG por contexto direto.
+
+154
+00:07:28,609 --> 00:07:29,315
+Até lá.

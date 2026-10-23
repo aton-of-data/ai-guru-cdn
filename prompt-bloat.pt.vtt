@@ -1,0 +1,493 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.608
+O bot de RH da empresa começou com dez linhas.
+
+00:00:04.908 --> 00:00:08.724
+Um tom simpático, duas ou três regras, e só.
+
+00:00:09.374 --> 00:00:12.160
+Hoje, o prompt de sistema dele está assim.
+
+00:00:12.460 --> 00:00:15.727
+Quarenta parágrafos, uns quatro mil tokens.
+
+00:00:16.027 --> 00:00:18.704
+E tem três coisas que valem a atenção.
+
+00:00:19.354 --> 00:00:22.151
+Primeiro, a regra de home office aparece duas vezes.
+
+00:00:22.451 --> 00:00:24.499
+Numa, diz três dias por semana.
+
+00:00:25.149 --> 00:00:27.334
+E mais embaixo, diz dois.
+
+00:00:27.634 --> 00:00:31.087
+Com valores diferentes, e ninguém apagou a antiga.
+
+00:00:31.737 --> 00:00:34.095
+Segundo, o prompt pede brevidade,
+
+00:00:34.095 --> 00:00:37.238
+bem no fim de um texto de quatro mil tokens.
+
+00:00:37.888 --> 00:00:41.339
+E terceiro, metade do conteúdo nem é instrução.
+
+00:00:41.639 --> 00:00:42.617
+É conhecimento.
+
+00:00:42.917 --> 00:00:46.360
+A política de férias, a de reembolso.
+
+00:00:46.660 --> 00:00:50.328
+Nesta aula, você vai aprender a reconhecer esse smell,
+
+00:00:50.328 --> 00:00:51.618
+por que ele cresce,
+
+00:00:51.618 --> 00:00:54.743
+quanto custa e como encolher sem quebrar nada.
+
+00:00:55.943 --> 00:00:59.180
+Esse último ponto é a chave do diagnóstico.
+
+00:00:59.830 --> 00:01:04.572
+Uma instrução diz ao modelo como agir, em qualquer conversa.
+
+00:01:04.872 --> 00:01:05.630
+Seja breve.
+
+00:01:05.930 --> 00:01:07.634
+Nunca fale de salário.
+
+00:01:08.284 --> 00:01:11.084
+Conhecimento é o assunto de algumas conversas.
+
+00:01:11.384 --> 00:01:14.115
+A política de férias só importa quando
+
+00:01:14.115 --> 00:01:15.983
+alguém pergunta de férias.
+
+00:01:16.283 --> 00:01:20.012
+Mas quando o conhecimento mora no prompt de sistema,
+
+00:01:20.012 --> 00:01:22.451
+ele vai de carona em toda chamada.
+
+00:01:22.751 --> 00:01:24.966
+Inclusive nas que não precisam dele.
+
+00:01:25.616 --> 00:01:27.454
+Então, como reconhecer?
+
+00:01:27.754 --> 00:01:31.517
+O prompt de sistema passou de alguns milhares de tokens,
+
+00:01:31.517 --> 00:01:32.323
+e só cresce.
+
+00:01:32.973 --> 00:01:35.950
+Cada bug corrigido virou um parágrafo novo.
+
+00:01:36.250 --> 00:01:38.532
+Nunca a remoção de um antigo.
+
+00:01:39.182 --> 00:01:43.524
+Algumas regras se contradizem, e ninguém sabe qual vence.
+
+00:01:44.174 --> 00:01:46.296
+Blocos inteiros de conhecimento estão colados ali.
+
+00:01:46.596 --> 00:01:50.295
+Políticas, catálogos, perguntas frequentes.
+
+00:01:50.945 --> 00:01:55.259
+E ninguém do time sabe explicar o que cada parágrafo faz.
+
+00:01:55.559 --> 00:01:57.994
+Mudar uma linha muda respostas sobre
+
+00:01:57.994 --> 00:02:00.160
+assuntos que não têm nada a ver.
+
+00:02:01.360 --> 00:02:04.126
+Ninguém escreve um prompt inchado de propósito.
+
+00:02:04.426 --> 00:02:08.209
+Ele cresce a partir de decisões razoáveis, uma de cada vez.
+
+00:02:08.509 --> 00:02:10.278
+E cresce em ciclo.
+
+00:02:10.928 --> 00:02:13.808
+Aparece um caso que o bot trata mal.
+
+00:02:14.458 --> 00:02:16.906
+A correção mais rápida, às seis da tarde,
+
+00:02:16.906 --> 00:02:18.877
+é acrescentar mais uma instrução.
+
+00:02:19.177 --> 00:02:20.451
+Não faça isso.
+
+00:02:21.101 --> 00:02:22.146
+O prompt cresce,
+
+00:02:22.146 --> 00:02:25.542
+e cada instrução nova disputa espaço com as antigas.
+
+00:02:26.192 --> 00:02:28.231
+O modelo segue as regras existentes
+
+00:02:28.231 --> 00:02:30.094
+com um pouco menos de confiança.
+
+00:02:30.394 --> 00:02:31.545
+Bugs novos aparecem.
+
+00:02:31.845 --> 00:02:33.814
+E o ciclo recomeça.
+
+00:02:34.464 --> 00:02:36.817
+Acrescentar é mais rápido que entender.
+
+00:02:37.467 --> 00:02:38.828
+Não existe eval.
+
+00:02:39.128 --> 00:02:42.463
+Sem um conjunto de testes, tirar um parágrafo dá medo,
+
+00:02:42.463 --> 00:02:44.810
+porque ninguém sabe o que vai quebrar.
+
+00:02:45.460 --> 00:02:47.556
+O prompt é o único lugar.
+
+00:02:47.856 --> 00:02:50.854
+Sem índice de busca e sem ferramentas,
+
+00:02:50.854 --> 00:02:52.906
+toda informação acaba ali.
+
+00:02:53.556 --> 00:02:55.217
+E várias pessoas editam.
+
+00:02:55.517 --> 00:02:58.865
+Cada uma acrescenta a sua regra, sem ler a dos outros.
+
+00:03:00.065 --> 00:03:02.296
+Agora, o custo de ignorar.
+
+00:03:02.596 --> 00:03:05.894
+Primeiro o dinheiro, com números ilustrativos.
+
+00:03:06.194 --> 00:03:08.023
+Um prompt de quatro mil tokens,
+
+00:03:08.023 --> 00:03:10.030
+vezes vinte mil mensagens por dia,
+
+00:03:10.030 --> 00:03:12.863
+dá oitenta milhões de tokens de entrada por dia.
+
+00:03:13.513 --> 00:03:15.860
+A um dólar hipotético por milhão,
+
+00:03:15.860 --> 00:03:20.413
+são uns dois mil e quatrocentos dólares por mês, só pelo prompt.
+
+00:03:20.713 --> 00:03:23.933
+Antes de o usuário digitar uma palavra.
+
+00:03:24.583 --> 00:03:25.520
+Depois, tempo.
+
+00:03:25.820 --> 00:03:28.607
+Entrada maior quer dizer resposta mais lenta,
+
+00:03:28.607 --> 00:03:31.517
+principalmente até a primeira palavra aparecer.
+
+00:03:32.167 --> 00:03:33.050
+Depois, qualidade.
+
+00:03:33.350 --> 00:03:36.178
+As instruções disputam a atenção do modelo.
+
+00:03:36.478 --> 00:03:39.254
+Pesquisas mostram que os modelos usam pior
+
+00:03:39.254 --> 00:03:41.898
+o que fica no meio de um contexto longo.
+
+00:03:42.198 --> 00:03:46.087
+Uma regra importante no parágrafo vinte e três de quarenta
+
+00:03:46.087 --> 00:03:48.970
+tende a ser seguida com menos consistência.
+
+00:03:49.270 --> 00:03:54.858
+E regras contraditórias produzem respostas imprevisíveis.
+
+00:03:55.508 --> 00:03:56.643
+E a velocidade do time.
+
+00:03:56.943 --> 00:03:58.506
+Ninguém quer mexer.
+
+00:03:58.806 --> 00:04:03.447
+Toda mudança vira uma sessão de teste manual, e de torcida.
+
+00:04:04.647 --> 00:04:06.111
+Uma pergunta para você.
+
+00:04:06.411 --> 00:04:07.385
+Com aquele prompt,
+
+00:04:07.385 --> 00:04:10.413
+um funcionário pergunta quantos dias de home office tem.
+
+00:04:10.713 --> 00:04:12.873
+Às vezes o bot diz três.
+
+00:04:13.173 --> 00:04:15.186
+Às vezes diz dois.
+
+00:04:15.486 --> 00:04:17.452
+Qual é a causa mais provável?
+
+00:04:20.502 --> 00:04:23.091
+O prompt tem duas regras contraditórias,
+
+00:04:23.091 --> 00:04:25.358
+e o modelo escolhe uma de cada vez.
+
+00:04:25.658 --> 00:04:26.854
+Não é a temperatura.
+
+00:04:27.154 --> 00:04:30.494
+Mesmo em zero, a contradição continuaria lá.
+
+00:04:30.794 --> 00:04:33.424
+E não é que o modelo entendeu errado.
+
+00:04:33.724 --> 00:04:35.208
+A pergunta é simples.
+
+00:04:35.508 --> 00:04:38.283
+O problema está no que o modelo recebe.
+
+00:04:38.933 --> 00:04:41.913
+A correção é manter cada regra num lugar só.
+
+00:04:42.213 --> 00:04:44.966
+Não pedir para o modelo prestar mais atenção.
+
+00:04:46.166 --> 00:04:50.077
+São três refatorações, conforme o material do inchaço.
+
+00:04:50.727 --> 00:04:54.033
+Se o prompt cuida de vários assuntos ou tarefas,
+
+00:04:54.033 --> 00:04:55.272
+extract subprompt.
+
+00:04:55.572 --> 00:04:59.039
+Cada um ganha a sua chamada, muitas vezes atrás de um roteador.
+
+00:04:59.689 --> 00:05:02.230
+Se o inchaço é regra de estilo e formato,
+
+00:05:02.230 --> 00:05:03.966
+replace rules with examples.
+
+00:05:04.266 --> 00:05:06.515
+Poucos bons exemplos ensinam mais
+
+00:05:06.515 --> 00:05:08.627
+que vinte regras em maiúsculas.
+
+00:05:09.277 --> 00:05:12.003
+E se o inchaço é conteúdo, como políticas,
+
+00:05:12.003 --> 00:05:15.182
+catálogos e perguntas frequentes, tire do prompt.
+
+00:05:15.482 --> 00:05:18.402
+Esse conteúdo vai para um índice e entra
+
+00:05:18.402 --> 00:05:20.811
+pela busca só quando é relevante.
+
+00:05:21.461 --> 00:05:23.219
+Aplique as três no bot de RH,
+
+00:05:23.219 --> 00:05:26.190
+e o prompt de sistema encolhe para quatro linhas.
+
+00:05:26.490 --> 00:05:28.949
+Responda a partir dos trechos da política.
+
+00:05:29.249 --> 00:05:33.546
+Se não estiver lá, diga que não sabe e indique o canal de RH.
+
+00:05:33.846 --> 00:05:35.550
+Nunca fale de salário.
+
+00:05:35.850 --> 00:05:38.915
+E responda em no máximo três frases.
+
+00:05:39.565 --> 00:05:42.971
+Repare que seja breve virou um limite que dá para conferir.
+
+00:05:43.271 --> 00:05:45.086
+No máximo três frases.
+
+00:05:45.736 --> 00:05:48.514
+As políticas viram documentos num índice,
+
+00:05:48.514 --> 00:05:50.479
+cada um com data de vigência.
+
+00:05:50.779 --> 00:05:53.440
+A regra dos três dias simplesmente some,
+
+00:05:53.440 --> 00:05:55.835
+porque só a versão atual é indexada.
+
+00:05:56.135 --> 00:06:01.396
+E uma pergunta de reembolso traz só o trecho de reembolso.
+
+00:06:02.046 --> 00:06:04.067
+Mas antes de qualquer coisa,
+
+00:06:04.067 --> 00:06:08.109
+monte um eval com perguntas reais e meça o prompt atual.
+
+00:06:08.409 --> 00:06:11.620
+É isso que dá coragem para apagar parágrafos.
+
+00:06:12.270 --> 00:06:17.551
+O erro comum aqui é cortar no feeling, num sábado, sem eval.
+
+00:06:17.851 --> 00:06:20.093
+Um parágrafo que parecia inútil pode
+
+00:06:20.093 --> 00:06:21.961
+ser o que segura um caso raro,
+
+00:06:21.961 --> 00:06:23.767
+como a regra dos estagiários.
+
+00:06:24.067 --> 00:06:25.781
+Corte um bloco por vez,
+
+00:06:25.781 --> 00:06:29.806
+rode o eval e só continue se os números se mantiverem.
+
+00:06:31.006 --> 00:06:32.604
+E quando dá para conviver?
+
+00:06:32.904 --> 00:06:34.384
+Num protótipo.
+
+00:06:34.684 --> 00:06:36.524
+Para validar uma ideia em uma semana,
+
+00:06:36.524 --> 00:06:39.509
+um prompt grande e bagunçado pode ser o caminho mais rápido.
+
+00:06:39.809 --> 00:06:42.099
+Só não leve assim para produção.
+
+00:06:42.749 --> 00:06:44.748
+Volume baixo e conteúdo estável.
+
+00:06:45.048 --> 00:06:47.886
+Uma ferramenta interna usada dez vezes por dia,
+
+00:06:47.886 --> 00:06:49.818
+com uma base que quase não muda,
+
+00:06:49.818 --> 00:06:51.751
+pode viver com um prompt grande.
+
+00:06:52.051 --> 00:06:54.197
+Ligue o cache e siga em frente.
+
+00:06:54.847 --> 00:06:58.072
+E um prompt que é longo porque tem oito exemplos
+
+00:06:58.072 --> 00:07:00.222
+bem escolhidos não está inchado.
+
+00:07:00.522 --> 00:07:03.935
+Se o acerto é alto e ninguém mexe nele há meses,
+
+00:07:03.935 --> 00:07:05.215
+ele está saudável.
+
+00:07:05.515 --> 00:07:09.002
+O smell é crescimento sem critério, não tamanho.
+
+00:07:09.652 --> 00:07:11.042
+Uma última armadilha.
+
+00:07:11.342 --> 00:07:13.030
+Alguém liga o cache de prompt,
+
+00:07:13.030 --> 00:07:15.843
+o custo do prompt de oito mil tokens cai bastante,
+
+00:07:15.843 --> 00:07:18.375
+e a pessoa diz que o problema está resolvido.
+
+00:07:18.675 --> 00:07:21.434
+O cache baixa o preço dos tokens repetidos.
+
+00:07:21.734 --> 00:07:25.570
+Mas o modelo continua lendo o prompt inteiro, em toda chamada,
+
+00:07:25.570 --> 00:07:29.097
+com as mesmas contradições e a mesma disputa por atenção.
+
+00:07:30.297 --> 00:07:32.283
+Então, a ideia para levar.
+
+00:07:32.583 --> 00:07:35.338
+Um prompt de sistema deve dizer como se comportar,
+
+00:07:35.338 --> 00:07:37.984
+não tudo o que o bot um dia pode precisar saber.
+
+00:07:38.284 --> 00:07:42.344
+Cada regra num lugar só, conhecimento num índice,
+
+00:07:42.344 --> 00:07:45.327
+e um eval para apagar com segurança.
+
+00:07:45.627 --> 00:07:48.117
+Um prompt que alguém lê em dois minutos
+
+00:07:48.117 --> 00:07:50.797
+é um prompt que o seu time consegue mudar.
+
+00:07:51.447 --> 00:07:52.534
+Na próxima aula,
+
+00:07:52.534 --> 00:07:55.793
+a gente tira do texto parte do que o prompt pede
+
+00:07:55.793 --> 00:07:58.849
+e leva para um contrato que o código confere:
+
+00:07:58.849 --> 00:08:00.207
+a saída estruturada.
+
+00:08:00.507 --> 00:08:01.337
+Até lá.

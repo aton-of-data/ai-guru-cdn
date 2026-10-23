@@ -1,0 +1,445 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:07.382
+Joana's data team built a system that turns plain questions into database queries.
+
+00:00:07.682 --> 00:00:09.646
+And they did the hard part already.
+
+00:00:09.946 --> 00:00:11.456
+They have a dataset.
+
+00:00:11.756 --> 00:00:15.614
+One hundred twenty real questions, each with the correct query.
+
+00:00:16.264 --> 00:00:20.711
+The problem is that running the eval is a half hour ritual.
+
+00:00:21.011 --> 00:00:26.458
+Open a notebook, point it at the right prompt version, wait, copy the results into a
+
+00:00:26.458 --> 00:00:30.154
+spreadsheet, and compare it with last week's spreadsheet.
+
+00:00:30.804 --> 00:00:34.221
+So in practice, the eval runs when someone remembers.
+
+00:00:34.521 --> 00:00:38.389
+And the week three people changed the prompt, nobody ran it.
+
+00:00:38.689 --> 00:00:39.921
+Accuracy dropped.
+
+00:00:40.221 --> 00:00:44.783
+And they had to dig through the three changes by hand, to find which one caused it.
+
+00:00:45.433 --> 00:00:47.243
+Having the cases isn't enough.
+
+00:00:47.543 --> 00:00:52.945
+They have to run on their own, the same way every time, and the result has to reach
+
+00:00:52.945 --> 00:00:55.678
+whoever made the change, before the merge.
+
+00:00:55.978 --> 00:01:01.281
+In this lesson, you'll see how to turn a dataset into an automatic check that runs
+
+00:01:01.281 --> 00:01:02.316
+on every change.
+
+00:01:03.516 --> 00:01:06.245
+An eval harness has four fixed parts.
+
+00:01:06.895 --> 00:01:08.034
+Load the cases.
+
+00:01:08.684 --> 00:01:10.613
+Run the real system on each one.
+
+00:01:11.263 --> 00:01:13.580
+Grade each output with the right rule.
+
+00:01:14.230 --> 00:01:17.016
+And compare the result with a stored baseline.
+
+00:01:17.666 --> 00:01:19.938
+Then you wire it into your pipeline.
+
+00:01:20.238 --> 00:01:25.975
+Every change to a prompt, a model, a tool, or the pipeline code triggers the eval,
+
+00:01:25.975 --> 00:01:29.053
+and attaches the report to the pull request.
+
+00:01:29.353 --> 00:01:31.637
+And one detail matters a lot.
+
+00:01:31.937 --> 00:01:36.191
+The eval harness runs the system as it runs in production.
+
+00:01:36.491 --> 00:01:39.148
+Same code, same versioned prompt.
+
+00:01:39.448 --> 00:01:41.520
+Not a simplified copy.
+
+00:01:42.720 --> 00:01:43.963
+Here's the flow.
+
+00:01:44.263 --> 00:01:46.277
+Someone opens a pull request.
+
+00:01:46.927 --> 00:01:50.489
+The eval harness loads the current version of the dataset.
+
+00:01:51.139 --> 00:01:56.525
+Each case runs through the real pipeline, in parallel, with a few repeats when the
+
+00:01:56.525 --> 00:01:57.445
+output varies.
+
+00:01:58.095 --> 00:01:59.786
+Each output gets graded.
+
+00:02:00.086 --> 00:02:03.614
+By exact match, a rule in code, or a judge.
+
+00:02:04.264 --> 00:02:08.290
+The scores become rates per category, plus cost and latency.
+
+00:02:08.940 --> 00:02:12.744
+The result is compared with the main branch's baseline.
+
+00:02:13.394 --> 00:02:15.669
+And the report goes onto the pull request.
+
+00:02:15.969 --> 00:02:18.801
+A regression above the threshold blocks the merge.
+
+00:02:20.001 --> 00:02:25.655
+On Monday, Joana's pull request changes only one example in the prompt, the one
+
+00:02:25.655 --> 00:02:27.159
+about joining tables.
+
+00:02:27.459 --> 00:02:32.726
+The pipeline starts the eval harness, runs the one hundred twenty cases through the
+
+00:02:32.726 --> 00:02:35.772
+real system, and posts this on the pull request.
+
+00:02:36.422 --> 00:02:37.871
+Aggregation holds.
+
+00:02:38.171 --> 00:02:39.746
+Date filters hold.
+
+00:02:40.046 --> 00:02:42.461
+Joins drop almost seventeen points.
+
+00:02:42.761 --> 00:02:43.526
+Regression.
+
+00:02:44.176 --> 00:02:45.741
+The merge is blocked.
+
+00:02:46.041 --> 00:02:51.058
+The report lists the eleven join cases that went from right to wrong.
+
+00:02:51.358 --> 00:02:56.575
+Joana opens the first one, sees the generated query, and notices the new example
+
+00:02:56.575 --> 00:02:58.988
+flipped which table was the main one.
+
+00:02:59.288 --> 00:03:03.945
+Without the eval harness, that drop would only show up in Friday's spreadsheet,
+
+00:03:03.945 --> 00:03:05.655
+mixed with two other changes.
+
+00:03:05.955 --> 00:03:12.919
+With it, the guilty change is obvious, because only one pull request ever merged.
+
+00:03:13.569 --> 00:03:15.730
+And notice how these cases are graded.
+
+00:03:16.030 --> 00:03:18.119
+Not by comparing the query text.
+
+00:03:18.419 --> 00:03:21.341
+Two different queries can return the same table.
+
+00:03:21.641 --> 00:03:27.088
+The eval harness runs the generated query and the expected one on a test database,
+
+00:03:27.088 --> 00:03:28.549
+and compares the rows.
+
+00:03:28.849 --> 00:03:32.742
+A query written differently that returns the right rows passes.
+
+00:03:33.042 --> 00:03:36.628
+One with an extra join that duplicates rows fails.
+
+00:03:36.928 --> 00:03:41.931
+Comparing text would have rejected the first, and sometimes accepted the second.
+
+00:03:43.131 --> 00:03:44.604
+Here's one for you.
+
+00:03:44.904 --> 00:03:49.430
+Remember the week three people changed the prompt, and accuracy dropped?
+
+00:03:49.730 --> 00:03:51.380
+The dataset already existed.
+
+00:03:51.680 --> 00:03:54.289
+What would the eval harness have done differently?
+
+00:03:57.339 --> 00:04:02.467
+Each pull request would have run the one hundred twenty cases on the real system.
+
+00:04:02.767 --> 00:04:06.146
+And the first one that broke joins would have been blocked.
+
+00:04:06.446 --> 00:04:09.896
+Having cases in the repository doesn't protect you.
+
+00:04:10.196 --> 00:04:12.376
+The notebook ritual is what failed.
+
+00:04:12.676 --> 00:04:17.938
+The eval harness exists so the eval runs without anyone having to remember.
+
+00:04:18.238 --> 00:04:23.446
+And it slices the problem for you, so nobody has to dig through three changes by
+
+00:04:23.446 --> 00:04:23.772
+hand.
+
+00:04:24.972 --> 00:04:26.688
+Which grader should you use?
+
+00:04:26.988 --> 00:04:30.115
+Start with what code can decide on its own.
+
+00:04:30.415 --> 00:04:34.632
+For the route a classifier picks, use exact match.
+
+00:04:35.282 --> 00:04:38.874
+A database query: run it, and compare the rows.
+
+00:04:39.524 --> 00:04:41.288
+An agent: check the path.
+
+00:04:41.588 --> 00:04:43.046
+It called the order lookup.
+
+00:04:43.346 --> 00:04:45.891
+It did not call the refund without approval.
+
+00:04:46.541 --> 00:04:52.122
+And free text, only when there's no other way: a model as judge, with a rubric,
+
+00:04:52.122 --> 00:04:54.737
+checked against a person on a sample.
+
+00:04:55.037 --> 00:04:56.845
+The judge is the last resort.
+
+00:04:57.145 --> 00:05:02.167
+It costs one more call per case, and it can agree with a bad answer.
+
+00:05:02.467 --> 00:05:07.450
+If a code rule covers eighty percent of the cases, leave the judge for the other
+
+00:05:07.450 --> 00:05:07.886
+twenty.
+
+00:05:08.186 --> 00:05:09.565
+Not the other way around.
+
+00:05:10.765 --> 00:05:14.185
+The eval harness usually runs at two speeds.
+
+00:05:14.485 --> 00:05:19.386
+On every commit, a subset of twenty canary cases runs in a few minutes.
+
+00:05:19.686 --> 00:05:21.432
+It catches the obvious miss.
+
+00:05:22.082 --> 00:05:26.585
+Before the merge, and every night, the full set runs, with repeats.
+
+00:05:26.885 --> 00:05:29.220
+That one catches the rare category.
+
+00:05:29.870 --> 00:05:32.090
+And the threshold isn't a matter of taste.
+
+00:05:32.390 --> 00:05:37.115
+Run the same version twice, with no change at all, and see how much the result
+
+00:05:37.115 --> 00:05:37.479
+moves.
+
+00:05:37.779 --> 00:05:43.158
+If the natural spread is one point, a threshold of zero rejects innocent pull
+
+00:05:43.158 --> 00:05:43.787
+requests.
+
+00:05:44.087 --> 00:05:49.065
+If it's four points, a threshold of two lets a real regression through.
+
+00:05:49.365 --> 00:05:52.758
+The threshold sits a little above the noise you measured.
+
+00:05:53.958 --> 00:05:55.628
+Now the common mistakes.
+
+00:05:55.928 --> 00:05:57.358
+A simplified copy.
+
+00:05:57.658 --> 00:06:02.186
+The eval harness calls the model directly, without retrieval, without the router,
+
+00:06:02.186 --> 00:06:03.192
+without the tools.
+
+00:06:03.492 --> 00:06:06.303
+The eval passes, and production fails.
+
+00:06:06.603 --> 00:06:10.298
+The entry point has to be the same function production calls.
+
+00:06:10.948 --> 00:06:12.855
+A notebook as the pipeline.
+
+00:06:13.155 --> 00:06:14.628
+It works once.
+
+00:06:14.928 --> 00:06:18.421
+The week of three pull requests, nobody opens it.
+
+00:06:19.071 --> 00:06:20.446
+A frozen dataset.
+
+00:06:20.746 --> 00:06:23.756
+The eval harness is only as good as its cases.
+
+00:06:24.056 --> 00:06:26.817
+Every production bug becomes a new case.
+
+00:06:27.117 --> 00:06:29.453
+Otherwise you're measuring an old world.
+
+00:06:30.103 --> 00:06:33.925
+And a zero threshold on a system with a lot of variation.
+
+00:06:34.225 --> 00:06:36.531
+The same case passes and fails.
+
+00:06:36.831 --> 00:06:40.750
+Add repeats and averages before you tighten the threshold.
+
+00:06:41.950 --> 00:06:44.694
+The eval harness needs evaluating too.
+
+00:06:44.994 --> 00:06:47.077
+Does the judge agree with a person?
+
+00:06:47.377 --> 00:06:50.664
+How stable is the result between identical runs?
+
+00:06:50.964 --> 00:06:55.030
+And how many of last quarter's production bugs have a case in the dataset?
+
+00:06:55.680 --> 00:06:57.199
+And keep an eye on one signal.
+
+00:06:57.499 --> 00:07:02.762
+If the nightly eval drops with no code change at all, suspect the provider, with an
+
+00:07:02.762 --> 00:07:04.855
+updated model, or your test data.
+
+00:07:05.155 --> 00:07:08.575
+That alert is as useful as the one on the pull request.
+
+00:07:08.875 --> 00:07:10.493
+The baseline ages too.
+
+00:07:10.793 --> 00:07:15.632
+Keep eval traces apart from production traces, tagged with the version tested.
+
+00:07:16.832 --> 00:07:21.845
+On the page, the eval harness comes in Python and TypeScript, and both do the same
+
+00:07:21.845 --> 00:07:22.212
+thing.
+
+00:07:22.512 --> 00:07:24.099
+Load the cases from a file.
+
+00:07:24.399 --> 00:07:29.348
+Run each one a few times through the real system, with a concurrency limit, so you
+
+00:07:29.348 --> 00:07:32.064
+don't blow through the provider's rate limit.
+
+00:07:32.364 --> 00:07:35.413
+And turn the scores into rates per category.
+
+00:07:36.063 --> 00:07:40.024
+Then compare each category with the baseline from the main branch.
+
+00:07:40.324 --> 00:07:45.632
+If any one drops more than the threshold, the process exits with an error, and the
+
+00:07:45.632 --> 00:07:46.603
+pipeline fails.
+
+00:07:47.253 --> 00:07:49.660
+That's one command your pipeline can run.
+
+00:07:49.960 --> 00:07:56.330
+Grading with rules and judges, and a nicer report on the pull request, come in the
+
+00:07:56.330 --> 00:07:57.572
+next iterations.
+
+00:07:57.872 --> 00:08:00.460
+And off the shelf tools can save you the scaffolding.
+
+00:08:00.760 --> 00:08:06.310
+What you never outsource is the dataset, the grader, and the trigger on the pull
+
+00:08:06.310 --> 00:08:06.865
+request.
+
+00:08:08.065 --> 00:08:09.864
+So here's the idea to take with you.
+
+00:08:10.164 --> 00:08:13.178
+A dataset protects you only when it runs on its own.
+
+00:08:13.478 --> 00:08:18.646
+Run the real system, grade with the simplest rule that works, compare per category
+
+00:08:18.646 --> 00:08:23.499
+against a baseline, and put the answer on the pull request, before the merge.
+
+00:08:23.799 --> 00:08:27.457
+Then three changes in one week stop being a mystery.
+
+00:08:28.107 --> 00:08:33.475
+In the next lesson, we'll look at the fuel for all of this: the golden dataset, and
+
+00:08:33.475 --> 00:08:34.833
+how to keep it alive.
+
+00:08:35.133 --> 00:08:35.963
+See you there.

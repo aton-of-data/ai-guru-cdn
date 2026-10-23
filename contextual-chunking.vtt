@@ -1,0 +1,403 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:05.804
+Eduardo maintains the search over a health insurer's internal manual.
+
+00:00:06.104 --> 00:00:11.192
+Somebody cut the documents every five hundred tokens, ignoring the structure.
+
+00:00:11.492 --> 00:00:13.652
+And one of the chunks says only this.
+
+00:00:14.302 --> 00:00:19.211
+The deadline is twenty one business days from the request, and it may be extended
+
+00:00:19.211 --> 00:00:20.726
+once, with justification.
+
+00:00:21.026 --> 00:00:24.023
+In the cases covered by item three point two.
+
+00:00:24.673 --> 00:00:26.702
+Deadline for what?
+
+00:00:27.002 --> 00:00:27.604
+For whom?
+
+00:00:27.904 --> 00:00:29.628
+From which version of the manual?
+
+00:00:29.928 --> 00:00:33.904
+Search finds this passage for the authorization deadline for surgery.
+
+00:00:34.204 --> 00:00:39.574
+But also for the reimbursement deadline, because the passage never says which topic
+
+00:00:39.574 --> 00:00:40.221
+it covers.
+
+00:00:40.521 --> 00:00:45.347
+And the model answers with confidence, and sometimes gets the topic wrong.
+
+00:00:45.997 --> 00:00:51.075
+In this lesson, you'll learn to cut documents so that each chunk can be understood,
+
+00:00:51.075 --> 00:00:52.421
+and found, on its own.
+
+00:00:53.621 --> 00:00:54.881
+Think of a file card.
+
+00:00:55.181 --> 00:00:57.563
+A good one doesn't just say what it contains.
+
+00:00:57.863 --> 00:01:01.817
+It says which folder, which drawer, and which year it came from.
+
+00:01:02.117 --> 00:01:05.213
+The pattern makes two changes, both at indexing time.
+
+00:01:05.863 --> 00:01:07.651
+First, split by structure.
+
+00:01:07.951 --> 00:01:12.577
+Headings, sections, clauses, list items and tables are the boundaries.
+
+00:01:12.877 --> 00:01:17.646
+A chunk never starts mid sentence, and never separates a table from its header.
+
+00:01:17.946 --> 00:01:21.539
+There's still a maximum size, but it's the limit, not the rule.
+
+00:01:22.189 --> 00:01:24.628
+Second, attach context.
+
+00:01:24.928 --> 00:01:29.923
+Each chunk gets a header with its path, document, chapter and section, its version,
+
+00:01:29.923 --> 00:01:34.437
+and optionally one sentence, written by a model, that situates the passage.
+
+00:01:35.087 --> 00:01:38.725
+That header goes into the text you index, for the search.
+
+00:01:39.025 --> 00:01:43.454
+And into the text you send to the model, for the answer and the citation.
+
+00:01:44.654 --> 00:01:49.182
+The document arrives, as a PDF, a web page or plain text.
+
+00:01:49.832 --> 00:01:53.525
+A parser finds the headings, sections, lists and tables.
+
+00:01:54.175 --> 00:01:57.901
+The split follows that structure, within the maximum size.
+
+00:01:58.551 --> 00:02:03.503
+A small model reads the document and the passage, and writes one sentence that says
+
+00:02:03.503 --> 00:02:04.517
+where it belongs.
+
+00:02:05.167 --> 00:02:10.700
+Each chunk becomes a header, with path, version and that sentence, plus the original
+
+00:02:10.700 --> 00:02:11.029
+text.
+
+00:02:11.679 --> 00:02:16.100
+And the full chunk is indexed, for keyword search and for vector search.
+
+00:02:17.300 --> 00:02:19.832
+Now the same passage, after the pattern.
+
+00:02:20.132 --> 00:02:23.016
+Three things changed, and each one teaches something.
+
+00:02:23.666 --> 00:02:24.272
+The path.
+
+00:02:24.572 --> 00:02:30.286
+Authorizations, then elective surgery, now goes into the embedding and into keyword
+
+00:02:30.286 --> 00:02:30.768
+search.
+
+00:02:31.068 --> 00:02:34.602
+A reimbursement question no longer looks just as similar.
+
+00:02:35.252 --> 00:02:36.471
+The context sentence.
+
+00:02:36.771 --> 00:02:41.419
+It translates the vague passage into the vocabulary of the question.
+
+00:02:41.719 --> 00:02:45.255
+Authorization, elective surgery, individual plan.
+
+00:02:45.905 --> 00:02:47.353
+And the neighboring clause.
+
+00:02:47.653 --> 00:02:51.651
+If the section fits the limit, item three point two travels with it.
+
+00:02:51.951 --> 00:02:56.751
+If it doesn't, the header still points at section four point three, and the citation
+
+00:02:56.751 --> 00:02:59.037
+doesn't pretend the passage is complete.
+
+00:02:59.687 --> 00:03:00.842
+What does it cost?
+
+00:03:01.142 --> 00:03:04.456
+Say eight hundred tokens of body and eighty of header.
+
+00:03:04.756 --> 00:03:10.001
+Five chunks per question go from four thousand tokens to four thousand four hundred.
+
+00:03:10.301 --> 00:03:15.752
+The real cost sits in ingestion, one small call per chunk, with the whole document
+
+00:03:15.752 --> 00:03:16.217
+cached.
+
+00:03:16.517 --> 00:03:17.856
+Not in the question.
+
+00:03:18.506 --> 00:03:21.324
+And putting the path at the start helps twice.
+
+00:03:21.624 --> 00:03:23.224
+The search finds the right topic.
+
+00:03:23.524 --> 00:03:28.822
+And the model, which reads the start of a context better than the middle, sees first
+
+00:03:28.822 --> 00:03:30.588
+where the passage came from.
+
+00:03:31.788 --> 00:03:32.878
+Here's one for you.
+
+00:03:33.178 --> 00:03:38.322
+You turned on the context sentence, but you generated it by reading only the chunk,
+
+00:03:38.322 --> 00:03:39.376
+not the document.
+
+00:03:39.676 --> 00:03:45.468
+In the eval, the reimbursement question still retrieves the authorization passage.
+
+00:03:45.768 --> 00:03:46.270
+Why?
+
+00:03:49.320 --> 00:03:52.159
+Because the sentence is as vague as the chunk.
+
+00:03:52.459 --> 00:03:55.311
+The model writing it never saw the chapter either.
+
+00:03:55.611 --> 00:04:00.014
+So it writes something like, this passage discusses a deadline.
+
+00:04:00.664 --> 00:04:04.717
+The sentence exists to inject the context the chunk lost.
+
+00:04:05.017 --> 00:04:08.742
+Without the document in that call, there's no context to inject.
+
+00:04:09.042 --> 00:04:14.161
+That's why the call carries the whole document, cached, and reuses it across every
+
+00:04:14.161 --> 00:04:14.535
+chunk.
+
+00:04:15.735 --> 00:04:18.549
+Short documents that fit in a single chunk.
+
+00:04:18.849 --> 00:04:22.168
+A two page remote work policy doesn't need to be cut.
+
+00:04:22.468 --> 00:04:25.587
+A title and a version at the start are enough.
+
+00:04:25.887 --> 00:04:29.909
+Splitting it only invents boundaries, and can cut the rule in half.
+
+00:04:30.559 --> 00:04:34.052
+Unstructured content, like conversation transcripts.
+
+00:04:34.352 --> 00:04:36.112
+There are no headings to follow.
+
+00:04:36.412 --> 00:04:39.809
+Split by topic, or by overlapping windows.
+
+00:04:40.459 --> 00:04:43.558
+And material that fits whole in the context.
+
+00:04:43.858 --> 00:04:46.119
+That's the smell from two lessons ago.
+
+00:04:46.419 --> 00:04:48.691
+Don't chunk what the model could read.
+
+00:04:49.341 --> 00:04:50.932
+Now the common traps.
+
+00:04:51.232 --> 00:04:54.106
+Cutting by characters and calling it structural.
+
+00:04:54.406 --> 00:04:59.164
+If the boundary ignores the table title, you only changed the size.
+
+00:04:59.814 --> 00:05:02.706
+Which is exactly what happened at the insurer.
+
+00:05:03.006 --> 00:05:06.212
+The rows with the deadline numbers landed in one chunk.
+
+00:05:06.512 --> 00:05:12.345
+The header, with the columns, authorization, reimbursement, appeal, stayed in the
+
+00:05:12.345 --> 00:05:13.281
+previous one.
+
+00:05:13.581 --> 00:05:18.020
+So the bot started citing twenty one, without saying which deadline.
+
+00:05:18.320 --> 00:05:22.417
+A table becomes its own chunk, with its title and its columns.
+
+00:05:23.067 --> 00:05:26.046
+And leaving repealed versions in the index.
+
+00:05:26.346 --> 00:05:31.523
+A header that says version six doesn't stop the search from returning version six.
+
+00:05:31.823 --> 00:05:36.591
+Filter by effective date at query time, and remove the old document when you
+
+00:05:36.591 --> 00:05:37.093
+reindex.
+
+00:05:37.393 --> 00:05:40.365
+That's solved in the index, not in the prompt.
+
+00:05:41.565 --> 00:05:42.594
+What to measure.
+
+00:05:42.894 --> 00:05:48.361
+Search recall and precision, before and after, on the same eval.
+
+00:05:49.011 --> 00:05:51.738
+Build twin questions on purpose.
+
+00:05:52.038 --> 00:05:55.726
+The reimbursement deadline and the authorization deadline.
+
+00:05:56.026 --> 00:06:00.449
+If the reimbursement passage stays out of the top five for the authorization
+
+00:06:00.449 --> 00:06:02.660
+question, the header is doing its job.
+
+00:06:03.310 --> 00:06:04.660
+Check the citations.
+
+00:06:04.960 --> 00:06:08.272
+The section cited in the answer has to be the right one.
+
+00:06:08.922 --> 00:06:12.454
+And alert on the empty-path rate at ingestion.
+
+00:06:12.754 --> 00:06:17.795
+If thirty percent of the chunks come out with no path, the parser broke on a new
+
+00:06:17.795 --> 00:06:18.551
+kind of PDF.
+
+00:06:18.851 --> 00:06:21.644
+Don't paper over it with the generated sentence.
+
+00:06:21.944 --> 00:06:24.523
+Fix the conversion, and reindex.
+
+00:06:25.173 --> 00:06:26.491
+One security point.
+
+00:06:26.791 --> 00:06:30.766
+A chunk can carry personal data, a member's name, a card number.
+
+00:06:31.066 --> 00:06:36.423
+Under data protection law, the index is one more place where that data lives.
+
+00:06:36.723 --> 00:06:41.652
+If your policy forbids sending those documents to the model that writes the context
+
+00:06:41.652 --> 00:06:46.106
+sentence, stay on the structural header, built only from title and section.
+
+00:06:47.306 --> 00:06:49.475
+On the page, there are two tabs.
+
+00:06:49.775 --> 00:06:52.640
+The TypeScript one does only the structural part.
+
+00:06:52.940 --> 00:06:58.192
+It splits the document by its headings, keeps the path as it goes down, and puts
+
+00:06:58.192 --> 00:07:01.410
+title, path and version at the top of each chunk.
+
+00:07:01.710 --> 00:07:03.408
+No model call at all.
+
+00:07:04.058 --> 00:07:06.847
+The Python one adds the context sentence.
+
+00:07:07.147 --> 00:07:12.245
+It sends the whole document as a cached block, and asks a small model, for each
+
+00:07:12.245 --> 00:07:15.342
+chunk, which topic and case that passage covers.
+
+00:07:15.992 --> 00:07:17.974
+And that's the order to adopt it.
+
+00:07:18.274 --> 00:07:20.036
+Start with the structural header.
+
+00:07:20.336 --> 00:07:23.804
+It's cheap, and it already solves much of the problem.
+
+00:07:24.454 --> 00:07:29.841
+Turn on the generated sentence only if the topic confusion eval still fails.
+
+00:07:31.041 --> 00:07:33.244
+So here's the idea to take with you.
+
+00:07:33.544 --> 00:07:36.635
+A chunk cut blindly is a sentence without an address.
+
+00:07:36.935 --> 00:07:42.238
+Cut along the document's own structure, and give each piece its path, its version
+
+00:07:42.238 --> 00:07:45.969
+and, when it helps, a sentence that says what it's about.
+
+00:07:46.269 --> 00:07:49.667
+Then both the search and the model know where they are.
+
+00:07:50.317 --> 00:07:55.907
+That path in the header is made of exact words, and exact words are what keyword
+
+00:07:55.907 --> 00:07:56.815
+search loves.
+
+00:07:57.115 --> 00:08:01.945
+In the next lesson, we'll combine keyword search with embeddings: hybrid search.
+
+00:08:02.245 --> 00:08:03.262
+See you there.

@@ -1,0 +1,379 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:03.900
+Picture your first week on a new team.
+
+00:00:04.200 --> 00:00:09.167
+You inherited an assistant that answers customers on WhatsApp, looks up orders, and
+
+00:00:09.167 --> 00:00:10.663
+sometimes calls a person.
+
+00:00:11.313 --> 00:00:12.484
+It works.
+
+00:00:12.784 --> 00:00:17.966
+But every prompt change is scary, the provider bill went up, and nobody can explain
+
+00:00:17.966 --> 00:00:20.714
+why the bot said something absurd yesterday.
+
+00:00:21.364 --> 00:00:22.645
+You open the code.
+
+00:00:22.945 --> 00:00:26.755
+The first thing you see is a system prompt with forty paragraphs.
+
+00:00:27.405 --> 00:00:32.138
+Then a loop that keeps calling the model until it decides it's done, with no
+
+00:00:32.138 --> 00:00:32.636
+counter.
+
+00:00:33.286 --> 00:00:34.255
+And no tests.
+
+00:00:34.555 --> 00:00:36.247
+You can tell something is off.
+
+00:00:36.547 --> 00:00:40.921
+The hard part is saying what, deciding what comes first, and fixing it without
+
+00:00:40.921 --> 00:00:42.322
+breaking everything else.
+
+00:00:42.972 --> 00:00:46.510
+You don't need another tutorial on how to call an API.
+
+00:00:46.810 --> 00:00:50.593
+You need words for what's wrong, and a safe path to fix it.
+
+00:00:50.893 --> 00:00:55.169
+That's what this catalog is for, and in this lesson you'll learn how to use it.
+
+00:00:56.369 --> 00:01:01.712
+The catalog organizes the engineering of language model systems into five pillars.
+
+00:01:02.012 --> 00:01:04.703
+Each one answers a different question.
+
+00:01:05.353 --> 00:01:10.194
+Fundamentals answer: what do I need to know before designing anything?
+
+00:01:10.494 --> 00:01:14.190
+Tokens, cost, how the model picks words.
+
+00:01:14.840 --> 00:01:17.896
+Smells answer: what's wrong with my system?
+
+00:01:18.196 --> 00:01:20.428
+That giant prompt has a name.
+
+00:01:20.728 --> 00:01:22.111
+It's called prompt bloat.
+
+00:01:22.761 --> 00:01:26.267
+Refactorings answer: how do I fix it without breaking it?
+
+00:01:26.917 --> 00:01:30.627
+Patterns answer: what's the right shape for this kind of problem?
+
+00:01:30.927 --> 00:01:36.273
+And the fifth pillar, real-world scenarios, shows all of that inside a complete
+
+00:01:36.273 --> 00:01:36.747
+system.
+
+00:01:37.947 --> 00:01:40.110
+The pillars are not separate boxes.
+
+00:01:40.410 --> 00:01:43.421
+They form a path, and you'll walk it again and again.
+
+00:01:44.071 --> 00:01:45.413
+It starts with a smell.
+
+00:01:45.713 --> 00:01:48.731
+A smell is a sign that something will hurt later.
+
+00:01:49.031 --> 00:01:53.935
+The system works today, but it's getting expensive, fragile, or unsafe.
+
+00:01:54.585 --> 00:01:56.593
+The smell points to a refactoring.
+
+00:01:56.893 --> 00:02:00.909
+A refactoring changes the structure without changing what users get.
+
+00:02:01.209 --> 00:02:06.340
+And every refactoring starts and ends with an eval, a test for what the model
+
+00:02:06.340 --> 00:02:06.940
+produces.
+
+00:02:07.590 --> 00:02:12.343
+The refactoring leads to a design pattern, the proven way to solve that kind of
+
+00:02:12.343 --> 00:02:12.824
+problem.
+
+00:02:13.474 --> 00:02:16.232
+And the pattern shows up in real-world scenarios.
+
+00:02:16.532 --> 00:02:20.272
+Each scenario starts with a naive first version.
+
+00:02:20.572 --> 00:02:25.609
+That first version has the smells from step one, and the cycle starts again.
+
+00:02:26.809 --> 00:02:31.958
+Let's go back to the assistant you inherited and follow that path with its two most
+
+00:02:31.958 --> 00:02:33.013
+visible problems.
+
+00:02:33.663 --> 00:02:35.742
+First, the loop with no counter.
+
+00:02:36.042 --> 00:02:40.051
+One single run cost dozens of times more than a normal one.
+
+00:02:40.351 --> 00:02:43.199
+That smell is called unbounded loop.
+
+00:02:43.849 --> 00:02:49.896
+The fix is a refactoring called add loop budget: a limit on steps, tokens and time.
+
+00:02:50.546 --> 00:02:55.066
+And where you land is a pattern called stop conditions, where the agent knows
+
+00:02:55.066 --> 00:02:56.710
+exactly when it has to stop.
+
+00:02:57.360 --> 00:03:02.993
+Second, the forty paragraph prompt, where every bug that got fixed became one more
+
+00:03:02.993 --> 00:03:03.680
+paragraph.
+
+00:03:03.980 --> 00:03:06.256
+That's what we call prompt bloat.
+
+00:03:06.906 --> 00:03:11.212
+The refactoring pulls one job out into its own smaller prompt.
+
+00:03:11.512 --> 00:03:14.187
+It's called extract subprompt.
+
+00:03:14.837 --> 00:03:20.264
+And the target is prompt chaining: a few short steps, each one easy to test.
+
+00:03:20.914 --> 00:03:22.024
+Now notice the order.
+
+00:03:22.324 --> 00:03:26.105
+You don't jump from the symptom straight to rewriting everything with the right
+
+00:03:26.105 --> 00:03:26.488
+pattern.
+
+00:03:26.788 --> 00:03:32.416
+The refactoring is the small, measured path between what exists today and the final
+
+00:03:32.416 --> 00:03:32.823
+shape.
+
+00:03:33.123 --> 00:03:37.280
+Measure first, change the structure, then measure again.
+
+00:03:38.480 --> 00:03:39.953
+Here's one for you.
+
+00:03:40.253 --> 00:03:45.411
+A teammate applied extract subprompt to the ticket classifier, and tells you it got
+
+00:03:45.411 --> 00:03:46.157
+much better.
+
+00:03:46.457 --> 00:03:51.025
+Based on what you just heard, what's missing before you accept that change?
+
+00:03:54.075 --> 00:03:59.906
+What's missing is the eval, run before and after, with the numbers side by side.
+
+00:04:00.206 --> 00:04:03.773
+Without the before number, better is just an impression.
+
+00:04:04.073 --> 00:04:07.424
+And a drop in some other category would go completely unnoticed.
+
+00:04:08.074 --> 00:04:11.439
+Switching to a bigger model wouldn't answer the question either.
+
+00:04:11.739 --> 00:04:15.442
+It mixes two changes and makes everything more expensive.
+
+00:04:15.742 --> 00:04:19.760
+The guarantee that nothing got worse comes from measuring.
+
+00:04:20.960 --> 00:04:25.300
+The word smell comes from classic code refactoring.
+
+00:04:25.600 --> 00:04:28.032
+And there's a difference worth holding on to.
+
+00:04:28.332 --> 00:04:29.546
+A bug breaks today.
+
+00:04:29.846 --> 00:04:32.476
+A smell works today and charges you later.
+
+00:04:33.126 --> 00:04:34.623
+It charges on the bill.
+
+00:04:35.273 --> 00:04:37.977
+In the time your team spends maintaining it.
+
+00:04:38.627 --> 00:04:40.935
+And sometimes in a security incident.
+
+00:04:41.585 --> 00:04:46.247
+That's why every smell in the catalog has a section called when to ignore.
+
+00:04:46.547 --> 00:04:49.971
+A big prompt in a prototype with ten users may be fine.
+
+00:04:50.271 --> 00:04:55.264
+The same prompt in a support channel with thousands of conversations a day is money
+
+00:04:55.264 --> 00:04:56.467
+leaving every month.
+
+00:04:57.117 --> 00:04:59.953
+The catalog gives you the diagnosis.
+
+00:05:00.253 --> 00:05:03.155
+The decision of when to fix stays with you.
+
+00:05:03.805 --> 00:05:09.126
+And the most common beginner mistake is the opposite one: reading the list of smells
+
+00:05:09.126 --> 00:05:11.533
+and trying to fix all of them at once.
+
+00:05:11.833 --> 00:05:13.500
+Start with what hurts most.
+
+00:05:13.800 --> 00:05:17.675
+Usually, that's what shows up on the bill, or in this week's incident.
+
+00:05:18.875 --> 00:05:22.982
+Every page in a pillar has the same sections in the same order.
+
+00:05:23.282 --> 00:05:26.819
+Learn the format once and you'll find anything without hunting.
+
+00:05:27.119 --> 00:05:30.754
+And the numbers in the diagrams match the comments in the code.
+
+00:05:31.054 --> 00:05:37.265
+If step three in the diagram is classify, the code also says step three, classify.
+
+00:05:37.565 --> 00:05:41.453
+When you get lost in the code, go back to the diagram by number.
+
+00:05:42.103 --> 00:05:44.485
+Along the way you'll find short questions.
+
+00:05:44.785 --> 00:05:50.231
+Every option has an explanation, including the wrong ones, because the most useful
+
+00:05:50.231 --> 00:05:52.490
+mistake is the one you understand.
+
+00:05:53.140 --> 00:05:56.919
+And if you came from a search, reading out of order is fine.
+
+00:05:57.219 --> 00:06:02.362
+Every page ends with a read next, pointing to the most useful step from there.
+
+00:06:02.662 --> 00:06:05.202
+If you want an order, follow the trails.
+
+00:06:05.502 --> 00:06:11.824
+They form one course: foundations, evals, RAG and context, agents, security, and
+
+00:06:11.824 --> 00:06:12.693
+production.
+
+00:06:13.893 --> 00:06:16.917
+Now pick a system you know and answer four questions.
+
+00:06:17.217 --> 00:06:21.398
+Write the answers down, even if the answer is I don't know.
+
+00:06:22.048 --> 00:06:22.481
+One.
+
+00:06:22.781 --> 00:06:25.585
+How many tokens is the system prompt today?
+
+00:06:25.885 --> 00:06:31.897
+If the answer is several thousand, or no idea, read prompt bloat.
+
+00:06:32.547 --> 00:06:33.206
+Two.
+
+00:06:33.506 --> 00:06:38.247
+If someone changes one line of the prompt, how do you know nothing got worse?
+
+00:06:38.547 --> 00:06:43.611
+If the answer is we try a few questions by hand, read untested prompt.
+
+00:06:44.261 --> 00:06:44.670
+Three.
+
+00:06:44.970 --> 00:06:49.577
+If the model does something wrong in production, where do you look?
+
+00:06:49.877 --> 00:06:52.246
+If you can't tell, read no tracing.
+
+00:06:52.896 --> 00:06:53.352
+Four.
+
+00:06:53.652 --> 00:06:58.175
+What was the most expensive run this month, and how much did it cost?
+
+00:06:58.475 --> 00:07:01.504
+If nobody tracks that, read no cost budget.
+
+00:07:02.154 --> 00:07:04.894
+Most teams answer at least two of these badly.
+
+00:07:05.194 --> 00:07:08.097
+That's normal, and it's a good place to start.
+
+00:07:08.397 --> 00:07:12.639
+You just built your priority list, with names the rest of your team can look up.
+
+00:07:13.839 --> 00:07:17.085
+That's the real value of a shared vocabulary.
+
+00:07:17.385 --> 00:07:22.037
+Saying this agent has tool sprawl tells your team more than saying the agent gets
+
+00:07:22.037 --> 00:07:23.129
+confused sometimes.
+
+00:07:23.429 --> 00:07:28.320
+The name carries the diagnosis, the tested fix, and the shape you're aiming for.
+
+00:07:28.970 --> 00:07:33.911
+In the next lesson, we start with the model itself: four properties every engineer
+
+00:07:33.911 --> 00:07:37.949
+needs to know, and that almost every pattern here tries to control.
+
+00:07:38.249 --> 00:07:39.079
+See you there.

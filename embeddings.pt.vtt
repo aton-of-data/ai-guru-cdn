@@ -1,0 +1,502 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.717
+Uma central de ajuda tinha uma busca por palavra-chave.
+
+00:00:05.017 --> 00:00:07.782
+Um cliente digitou: não consigo entrar na minha conta.
+
+00:00:08.082 --> 00:00:09.516
+Zero resultados.
+
+00:00:10.166 --> 00:00:13.142
+O artigo certo se chamava: como redefinir sua senha.
+
+00:00:13.442 --> 00:00:15.385
+Nenhuma palavra em comum.
+
+00:00:15.685 --> 00:00:16.527
+O mesmo assunto.
+
+00:00:17.177 --> 00:00:19.735
+Então o time trocou a busca para embeddings,
+
+00:00:19.735 --> 00:00:22.526
+e aquela pergunta passou a achar o artigo certo.
+
+00:00:22.826 --> 00:00:24.943
+Duas semanas depois, um bug novo.
+
+00:00:25.243 --> 00:00:29.693
+Quem buscava cancelar assinatura recebia, em primeiro lugar:
+
+00:00:29.693 --> 00:00:31.696
+como assinar o plano anual.
+
+00:00:32.346 --> 00:00:35.012
+Assunto parecido, intenção oposta.
+
+00:00:35.312 --> 00:00:39.069
+Esses dois casos mostram exatamente o que os embeddings captam,
+
+00:00:39.069 --> 00:00:40.261
+e onde eles enganam.
+
+00:00:40.561 --> 00:00:44.109
+E no fim desta aula, você vai saber quando confiar neles,
+
+00:00:44.109 --> 00:00:45.727
+e quando usar outra coisa.
+
+00:00:46.927 --> 00:00:49.909
+Um embedding é uma lista de números, um vetor,
+
+00:00:49.909 --> 00:00:52.567
+que representa o significado de um texto.
+
+00:00:52.867 --> 00:00:55.657
+Um modelo de embedding foi treinado para que textos
+
+00:00:55.657 --> 00:00:59.103
+com significado parecido virem vetores próximos uns dos outros.
+
+00:00:59.753 --> 00:01:01.118
+Imagine um mapa enorme.
+
+00:01:01.418 --> 00:01:03.275
+Cada texto ganha um ponto nele.
+
+00:01:03.575 --> 00:01:08.604
+Redefinir senha e não consigo entrar na conta caem na mesma rua.
+
+00:01:08.904 --> 00:01:10.956
+Prazo de entrega por região cai num
+
+00:01:10.956 --> 00:01:12.773
+bairro completamente diferente.
+
+00:01:13.973 --> 00:01:15.470
+Você começa com dois textos.
+
+00:01:15.770 --> 00:01:19.082
+A pergunta de um cliente e um artigo de ajuda, por exemplo.
+
+00:01:19.732 --> 00:01:22.621
+O mesmo modelo de embedding processa os dois.
+
+00:01:23.271 --> 00:01:28.112
+Cada texto vira um vetor, com centenas ou milhares de dimensões.
+
+00:01:28.762 --> 00:01:33.221
+Um cálculo simples, normalmente a similaridade de cosseno,
+
+00:01:33.221 --> 00:01:35.066
+compara os dois vetores.
+
+00:01:35.716 --> 00:01:38.463
+E o resultado diz o quão próximos estão os significados.
+
+00:01:38.763 --> 00:01:40.551
+Os significados, não as palavras.
+
+00:01:41.201 --> 00:01:43.537
+Uma regra que muita gente aprende do jeito difícil.
+
+00:01:43.837 --> 00:01:47.505
+A pergunta e os documentos precisam passar pelo mesmo modelo.
+
+00:01:47.805 --> 00:01:49.860
+Cada modelo desenha um mapa diferente.
+
+00:01:50.160 --> 00:01:54.199
+Comparar um vetor de um modelo com vetores de outro é como
+
+00:01:54.199 --> 00:01:57.611
+comparar um endereço com o mapa de outro planeta.
+
+00:01:57.911 --> 00:02:00.182
+Então, se trocar o modelo de embedding,
+
+00:02:00.182 --> 00:02:01.812
+reconstrua o índice inteiro.
+
+00:02:03.012 --> 00:02:05.778
+Então, o que a similaridade capta bem?
+
+00:02:06.078 --> 00:02:07.975
+Sinônimos e paráfrases.
+
+00:02:08.275 --> 00:02:11.310
+Entrar na minha conta fica perto de fazer login,
+
+00:02:11.310 --> 00:02:12.638
+e de redefinir senha.
+
+00:02:13.288 --> 00:02:16.725
+Idiomas diferentes, se o modelo for multilíngue.
+
+00:02:17.025 --> 00:02:20.569
+Reembolso fica perto de refund.
+
+00:02:21.219 --> 00:02:22.830
+E o assunto geral.
+
+00:02:23.130 --> 00:02:25.546
+Textos sobre o mesmo tema se agrupam.
+
+00:02:26.196 --> 00:02:29.196
+No atendimento brasileiro, isso aparece o tempo todo.
+
+00:02:29.496 --> 00:02:32.142
+Pix não caiu e transferência não creditada
+
+00:02:32.142 --> 00:02:34.158
+quase não têm palavras em comum.
+
+00:02:34.458 --> 00:02:36.127
+Elas falam da mesma dor.
+
+00:02:36.427 --> 00:02:37.734
+O embedding pega isso.
+
+00:02:38.034 --> 00:02:41.044
+A busca por palavra-chave sozinha, não.
+
+00:02:42.244 --> 00:02:44.025
+Agora, onde ele engana.
+
+00:02:44.325 --> 00:02:45.913
+Negação e intenção.
+
+00:02:46.213 --> 00:02:50.639
+Cancelar assinatura e assinar um plano dividem o assunto,
+
+00:02:50.639 --> 00:02:53.124
+e o vetor vê o assunto primeiro.
+
+00:02:53.774 --> 00:02:55.690
+Números e códigos.
+
+00:02:55.990 --> 00:03:01.301
+Pedido 4521 e pedido 4512 ficam quase idênticos.
+
+00:03:01.601 --> 00:03:04.656
+O vetor vê: isso é um número de pedido.
+
+00:03:04.956 --> 00:03:08.116
+Para identificadores, CNPJ e códigos de rastreio,
+
+00:03:08.116 --> 00:03:09.729
+filtre no banco de dados.
+
+00:03:10.029 --> 00:03:11.296
+Não por similaridade.
+
+00:03:11.946 --> 00:03:13.490
+Termos raros do seu domínio.
+
+00:03:13.790 --> 00:03:16.239
+Siglas internas e nomes de produto podem
+
+00:03:16.239 --> 00:03:18.198
+ser desconhecidos para o modelo.
+
+00:03:18.848 --> 00:03:20.779
+E textos longos demais.
+
+00:03:21.079 --> 00:03:24.527
+Um documento de vinte páginas vira um único vetor,
+
+00:03:24.527 --> 00:03:27.287
+e o significado de cada trecho se dilui.
+
+00:03:27.587 --> 00:03:29.718
+Por isso os documentos são divididos
+
+00:03:29.718 --> 00:03:31.849
+em pedaços antes de virar embedding.
+
+00:03:32.499 --> 00:03:35.778
+Esse último é a armadilha clássica de quem está começando.
+
+00:03:36.078 --> 00:03:39.799
+O time transforma uma política de quarenta páginas num vetor só.
+
+00:03:40.099 --> 00:03:43.094
+Uma pergunta sobre prazo de troca de eletrônicos
+
+00:03:43.094 --> 00:03:45.215
+acerta um bolo que mistura férias,
+
+00:03:45.215 --> 00:03:47.648
+reembolso, devolução e código de ética.
+
+00:03:47.948 --> 00:03:50.718
+A similaridade pode até ser alta.
+
+00:03:51.018 --> 00:03:53.901
+Mas o trecho útil não está isolado.
+
+00:03:54.201 --> 00:03:55.461
+A divisão em pedaços existe
+
+00:03:55.461 --> 00:03:57.421
+para que cada vetor represente um assunto.
+
+00:03:58.621 --> 00:04:00.094
+Uma pergunta para você.
+
+00:04:00.394 --> 00:04:01.803
+De volta à central de ajuda.
+
+00:04:02.103 --> 00:04:04.942
+Um cliente busca cancelar assinatura,
+
+00:04:04.942 --> 00:04:08.931
+e o primeiro resultado é como assinar o plano anual.
+
+00:04:09.231 --> 00:04:10.571
+O índice está quebrado?
+
+00:04:10.871 --> 00:04:13.052
+Qual é a leitura certa desse ranking?
+
+00:04:16.102 --> 00:04:17.549
+O índice está bem.
+
+00:04:17.849 --> 00:04:19.348
+O embedding fez o trabalho dele.
+
+00:04:19.648 --> 00:04:21.580
+Agrupou o assunto assinatura.
+
+00:04:21.880 --> 00:04:23.433
+A intenção é que saiu invertida.
+
+00:04:23.733 --> 00:04:27.202
+Para desempatar, você precisa de um sinal além da similaridade.
+
+00:04:27.502 --> 00:04:31.223
+Palavra-chave, um filtro, reranking ou um classificador.
+
+00:04:31.873 --> 00:04:35.982
+E trocar por um modelo melhor em português também não resolve.
+
+00:04:36.282 --> 00:04:40.179
+O mesmo acontece em inglês, com cancel e subscribe.
+
+00:04:40.479 --> 00:04:42.172
+O modelo pode mexer um pouco na ordem.
+
+00:04:42.472 --> 00:04:44.284
+O limite de intenção continua.
+
+00:04:45.484 --> 00:04:48.206
+Então, onde os embeddings aparecem na prática?
+
+00:04:48.506 --> 00:04:51.055
+Busca semântica.
+
+00:04:51.355 --> 00:04:53.923
+Compare a pergunta com pedaços de documentos
+
+00:04:53.923 --> 00:04:55.382
+e pegue os mais próximos.
+
+00:04:56.032 --> 00:04:59.271
+Busca para geração, o RAG.
+
+00:04:59.571 --> 00:05:03.075
+Use essa busca para escolher o que entra no contexto do modelo.
+
+00:05:03.375 --> 00:05:04.949
+É a próxima aula.
+
+00:05:05.599 --> 00:05:06.293
+Agrupamento.
+
+00:05:06.593 --> 00:05:11.059
+Junte tickets ou feedbacks parecidos, sem rotular nada antes.
+
+00:05:11.709 --> 00:05:12.839
+Roteamento barato.
+
+00:05:13.139 --> 00:05:15.791
+Compare a mensagem com exemplos de cada rota.
+
+00:05:16.091 --> 00:05:17.643
+Mas cuidado com empate.
+
+00:05:17.943 --> 00:05:21.810
+Uma mensagem como fui cobrado duas vezes pelo pedido
+
+00:05:21.810 --> 00:05:24.711
+4521 fica bem entre cobrança e pedidos.
+
+00:05:25.011 --> 00:05:26.254
+Abaixo de um limite,
+
+00:05:26.254 --> 00:05:29.176
+mande para um classificador ou para uma pessoa,
+
+00:05:29.176 --> 00:05:31.289
+em vez de forçar o primeiro lugar.
+
+00:05:31.939 --> 00:05:33.737
+E cache semântico.
+
+00:05:34.037 --> 00:05:36.079
+Reaproveite a resposta de uma pergunta
+
+00:05:36.079 --> 00:05:38.067
+muito parecida com uma já respondida.
+
+00:05:38.367 --> 00:05:40.121
+Ele herda a mesma armadilha.
+
+00:05:40.421 --> 00:05:43.717
+Como cancelo fica perto de como assino.
+
+00:05:44.017 --> 00:05:47.398
+Com um limite frouxo, o cache entrega a resposta errada.
+
+00:05:47.698 --> 00:05:50.832
+Então trate o limite como parte do contrato,
+
+00:05:50.832 --> 00:05:53.468
+e teste com casos de intenção oposta.
+
+00:05:54.668 --> 00:05:58.027
+Na página tem um experimento que roda no seu notebook,
+
+00:05:58.027 --> 00:06:01.822
+sem chave de API, com um modelo multilíngue pequeno e aberto.
+
+00:06:02.122 --> 00:06:05.559
+Você compara uma pergunta com quatro artigos
+
+00:06:05.559 --> 00:06:07.746
+de ajuda e imprime as notas.
+
+00:06:08.396 --> 00:06:11.111
+Comece com não consigo entrar na minha conta,
+
+00:06:11.111 --> 00:06:13.525
+e veja redefinir senha sair em primeiro.
+
+00:06:14.175 --> 00:06:18.260
+Depois troque a pergunta para quero cancelar minha assinatura,
+
+00:06:18.260 --> 00:06:20.895
+e veja onde cai o artigo do plano anual.
+
+00:06:21.195 --> 00:06:26.023
+Por fim, teste pedido 4521 contra pedido 4512.
+
+00:06:26.323 --> 00:06:30.802
+Os números vão mostrar, sozinhos, tudo o que esta aula explicou.
+
+00:06:31.452 --> 00:06:32.471
+E um aviso.
+
+00:06:32.771 --> 00:06:35.642
+As notas que você vê são deste modelo.
+
+00:06:35.942 --> 00:06:37.864
+Não copie o limite de outra pessoa
+
+00:06:37.864 --> 00:06:39.787
+da internet como se fosse sagrado.
+
+00:06:40.087 --> 00:06:41.797
+Meça os seus próprios pares.
+
+00:06:42.097 --> 00:06:45.675
+Os que devem casar, e os que não podem casar.
+
+00:06:46.875 --> 00:06:48.990
+Então, o que muda nos seus desenhos?
+
+00:06:49.290 --> 00:06:52.251
+Busca só com embedding raramente basta.
+
+00:06:52.551 --> 00:06:54.763
+Combinar com busca por palavra-chave
+
+00:06:54.763 --> 00:06:56.852
+é um padrão chamado hybrid search.
+
+00:06:57.152 --> 00:06:58.941
+Lembra do Pix não caiu?
+
+00:06:59.241 --> 00:07:03.337
+Só com embedding, o artigo certo ficava em quinto.
+
+00:07:03.637 --> 00:07:06.363
+Ligar a palavra-chave levou ele para primeiro,
+
+00:07:06.363 --> 00:07:08.496
+porque Pix é um termo raro e valioso
+
+00:07:08.496 --> 00:07:10.511
+que o seu domínio precisa acertar.
+
+00:07:11.161 --> 00:07:13.176
+Reordenar os primeiros resultados
+
+00:07:13.176 --> 00:07:15.191
+com um modelo se chama reranking.
+
+00:07:15.841 --> 00:07:18.661
+O jeito de cortar os documentos em pedaços muda
+
+00:07:18.661 --> 00:07:21.241
+a qualidade da busca tanto quanto o modelo.
+
+00:07:21.891 --> 00:07:26.957
+E identificadores, datas e valores ganham filtro exato no banco.
+
+00:07:27.257 --> 00:07:30.816
+Tire o número do pedido da pergunta, filtre por ele,
+
+00:07:30.816 --> 00:07:34.033
+e use similaridade só no texto livre que sobra.
+
+00:07:35.233 --> 00:07:37.032
+Então, a ideia para levar.
+
+00:07:37.332 --> 00:07:39.963
+Embeddings colocam o significado num mapa,
+
+00:07:39.963 --> 00:07:43.974
+e por isso acham o artigo de senha sem nenhuma palavra em comum.
+
+00:07:44.274 --> 00:07:47.055
+Mas um mapa mostra proximidade, não direção.
+
+00:07:47.355 --> 00:07:49.262
+Cancelar e assinar são vizinhos,
+
+00:07:49.262 --> 00:07:51.646
+e dois números de pedido parecem gêmeos.
+
+00:07:51.946 --> 00:07:54.682
+Use significado onde significado importa,
+
+00:07:54.682 --> 00:07:56.283
+e filtro exato no resto.
+
+00:07:56.933 --> 00:07:57.945
+Na próxima aula,
+
+00:07:57.945 --> 00:08:01.296
+a gente coloca os embeddings para trabalhar no padrão
+
+00:08:01.296 --> 00:08:04.395
+que ancora o modelo nos seus próprios documentos:
+
+00:08:04.395 --> 00:08:04.774
+o RAG.
+
+00:08:05.074 --> 00:08:05.904
+Até lá.

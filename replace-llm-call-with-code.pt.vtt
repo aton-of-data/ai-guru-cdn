@@ -1,0 +1,472 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:03.991
+Um pipeline de notas fiscais pedia ao
+
+00:00:03.991 --> 00:00:06.059
+modelo seis coisas numa chamada.
+
+00:00:06.359 --> 00:00:09.946
+Extrair os itens, somar, aplicar o desconto,
+
+00:00:09.946 --> 00:00:12.393
+calcular o ICMS de cada linha,
+
+00:00:12.393 --> 00:00:16.143
+converter a data e validar o CNPJ do emitente.
+
+00:00:16.793 --> 00:00:19.390
+Na maioria das notas, o total batia.
+
+00:00:19.690 --> 00:00:20.567
+Mas num lote,
+
+00:00:20.567 --> 00:00:24.007
+três notas em cada cem chegaram ao sistema contábil
+
+00:00:24.007 --> 00:00:27.041
+com o imposto errado na segunda casa decimal.
+
+00:00:27.691 --> 00:00:28.920
+E não havia padrão.
+
+00:00:29.220 --> 00:00:31.343
+Às vezes era arredondamento.
+
+00:00:31.993 --> 00:00:35.132
+Às vezes uma linha somada duas vezes.
+
+00:00:35.782 --> 00:00:40.106
+E às vezes um dígito do CNPJ que o modelo resolveu corrigir,
+
+00:00:40.106 --> 00:00:41.404
+por conta própria.
+
+00:00:42.054 --> 00:00:47.539
+Aritmética, imposto e dígito verificador não são interpretação.
+
+00:00:47.839 --> 00:00:49.024
+São regras.
+
+00:00:49.324 --> 00:00:52.721
+O modelo gera o próximo token por probabilidade.
+
+00:00:53.021 --> 00:00:54.664
+Uma função de soma, não.
+
+00:00:54.964 --> 00:00:58.130
+Nesta aula, você vai tirar esse trabalho do modelo,
+
+00:00:58.130 --> 00:01:01.855
+com segurança, e descobrir um bônus que talvez não esperava.
+
+00:01:03.055 --> 00:01:07.774
+A solução é tirar a operação determinística do prompt.
+
+00:01:08.074 --> 00:01:12.102
+O modelo extrai, ou decide, o que só ele consegue.
+
+00:01:12.402 --> 00:01:17.284
+Uma função comum faz a conta, a formatação ou a validação.
+
+00:01:17.584 --> 00:01:21.226
+E quando o modelo precisa do resultado no meio de uma conversa,
+
+00:01:21.226 --> 00:01:23.884
+essa função é oferecida a ele como ferramenta.
+
+00:01:25.084 --> 00:01:29.240
+Antes, entender e calcular acontecem na mesma chamada.
+
+00:01:29.540 --> 00:01:34.517
+A nota entra, números saem, e vão direto para o sistema.
+
+00:01:35.167 --> 00:01:39.309
+Depois, o modelo lê, e o código calcula e confere.
+
+00:01:39.609 --> 00:01:43.490
+A nota chega, e o modelo só extrai os valores,
+
+00:01:43.490 --> 00:01:45.684
+exatamente como impressos.
+
+00:01:46.334 --> 00:01:49.478
+Funções comuns cuidam das somas, do imposto,
+
+00:01:49.478 --> 00:01:51.764
+das datas e da checagem do CNPJ.
+
+00:01:52.414 --> 00:01:56.006
+O código compara o total calculado com o total impresso.
+
+00:01:56.656 --> 00:02:00.028
+E só uma nota coerente entra no sistema.
+
+00:02:00.328 --> 00:02:02.168
+Uma diferença vai para revisão.
+
+00:02:03.368 --> 00:02:04.741
+Aqui está uma nota.
+
+00:02:05.041 --> 00:02:07.429
+O modelo devolve dois itens.
+
+00:02:07.729 --> 00:02:12.452
+Duas unidades a cento e cinquenta dólares, e uma a quatrocentos.
+
+00:02:12.752 --> 00:02:15.051
+Os dois com alíquota de 18%.
+
+00:02:15.351 --> 00:02:16.776
+Sem desconto.
+
+00:02:17.076 --> 00:02:20.152
+E um total impresso de setecentos dólares.
+
+00:02:20.802 --> 00:02:21.972
+O código faz a conta.
+
+00:02:22.272 --> 00:02:26.577
+Duas vezes cento e cinquenta, mais quatrocentos, dá setecentos.
+
+00:02:26.877 --> 00:02:28.729
+Bate com o total impresso.
+
+00:02:29.029 --> 00:02:32.721
+Depois calcula o imposto com a regra de arredondamento
+
+00:02:32.721 --> 00:02:34.566
+que o time fiscal escolheu,
+
+00:02:34.566 --> 00:02:35.660
+e valida o CNPJ.
+
+00:02:36.310 --> 00:02:37.721
+Agora vem o bônus.
+
+00:02:38.021 --> 00:02:41.240
+Digamos que o modelo tivesse lido cento e cinquenta como quinze.
+
+00:02:41.540 --> 00:02:45.370
+A soma não chegaria a setecentos, e a nota iria para revisão.
+
+00:02:46.020 --> 00:02:50.048
+Antes, o modelo podia ajustar a soma em silêncio para fechar,
+
+00:02:50.048 --> 00:02:52.623
+e o erro de leitura simplesmente sumia.
+
+00:02:52.923 --> 00:02:57.291
+Agora a conta no código vira um fiscal da extração.
+
+00:02:57.591 --> 00:03:01.406
+O erro que passava calado agora levanta uma bandeira.
+
+00:03:02.606 --> 00:03:04.026
+Uma pergunta para você.
+
+00:03:04.326 --> 00:03:07.375
+O time criou uma ferramenta chamada sum items.
+
+00:03:07.675 --> 00:03:11.153
+Ela manda os valores para um modelo pequeno e pede a soma.
+
+00:03:11.453 --> 00:03:13.546
+O eval de contas melhorou um pouco.
+
+00:03:13.846 --> 00:03:15.584
+A refatoração está pronta?
+
+00:03:18.634 --> 00:03:19.378
+Não.
+
+00:03:19.678 --> 00:03:22.370
+A conta saiu de um prompt e entrou em outro.
+
+00:03:22.670 --> 00:03:26.051
+Continua sendo geração de token, continua errando,
+
+00:03:26.051 --> 00:03:29.702
+e agora o erro mora numa ferramenta com nome inocente.
+
+00:03:30.352 --> 00:03:32.467
+Ferramenta, aqui, é função.
+
+00:03:32.767 --> 00:03:36.154
+Soma, uma função de arredondamento, um validador de CNPJ.
+
+00:03:36.454 --> 00:03:37.565
+O teste é este.
+
+00:03:37.865 --> 00:03:40.354
+Se a operação não tem teste unitário
+
+00:03:40.354 --> 00:03:42.428
+sem chamar a API de um modelo,
+
+00:03:42.428 --> 00:03:44.432
+ela ainda não saiu do modelo.
+
+00:03:44.732 --> 00:03:47.683
+E mais barato e ainda errado continua errado.
+
+00:03:48.883 --> 00:03:50.431
+Agora, o passo a passo.
+
+00:03:51.081 --> 00:03:52.847
+Passo zero, medir.
+
+00:03:53.147 --> 00:03:56.453
+Rode o eval de extração e separe os erros por tipo.
+
+00:03:56.753 --> 00:03:59.920
+Erro de leitura, quando um valor foi lido errado.
+
+00:04:00.220 --> 00:04:04.379
+E erro de conta, na soma, no imposto ou no formato.
+
+00:04:04.679 --> 00:04:05.854
+Se você não separar,
+
+00:04:05.854 --> 00:04:08.320
+vai achar que o modelo melhorou quando ele
+
+00:04:08.320 --> 00:04:10.376
+só acertou a soma por coincidência.
+
+00:04:11.026 --> 00:04:14.167
+Liste as operações determinísticas do prompt.
+
+00:04:14.467 --> 00:04:18.922
+Todo verbo de cálculo, conversão ou validação.
+
+00:04:19.222 --> 00:04:22.791
+Somar, calcular, converter, validar o dígito verificador.
+
+00:04:23.441 --> 00:04:26.794
+Escreva uma função para cada uma, com teste unitário,
+
+00:04:26.794 --> 00:04:28.566
+incluindo os casos de borda.
+
+00:04:28.866 --> 00:04:32.443
+Meio centavo, alíquota zero, feriado nacional,
+
+00:04:32.443 --> 00:04:35.476
+um CNPJ cujo dígito verificador é zero.
+
+00:04:35.776 --> 00:04:38.484
+E a regra do imposto vem de uma conversa
+
+00:04:38.484 --> 00:04:40.177
+com quem cuida do fiscal,
+
+00:04:40.177 --> 00:04:41.870
+não do palpite do modelo.
+
+00:04:42.520 --> 00:04:45.506
+Reescreva o prompt pedindo só os dados brutos,
+
+00:04:45.506 --> 00:04:47.259
+como aparecem no documento.
+
+00:04:47.559 --> 00:04:51.642
+E tire os campos calculados, como o imposto e o total,
+
+00:04:51.642 --> 00:04:53.532
+do que o modelo preenche.
+
+00:04:54.182 --> 00:04:57.218
+Ligue as funções logo depois da extração.
+
+00:04:57.868 --> 00:05:01.738
+Ou, se o modelo precisa do resultado durante uma conversa,
+
+00:05:01.738 --> 00:05:03.340
+exponha como ferramenta.
+
+00:05:03.640 --> 00:05:07.127
+Um assistente de entregas que precisa do próximo dia útil
+
+00:05:07.127 --> 00:05:10.614
+no meio da conversa chama uma função que soma dias úteis.
+
+00:05:10.914 --> 00:05:12.649
+O modelo não soma dias.
+
+00:05:12.949 --> 00:05:13.934
+Ele pede.
+
+00:05:14.584 --> 00:05:16.579
+Use as diferenças como alarme.
+
+00:05:16.879 --> 00:05:19.835
+Quando a conta do código discorda do documento,
+
+00:05:19.835 --> 00:05:21.030
+mande para revisão.
+
+00:05:21.680 --> 00:05:22.830
+E meça de novo.
+
+00:05:23.130 --> 00:05:25.415
+Erro de conta deve cair a zero.
+
+00:05:25.715 --> 00:05:27.766
+Erro de leitura continua existindo,
+
+00:05:27.766 --> 00:05:29.465
+mas agora a conferência pega.
+
+00:05:30.665 --> 00:05:31.676
+Alguns riscos.
+
+00:05:31.976 --> 00:05:34.443
+Interpretação escondida dentro da conta.
+
+00:05:34.743 --> 00:05:37.429
+O total pode ou não incluir o frete.
+
+00:05:37.729 --> 00:05:42.355
+Acerte essa regra com quem conhece o negócio antes de codificar.
+
+00:05:42.655 --> 00:05:45.878
+Senão você troca o erro do modelo pelo seu.
+
+00:05:46.178 --> 00:05:49.264
+Determinístico, e em toda nota.
+
+00:05:49.914 --> 00:05:51.280
+Os formatos brutos variam.
+
+00:05:51.580 --> 00:05:55.173
+Pedir a data como está escrita empurra o parse para o código.
+
+00:05:55.473 --> 00:05:59.005
+Teste o parser com formatos reais da pasta de notas.
+
+00:05:59.655 --> 00:06:01.883
+Uma ferramenta que o modelo ignora.
+
+00:06:02.183 --> 00:06:04.100
+Se a função é ferramenta,
+
+00:06:04.100 --> 00:06:07.091
+o modelo pode pular e calcular sozinho.
+
+00:06:07.391 --> 00:06:09.165
+Diga na descrição quando usar,
+
+00:06:09.165 --> 00:06:11.945
+e confira no trace se a ferramenta foi chamada.
+
+00:06:12.595 --> 00:06:14.328
+E mais revisões, no começo.
+
+00:06:14.628 --> 00:06:17.994
+A conferência vai pegar erros que antes passavam em silêncio.
+
+00:06:18.294 --> 00:06:19.250
+Esse é o objetivo.
+
+00:06:19.550 --> 00:06:21.740
+Mas avise o time de operações antes
+
+00:06:21.740 --> 00:06:23.617
+que ele ache que algo quebrou.
+
+00:06:24.267 --> 00:06:28.576
+E se operações reclamar, não desligue o alarme.
+
+00:06:28.876 --> 00:06:31.570
+O volume normal de antes era erro invisível.
+
+00:06:31.870 --> 00:06:33.738
+Classifique as revisões.
+
+00:06:34.038 --> 00:06:35.730
+Separe as diferenças reais
+
+00:06:35.730 --> 00:06:38.268
+de uma regra de negócio mal codificada.
+
+00:06:38.568 --> 00:06:39.876
+E corrija a certa.
+
+00:06:40.526 --> 00:06:43.123
+E tem um atalho tentador para resistir.
+
+00:06:43.423 --> 00:06:46.897
+A soma do código e o total impresso diferem em 2%,
+
+00:06:46.897 --> 00:06:50.233
+e alguém sugere deixar o modelo ajustar o total,
+
+00:06:50.233 --> 00:06:52.873
+porque ele entende desconto implícito.
+
+00:06:53.173 --> 00:06:54.762
+É o smell voltando.
+
+00:06:55.062 --> 00:06:58.062
+Um desconto de verdade vira um campo extraído,
+
+00:06:58.062 --> 00:06:59.692
+não um ajuste silencioso.
+
+00:07:00.892 --> 00:07:02.888
+Então, o que fica com o modelo?
+
+00:07:03.188 --> 00:07:06.552
+Tudo o que não tem uma regra fechada que uma função aplique.
+
+00:07:06.852 --> 00:07:10.409
+Decidir se um parágrafo do contrato é cláusula
+
+00:07:10.409 --> 00:07:14.198
+de multa ou de confidencialidade é classificação.
+
+00:07:14.498 --> 00:07:17.696
+Nenhuma função calcula o significado de um parágrafo.
+
+00:07:17.996 --> 00:07:19.465
+Validar dígito verificador,
+
+00:07:19.465 --> 00:07:22.946
+ou transformar uma data escrita em data de calendário, é código.
+
+00:07:24.146 --> 00:07:26.131
+Então, a ideia para levar.
+
+00:07:26.431 --> 00:07:28.714
+Separe leitura de cálculo.
+
+00:07:29.014 --> 00:07:31.265
+O modelo copia o que está na página,
+
+00:07:31.265 --> 00:07:33.391
+as funções fazem todo número novo,
+
+00:07:33.391 --> 00:07:35.454
+e a comparação entre os dois vira
+
+00:07:35.454 --> 00:07:37.830
+o seu melhor alarme de leitura errada.
+
+00:07:38.130 --> 00:07:42.850
+Uma refatoração que tira erro, e ainda acha os que você não via.
+
+00:07:43.500 --> 00:07:47.226
+Até aqui, o erro vinha do modelo lendo errado.
+
+00:07:47.526 --> 00:07:48.477
+Na próxima aula,
+
+00:07:48.477 --> 00:07:51.984
+a gente olha o que acontece quando a própria chamada falha,
+
+00:07:51.984 --> 00:07:55.075
+e o código simplesmente tenta de novo: o retry cego.
+
+00:07:55.375 --> 00:07:56.205
+Até lá.

@@ -1,0 +1,550 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:05.395
+Um agente interno de operações começou com cinco ferramentas.
+
+00:00:05.695 --> 00:00:08.643
+A cada sprint, algum time pedia mais uma.
+
+00:00:08.943 --> 00:00:13.141
+Um ano depois, a lista enviada em toda chamada estava assim.
+
+00:00:13.791 --> 00:00:15.620
+Get user.
+
+00:00:15.920 --> 00:00:16.840
+Fetch user.
+
+00:00:17.140 --> 00:00:18.420
+Get user profile.
+
+00:00:18.720 --> 00:00:19.893
+Look up customer.
+
+00:00:20.193 --> 00:00:21.270
+Search users.
+
+00:00:21.570 --> 00:00:24.101
+Cinco ferramentas, todas dizendo, mais ou menos,
+
+00:00:24.101 --> 00:00:24.998
+busca um usuário.
+
+00:00:25.648 --> 00:00:30.084
+Depois, get account, e get account versão dois, descrita como:
+
+00:00:30.084 --> 00:00:31.658
+busca uma conta, nova.
+
+00:00:31.958 --> 00:00:33.418
+E mais trinta e três.
+
+00:00:34.068 --> 00:00:35.868
+O trace mostra o efeito.
+
+00:00:36.168 --> 00:00:40.815
+Chega um pedido: qual é o plano do cliente com este CPF?
+
+00:00:41.465 --> 00:00:45.641
+O modelo chama get user, com o CPF no campo de id.
+
+00:00:45.941 --> 00:00:46.414
+Erro de tipo.
+
+00:00:47.064 --> 00:00:50.681
+Tenta search users, com o CPF como texto livre.
+
+00:00:50.981 --> 00:00:52.001
+Nada útil.
+
+00:00:52.651 --> 00:00:56.401
+E só na terceira tentativa encontra look up customer.
+
+00:00:56.701 --> 00:00:58.792
+Três turnos, para uma consulta.
+
+00:00:59.092 --> 00:01:02.292
+Nesta aula, você vai aprender a reconhecer esse smell,
+
+00:01:02.292 --> 00:01:04.484
+quanto ele custa de verdade e a ordem
+
+00:01:04.484 --> 00:01:06.439
+de trabalho para enxugar a lista.
+
+00:01:07.639 --> 00:01:08.711
+O formato é este.
+
+00:01:09.011 --> 00:01:10.648
+Chega um pedido simples.
+
+00:01:11.298 --> 00:01:13.690
+O modelo precisa escolher entre dezenas
+
+00:01:13.690 --> 00:01:15.775
+de opções descritas de forma vaga.
+
+00:01:16.425 --> 00:01:19.866
+Ele escolhe a que tem o nome mais parecido com o pedido.
+
+00:01:20.516 --> 00:01:23.891
+O resultado é um erro, ou um dado que não ajuda.
+
+00:01:24.541 --> 00:01:27.420
+E depois de turnos extras, ele acerta.
+
+00:01:27.720 --> 00:01:28.559
+Ou desiste.
+
+00:01:29.209 --> 00:01:30.092
+Como identificar?
+
+00:01:30.392 --> 00:01:32.583
+Mais de quinze ou vinte ferramentas
+
+00:01:32.583 --> 00:01:34.398
+disponíveis na mesma chamada.
+
+00:01:35.048 --> 00:01:38.185
+Nomes parecidos, como get alguma coisa,
+
+00:01:38.185 --> 00:01:41.885
+fetch alguma coisa e alguma coisa versão dois,
+
+00:01:41.885 --> 00:01:44.138
+com descrições quase iguais.
+
+00:01:44.788 --> 00:01:48.327
+Descrições de uma linha que dizem o que a ferramenta faz,
+
+00:01:48.327 --> 00:01:49.693
+mas nunca quando usar.
+
+00:01:50.343 --> 00:01:52.763
+Traces em que a ferramenta errada é chamada
+
+00:01:52.763 --> 00:01:54.339
+primeiro e corrigida depois.
+
+00:01:54.639 --> 00:01:57.651
+E definições de ferramenta somando milhares
+
+00:01:57.651 --> 00:01:59.472
+de tokens em toda chamada.
+
+00:02:00.122 --> 00:02:03.154
+E ninguém sabe dizer quais ferramentas ainda são usadas.
+
+00:02:04.354 --> 00:02:05.863
+Cada time acrescenta a sua.
+
+00:02:06.163 --> 00:02:08.554
+Uma ferramenta nova é o jeito mais fácil
+
+00:02:08.554 --> 00:02:10.766
+de dar ao agente uma capacidade nova,
+
+00:02:10.766 --> 00:02:12.798
+e ninguém é dono da lista inteira.
+
+00:02:13.448 --> 00:02:14.930
+Remover parece arriscado.
+
+00:02:15.230 --> 00:02:16.161
+Sem dado de uso,
+
+00:02:16.161 --> 00:02:18.605
+tirar uma ferramenta pode quebrar um fluxo
+
+00:02:18.605 --> 00:02:20.408
+que alguém usa uma vez por mês.
+
+00:02:21.058 --> 00:02:24.360
+As APIs internas viram ferramentas uma a uma.
+
+00:02:24.660 --> 00:02:28.906
+Cada endpoint vira uma ferramenta, com o nome do endpoint.
+
+00:02:29.206 --> 00:02:32.064
+O agente herda o formato do seu backend,
+
+00:02:32.064 --> 00:02:33.779
+não o formato da tarefa.
+
+00:02:34.429 --> 00:02:36.800
+Versões novas convivem com as antigas.
+
+00:02:37.100 --> 00:02:41.235
+A versão dois entrou para a um não quebrar, e as duas ficaram.
+
+00:02:41.885 --> 00:02:44.814
+E conectar um servidor de ferramentas via MCP,
+
+00:02:44.814 --> 00:02:46.405
+o model context protocol,
+
+00:02:46.405 --> 00:02:49.780
+muitas vezes expõe dezenas de ferramentas de uma vez.
+
+00:02:50.080 --> 00:02:53.042
+O time liga o servidor e esquece de filtrar
+
+00:02:53.042 --> 00:02:55.385
+o que o agente precisa de verdade.
+
+00:02:56.035 --> 00:02:58.357
+A armadilha de quem está começando é tratar
+
+00:02:58.357 --> 00:03:00.408
+mais ferramentas como mais capacidade.
+
+00:03:00.708 --> 00:03:02.610
+Muitas vezes é o contrário.
+
+00:03:02.910 --> 00:03:04.593
+Poucas ferramentas, bem distintas,
+
+00:03:04.593 --> 00:03:06.127
+vencem uma caixa de ferramentas
+
+00:03:06.127 --> 00:03:08.008
+que o modelo não consegue ler inteira.
+
+00:03:09.208 --> 00:03:10.144
+Agora, o custo.
+
+00:03:10.444 --> 00:03:11.849
+Primeiro, acerto.
+
+00:03:12.149 --> 00:03:14.994
+A escolha de ferramenta piora quando as opções são muitas,
+
+00:03:14.994 --> 00:03:15.582
+e parecidas.
+
+00:03:15.882 --> 00:03:19.693
+Cada erro custa um turno a mais, ou uma resposta errada.
+
+00:03:20.343 --> 00:03:22.831
+Depois, dinheiro, com números ilustrativos.
+
+00:03:23.131 --> 00:03:25.549
+Digamos que cada definição de ferramenta
+
+00:03:25.549 --> 00:03:27.544
+tem uns cento e cinquenta tokens,
+
+00:03:27.544 --> 00:03:29.962
+e o agente faz dez mil chamadas por dia.
+
+00:03:30.262 --> 00:03:33.865
+Com quarenta ferramentas, são uns seis mil tokens por chamada,
+
+00:03:33.865 --> 00:03:36.248
+e uns sessenta milhões de tokens por dia.
+
+00:03:36.548 --> 00:03:37.958
+Só do catálogo.
+
+00:03:38.608 --> 00:03:41.297
+Com oito ferramentas, uns doze milhões.
+
+00:03:41.597 --> 00:03:44.283
+E cada escolha errada ainda paga um turno a mais,
+
+00:03:44.283 --> 00:03:46.038
+com o histórico inteiro de novo.
+
+00:03:46.688 --> 00:03:47.787
+E segurança.
+
+00:03:48.087 --> 00:03:50.465
+Mais ferramentas, mais superfície.
+
+00:03:50.765 --> 00:03:52.467
+Imagine o agente de um marketplace
+
+00:03:52.467 --> 00:03:54.168
+com três ferramentas de pagamento.
+
+00:03:54.468 --> 00:03:58.353
+Pagar boleto, enviar Pix e transferir por TED.
+
+00:03:58.653 --> 00:04:01.924
+As três descritas como: paga o cliente.
+
+00:04:02.224 --> 00:04:05.066
+Um pedido de estorno pode disparar a errada.
+
+00:04:05.366 --> 00:04:07.475
+Aí o erro deixa de ser custo.
+
+00:04:07.775 --> 00:04:09.886
+O dinheiro vai pelo trilho errado.
+
+00:04:10.186 --> 00:04:12.198
+E uma ferramenta de escrita esquecida
+
+00:04:12.198 --> 00:04:13.721
+na lista é uma porta aberta.
+
+00:04:14.021 --> 00:04:16.124
+Em segurança, isso tem nome.
+
+00:04:16.424 --> 00:04:18.453
+Agência excessiva.
+
+00:04:18.753 --> 00:04:21.714
+O modelo tem mais poder do que a tarefa precisa.
+
+00:04:22.914 --> 00:04:24.084
+Uma pergunta para você.
+
+00:04:24.384 --> 00:04:27.652
+Você conectou o servidor de ferramentas de um produto interno,
+
+00:04:27.652 --> 00:04:29.761
+e o agente agora vê oitenta ferramentas,
+
+00:04:29.761 --> 00:04:31.184
+a maioria de administração.
+
+00:04:31.484 --> 00:04:34.999
+Em produção, um usuário pediu o status de um pedido,
+
+00:04:34.999 --> 00:04:37.364
+e o modelo chamou delete workspace.
+
+00:04:37.664 --> 00:04:39.473
+O que esse caso mostra, primeiro?
+
+00:04:42.523 --> 00:04:45.970
+Que a lista enviada ao modelo é larga demais para a tarefa,
+
+00:04:45.970 --> 00:04:48.074
+com ferramentas destrutivas no mesmo
+
+00:04:48.074 --> 00:04:49.769
+conjunto de leituras simples.
+
+00:04:50.069 --> 00:04:53.370
+Status de pedido não precisa de delete workspace.
+
+00:04:54.020 --> 00:04:56.279
+Não é que o protocolo seja ruim.
+
+00:04:56.579 --> 00:04:59.591
+Ele é um jeito de expor ferramentas, não a causa.
+
+00:04:59.891 --> 00:05:03.638
+E culpar o usuário com um filtro de entrada vem depois.
+
+00:05:03.938 --> 00:05:07.150
+O desenho já entregou uma ferramenta destrutiva
+
+00:05:07.150 --> 00:05:08.995
+para uma tarefa de leitura.
+
+00:05:09.295 --> 00:05:11.914
+Filtre o que o servidor expõe, consolide,
+
+00:05:11.914 --> 00:05:14.980
+e mantenha efeito colateral separado de leitura.
+
+00:05:16.180 --> 00:05:18.295
+São três refatorações.
+
+00:05:18.595 --> 00:05:21.831
+Consolidar ferramentas, quando há duplicadas, quase gêmeas,
+
+00:05:21.831 --> 00:05:23.641
+ou ferramentas que ninguém chama.
+
+00:05:23.941 --> 00:05:25.818
+É quase sempre o primeiro passo.
+
+00:05:26.468 --> 00:05:27.830
+Introduzir um roteador,
+
+00:05:27.830 --> 00:05:29.783
+quando mesmo depois de consolidar
+
+00:05:29.783 --> 00:05:31.678
+ainda sobram muitas ferramentas,
+
+00:05:31.678 --> 00:05:33.927
+porque o agente cobre vários assuntos.
+
+00:05:34.227 --> 00:05:36.538
+Cada rota recebe só as suas.
+
+00:05:36.838 --> 00:05:40.293
+O agente de pedidos não precisa ver as ferramentas de RH.
+
+00:05:40.943 --> 00:05:44.265
+E mover as instruções para a descrição da ferramenta,
+
+00:05:44.265 --> 00:05:46.522
+quando as regras de quando usar cada
+
+00:05:46.522 --> 00:05:48.465
+uma moram no prompt de sistema,
+
+00:05:48.465 --> 00:05:51.035
+longe de onde o modelo realmente escolhe.
+
+00:05:51.685 --> 00:05:54.102
+Na prática, a ordem é esta.
+
+00:05:54.402 --> 00:05:58.010
+Meça o uso nos traces dos últimos noventa dias.
+
+00:05:58.310 --> 00:06:01.601
+Uma ferramenta que nunca aparece é candidata a sair.
+
+00:06:02.251 --> 00:06:04.121
+Junte as ferramentas que fazem a mesma
+
+00:06:04.121 --> 00:06:05.500
+coisa com chaves diferentes.
+
+00:06:05.800 --> 00:06:08.263
+Uma ferramenta, vários parâmetros.
+
+00:06:08.913 --> 00:06:11.809
+Reescreva cada descrição para o momento da escolha.
+
+00:06:12.109 --> 00:06:16.024
+O que faz, quando usar, quando não usar e o que devolve.
+
+00:06:16.674 --> 00:06:19.462
+E se a lista ainda passa de uma dúzia,
+
+00:06:19.462 --> 00:06:22.104
+e os assuntos são distintos, roteie.
+
+00:06:22.754 --> 00:06:24.872
+De volta ao pedido do CPF.
+
+00:06:25.172 --> 00:06:29.069
+Antes, quarenta ferramentas visíveis, cinco delas de usuário,
+
+00:06:29.069 --> 00:06:29.963
+e três turnos.
+
+00:06:30.263 --> 00:06:34.184
+Depois, oito ferramentas, e uma delas é find customer,
+
+00:06:34.184 --> 00:06:36.000
+com uma chave e um valor.
+
+00:06:36.300 --> 00:06:39.613
+A primeira chamada já usa o CPF como chave.
+
+00:06:39.913 --> 00:06:41.048
+Um turno.
+
+00:06:41.698 --> 00:06:43.574
+E digamos que você consolidou,
+
+00:06:43.574 --> 00:06:46.202
+e ainda sobraram vinte e oito ferramentas,
+
+00:06:46.202 --> 00:06:49.579
+porque o mesmo agente atende RH, pedidos e financeiro.
+
+00:06:49.879 --> 00:06:51.859
+A escolha continua ruim em pedidos.
+
+00:06:52.159 --> 00:06:55.320
+Não coloque um bloco no prompt dizendo,
+
+00:06:55.320 --> 00:06:58.481
+se o assunto for pedidos, use só estas.
+
+00:06:58.781 --> 00:07:00.898
+O modelo continua vendo as vinte e oito.
+
+00:07:01.198 --> 00:07:05.426
+A restrição tem que estar na lista que você manda, não na prosa.
+
+00:07:05.726 --> 00:07:07.200
+É isso que o roteador faz.
+
+00:07:08.400 --> 00:07:09.892
+Quando dá para ignorar?
+
+00:07:10.192 --> 00:07:12.667
+Vinte ferramentas de domínios diferentes,
+
+00:07:12.667 --> 00:07:15.744
+com nomes e descrições claros, podem funcionar bem.
+
+00:07:16.044 --> 00:07:18.761
+O smell é confusão, não quantidade.
+
+00:07:19.061 --> 00:07:20.888
+E o contrário também vale.
+
+00:07:21.188 --> 00:07:22.171
+Oito ferramentas,
+
+00:07:22.171 --> 00:07:23.962
+em que três fazem a mesma busca
+
+00:07:23.962 --> 00:07:25.870
+de cliente com chaves diferentes,
+
+00:07:25.870 --> 00:07:26.621
+é esse smell.
+
+00:07:27.271 --> 00:07:30.786
+Se o seu provedor deixa o modelo ver só um índice
+
+00:07:30.786 --> 00:07:33.439
+e carregar as definições sob demanda,
+
+00:07:33.439 --> 00:07:35.089
+o custo de tokens some.
+
+00:07:35.389 --> 00:07:38.566
+A confusão entre ferramentas parecidas continua.
+
+00:07:39.216 --> 00:07:40.266
+E num protótipo,
+
+00:07:40.266 --> 00:07:43.679
+começar largo para descobrir o que o agente precisa,
+
+00:07:43.679 --> 00:07:45.319
+e podar depois, tudo bem.
+
+00:07:46.519 --> 00:07:48.493
+Então, a ideia para levar.
+
+00:07:48.793 --> 00:07:51.487
+O modelo escolhe a partir do que você entrega,
+
+00:07:51.487 --> 00:07:52.775
+no momento da escolha.
+
+00:07:53.075 --> 00:07:55.572
+Entregue menos portas, uma por trabalho,
+
+00:07:55.572 --> 00:07:58.381
+cada uma com uma placa dizendo quando entrar.
+
+00:07:58.681 --> 00:08:00.216
+Você ganha menos turnos,
+
+00:08:00.216 --> 00:08:03.157
+menos tokens e menos jeitos de causar estrago.
+
+00:08:03.807 --> 00:08:07.554
+Na próxima aula, a gente faz o primeiro corte passo a passo:
+
+00:08:07.554 --> 00:08:08.678
+consolidate tools.
+
+00:08:08.978 --> 00:08:09.759
+Até lá.

@@ -1,0 +1,683 @@
+1
+00:00:01,600 --> 00:00:04,592
+A Paula lidera a migração de um sistema legado,
+
+2
+00:00:04,592 --> 00:00:06,883
+de um framework antigo para um novo.
+
+3
+00:00:07,183 --> 00:00:08,745
+São quatrocentos arquivos.
+
+4
+00:00:09,045 --> 00:00:11,457
+Alguns só precisam trocar os imports.
+
+5
+00:00:11,757 --> 00:00:15,496
+Outros têm uma lógica cujo significado muda no framework novo.
+
+6
+00:00:15,796 --> 00:00:19,311
+E alguns dependem uns dos outros, e precisam migrar juntos.
+
+7
+00:00:19,961 --> 00:00:23,728
+A primeira tentativa foi um agente só percorrendo os arquivos.
+
+8
+00:00:24,028 --> 00:00:27,555
+Na metade, o contexto estava cheio, e as primeiras decisões,
+
+9
+00:00:27,555 --> 00:00:30,905
+como tratar o novo sistema de eventos, tinham se perdido.
+
+10
+00:00:31,555 --> 00:00:33,824
+A segunda tentativa foi um script que mandava
+
+11
+00:00:33,824 --> 00:00:35,740
+cada arquivo para uma chamada isolada.
+
+12
+00:00:36,040 --> 00:00:37,134
+Rápido.
+
+13
+00:00:37,434 --> 00:00:41,266
+Mas arquivos que dependiam uns dos outros saíam incoerentes.
+
+14
+00:00:41,916 --> 00:00:43,482
+O que funciona tem as duas partes.
+
+15
+00:00:43,782 --> 00:00:47,301
+Alguém que olha o todo e decide como dividir.
+
+16
+00:00:47,601 --> 00:00:50,426
+E operários que fazem cada parte, com foco.
+
+17
+00:00:50,726 --> 00:00:54,687
+A divisão muda a cada módulo, então não dá para fixar no código.
+
+18
+00:00:54,987 --> 00:00:56,429
+É esta aula.
+
+19
+00:00:57,629 --> 00:01:00,093
+Separe três papéis.
+
+20
+00:01:00,393 --> 00:01:03,555
+O orquestrador lê a tarefa e o contexto,
+
+21
+00:01:03,555 --> 00:01:06,164
+e produz uma lista de subtarefas,
+
+22
+00:01:06,164 --> 00:01:10,511
+cada uma com uma instrução completa, e as dependências.
+
+23
+00:01:10,811 --> 00:01:12,158
+Ele não faz o trabalho.
+
+24
+00:01:12,808 --> 00:01:15,156
+Os operários recebem uma subtarefa cada,
+
+25
+00:01:15,156 --> 00:01:17,268
+fazem no próprio contexto e devolvem
+
+26
+00:01:17,268 --> 00:01:19,322
+um resultado num formato combinado.
+
+27
+00:01:19,622 --> 00:01:22,991
+Subtarefas sem dependência rodam em paralelo.
+
+28
+00:01:23,641 --> 00:01:26,256
+E o sintetizador junta os resultados,
+
+29
+00:01:26,256 --> 00:01:29,367
+resolve conflitos e entrega o produto final.
+
+30
+00:01:29,667 --> 00:01:33,117
+Muitas vezes é o próprio orquestrador, numa segunda chamada.
+
+31
+00:01:33,767 --> 00:01:37,354
+A diferença para o sectioning é quem decide a divisão.
+
+32
+00:01:37,654 --> 00:01:39,054
+Lá, o seu código.
+
+33
+00:01:39,354 --> 00:01:42,171
+Aqui, o modelo, olhando a entrada.
+
+34
+00:01:42,471 --> 00:01:44,623
+Se você consegue escrever o loop que divide
+
+35
+00:01:44,623 --> 00:01:46,325
+o trabalho antes de ver a entrada,
+
+36
+00:01:46,325 --> 00:01:47,977
+você não precisa de orquestrador.
+
+37
+00:01:48,277 --> 00:01:49,935
+E saiba o preço de antemão.
+
+38
+00:01:50,235 --> 00:01:53,051
+Esse padrão compra tempo e cobertura com dinheiro.
+
+39
+00:01:53,351 --> 00:01:56,267
+Times que rodam isso em escala relataram usar
+
+40
+00:01:56,267 --> 00:01:58,858
+muitas vezes os tokens de um chat comum.
+
+41
+00:02:00,058 --> 00:02:04,612
+A tarefa chega, com o material necessário, ou acesso a ele.
+
+42
+00:02:05,262 --> 00:02:08,779
+O orquestrador analisa e decide a divisão.
+
+43
+00:02:09,429 --> 00:02:11,399
+O plano é um objeto estruturado.
+
+44
+00:02:11,699 --> 00:02:14,209
+Subtarefas, a instrução de cada uma,
+
+45
+00:02:14,209 --> 00:02:16,788
+dependências e um critério de pronto.
+
+46
+00:02:17,438 --> 00:02:21,079
+Os operários rodam em paralelo quando não há dependência,
+
+47
+00:02:21,079 --> 00:02:23,570
+cada um com o seu contexto e orçamento.
+
+48
+00:02:24,220 --> 00:02:27,558
+O código valida cada resultado, com schema,
+
+49
+00:02:27,558 --> 00:02:30,508
+testes ou compilação, antes de seguir.
+
+50
+00:02:31,158 --> 00:02:36,001
+O sintetizador junta tudo e resolve as inconsistências.
+
+51
+00:02:36,651 --> 00:02:37,796
+E o resultado sai,
+
+52
+00:02:37,796 --> 00:02:41,487
+com o plano e os resultados parciais registrados no trace.
+
+53
+00:02:42,687 --> 00:02:43,504
+A Paula pede:
+
+54
+00:02:43,504 --> 00:02:46,708
+migre o módulo de pagamentos para o framework novo.
+
+55
+00:02:47,008 --> 00:02:50,273
+O orquestrador lê o módulo e devolve um plano.
+
+56
+00:02:50,923 --> 00:02:52,344
+Quatro subtarefas.
+
+57
+00:02:52,644 --> 00:02:55,976
+Models e events, sem dependência.
+
+58
+00:02:56,276 --> 00:02:58,419
+Depois service, que depende dos dois.
+
+59
+00:02:58,719 --> 00:03:01,167
+Depois a API, que depende do service.
+
+60
+00:03:01,467 --> 00:03:03,528
+Cada uma com um critério de pronto,
+
+61
+00:03:03,528 --> 00:03:05,413
+como os testes de models passam.
+
+62
+00:03:06,063 --> 00:03:09,151
+O código transforma essas dependências em ondas.
+
+63
+00:03:09,451 --> 00:03:12,540
+A onda um roda models e events, em paralelo.
+
+64
+00:03:12,840 --> 00:03:16,471
+A onda dois roda o service, que recebe os dois resultados.
+
+65
+00:03:16,771 --> 00:03:18,476
+A onda três roda a API.
+
+66
+00:03:18,776 --> 00:03:22,595
+Quatro operários, três ondas e uma síntese no fim.
+
+67
+00:03:23,245 --> 00:03:25,439
+E repare nas convenções no topo.
+
+68
+00:03:25,739 --> 00:03:29,114
+Eventos usam o novo barramento, nunca o emit antigo.
+
+69
+00:03:29,414 --> 00:03:32,501
+Erros de domínio herdam de uma classe de erro de pagamento.
+
+70
+00:03:32,801 --> 00:03:34,335
+Todo operário recebe isso.
+
+71
+00:03:35,535 --> 00:03:36,713
+Uma pergunta para você.
+
+72
+00:03:37,013 --> 00:03:40,763
+Durante a migração, dois operários devolvem código que compila.
+
+73
+00:03:41,063 --> 00:03:45,818
+Mas um trata erros com exceção, e o outro com código de retorno.
+
+74
+00:03:46,118 --> 00:03:48,334
+A síntese não consegue conciliar.
+
+75
+00:03:48,634 --> 00:03:50,163
+Onde está a correção mais barata?
+
+76
+00:03:53,213 --> 00:03:53,951
+No plano.
+
+77
+00:03:54,251 --> 00:03:58,689
+O orquestrador fixa a convenção de erro, e todo operário recebe.
+
+78
+00:03:58,989 --> 00:04:02,520
+Decisões que valem para várias partes moram no plano.
+
+79
+00:04:02,820 --> 00:04:06,744
+Quando a convenção chega a todo operário antes de ele começar,
+
+80
+00:04:06,744 --> 00:04:08,770
+as partes já nascem compatíveis.
+
+81
+00:04:09,420 --> 00:04:12,644
+Um sintetizador mais forte que reescreve um dos lados
+
+82
+00:04:12,644 --> 00:04:15,808
+paga para refazer um trabalho que nasceu incoerente.
+
+83
+00:04:16,108 --> 00:04:18,079
+E operários maiores também não ajudam.
+
+84
+00:04:18,379 --> 00:04:20,475
+Cada um só vê a própria subtarefa,
+
+85
+00:04:20,475 --> 00:04:23,126
+e não tem como saber o que o outro decidiu.
+
+86
+00:04:23,426 --> 00:04:24,423
+A regra prática:
+
+87
+00:04:24,423 --> 00:04:26,667
+toda decisão que mais de um operário
+
+88
+00:04:26,667 --> 00:04:28,786
+precisa tomar vem do orquestrador,
+
+89
+00:04:28,786 --> 00:04:30,967
+antes de qualquer operário começar.
+
+90
+00:04:32,167 --> 00:04:34,143
+A divisão é sempre a mesma.
+
+91
+00:04:34,443 --> 00:04:37,081
+Por arquivo, por página, por seção.
+
+92
+00:04:37,381 --> 00:04:38,598
+Aí divida no código.
+
+93
+00:04:39,248 --> 00:04:43,093
+A tarefa cabe num agente, com contexto limpo.
+
+94
+00:04:43,393 --> 00:04:46,577
+Um orquestrador acrescenta custo e pontos de falha.
+
+95
+00:04:46,877 --> 00:04:51,035
+Comece com um loop só e divida quando o contexto encher.
+
+96
+00:04:51,685 --> 00:04:53,335
+As partes dependem tanto umas
+
+97
+00:04:53,335 --> 00:04:55,383
+das outras que nenhuma roda sozinha.
+
+98
+00:04:55,683 --> 00:04:57,262
+O paralelismo some,
+
+99
+00:04:57,262 --> 00:05:01,916
+e você paga o plano e a síntese sem ganhar tempo nenhum.
+
+100
+00:05:02,566 --> 00:05:05,051
+E os operários seriam papéis decorativos,
+
+101
+00:05:05,051 --> 00:05:06,444
+passando texto adiante.
+
+102
+00:05:06,744 --> 00:05:08,981
+Um analista, um revisor e um redator,
+
+103
+00:05:08,981 --> 00:05:12,306
+lendo o mesmo contexto e reescrevendo a mesma resposta,
+
+104
+00:05:12,306 --> 00:05:13,999
+não dividem trabalho nenhum.
+
+105
+00:05:14,649 --> 00:05:15,877
+Um caso rápido.
+
+106
+00:05:16,177 --> 00:05:19,674
+O time quer um resumo semanal de trinta relatórios de loja.
+
+107
+00:05:19,974 --> 00:05:22,610
+Cada relatório vira um parágrafo,
+
+108
+00:05:22,610 --> 00:05:25,485
+e uma versão consolidada sai no fim.
+
+109
+00:05:25,785 --> 00:05:28,054
+Alguém propõe um orquestrador.
+
+110
+00:05:28,354 --> 00:05:29,572
+O que você responde?
+
+111
+00:05:29,872 --> 00:05:32,692
+A divisão é fixa, um relatório por parte.
+
+112
+00:05:32,992 --> 00:05:34,406
+Isso é um loop no código.
+
+113
+00:05:34,706 --> 00:05:37,929
+Você ganha paralelismo e contexto limpo por relatório,
+
+114
+00:05:37,929 --> 00:05:41,211
+sem a chamada do plano, e sem o risco de um plano ruim.
+
+115
+00:05:41,861 --> 00:05:43,310
+E um primo próximo.
+
+116
+00:05:43,610 --> 00:05:46,419
+O plan then execute também começa com um plano.
+
+117
+00:05:46,719 --> 00:05:48,795
+A diferença é quem executa.
+
+118
+00:05:49,095 --> 00:05:53,886
+Lá, um agente só segue o plano passo a passo, no mesmo contexto.
+
+119
+00:05:54,186 --> 00:05:58,659
+Aqui, cada subtarefa vai para um operário com contexto próprio,
+
+120
+00:05:58,659 --> 00:06:01,500
+e as independentes rodam ao mesmo tempo.
+
+121
+00:06:01,800 --> 00:06:04,368
+Use o primeiro quando os passos são sequenciais
+
+122
+00:06:04,368 --> 00:06:05,953
+e precisam do que veio antes.
+
+123
+00:06:06,253 --> 00:06:09,755
+Use este quando as partes cabem em contextos separados,
+
+124
+00:06:09,755 --> 00:06:11,984
+e o volume justifica o paralelismo.
+
+125
+00:06:13,184 --> 00:06:16,039
+Vamos dar um preço, com números ilustrativos.
+
+126
+00:06:16,339 --> 00:06:21,589
+O plano custa uns seis mil tokens, cada operário vinte mil,
+
+127
+00:06:21,589 --> 00:06:23,636
+e a síntese quinze mil.
+
+128
+00:06:23,936 --> 00:06:28,723
+Com quatro subtarefas, a tarefa gasta uns cento e um mil tokens.
+
+129
+00:06:29,023 --> 00:06:32,048
+Se o orquestrador decidir por vinte subtarefas,
+
+130
+00:06:32,048 --> 00:06:34,751
+o total passa de quatrocentos e vinte mil.
+
+131
+00:06:35,051 --> 00:06:37,577
+E a qualidade não sobe necessariamente.
+
+132
+00:06:37,877 --> 00:06:41,041
+Por isso o limite de subtarefas mora no prompt,
+
+133
+00:06:41,041 --> 00:06:42,321
+e também no código.
+
+134
+00:06:42,621 --> 00:06:44,133
+O modelo escolhe a divisão.
+
+135
+00:06:44,433 --> 00:06:46,609
+O código decide quanto ela pode custar.
+
+136
+00:06:47,259 --> 00:06:48,569
+Os modos de falha.
+
+137
+00:06:48,869 --> 00:06:51,924
+Um plano ruim, com subtarefas sobrepostas,
+
+138
+00:06:51,924 --> 00:06:53,524
+ou uma parte faltando.
+
+139
+00:06:53,824 --> 00:06:56,258
+Isso estraga tudo o que vem depois,
+
+140
+00:06:56,258 --> 00:06:58,275
+então avalie o plano sozinho.
+
+141
+00:06:58,575 --> 00:07:00,084
+Para vinte tarefas reais,
+
+142
+00:07:00,084 --> 00:07:03,463
+escreva à mão as partes que um bom plano precisa cobrir.
+
+143
+00:07:03,763 --> 00:07:06,184
+Parte faltando é falha de cobertura.
+
+144
+00:07:06,484 --> 00:07:09,672
+Duas subtarefas mexendo no mesmo arquivo é sobreposição.
+
+145
+00:07:09,972 --> 00:07:11,971
+E valide o plano no código também.
+
+146
+00:07:12,271 --> 00:07:15,496
+Sem ciclos, sem dependência apontando para o nada.
+
+147
+00:07:16,146 --> 00:07:17,599
+Divisão demais.
+
+148
+00:07:17,899 --> 00:07:20,016
+Dezenas de subtarefas triviais,
+
+149
+00:07:20,016 --> 00:07:23,091
+com saídas curtíssimas e um custo total alto.
+
+150
+00:07:23,741 --> 00:07:25,466
+E incoerência.
+
+151
+00:07:25,766 --> 00:07:29,300
+Operários tomando decisões diferentes sobre o mesmo problema.
+
+152
+00:07:29,600 --> 00:07:30,888
+Você acabou de ver a correção.
+
+153
+00:07:31,188 --> 00:07:33,285
+Convenções no plano.
+
+154
+00:07:33,935 --> 00:07:36,775
+Em produção, registre o plano como um span,
+
+155
+00:07:36,775 --> 00:07:39,219
+com um span filho para cada operário.
+
+156
+00:07:39,519 --> 00:07:42,913
+Coloque limite de subtarefas e de ondas por tarefa,
+
+157
+00:07:42,913 --> 00:07:44,643
+com alerta quando baterem.
+
+158
+00:07:44,943 --> 00:07:49,074
+E acompanhe as novas tentativas por subtarefa.
+
+159
+00:07:49,374 --> 00:07:52,064
+Um tipo de subtarefa que sempre falha está
+
+160
+00:07:52,064 --> 00:07:54,434
+pedindo um prompt de operário melhor.
+
+161
+00:07:55,634 --> 00:07:57,826
+Então, a ideia para levar.
+
+162
+00:07:58,126 --> 00:08:01,916
+Use um orquestrador só quando a divisão depende do conteúdo.
+
+163
+00:08:02,216 --> 00:08:05,288
+Deixe ele escrever um plano com instruções completas,
+
+164
+00:08:05,288 --> 00:08:08,882
+dependências, critérios de pronto e convenções compartilhadas.
+
+165
+00:08:09,182 --> 00:08:11,059
+Deixe o código rodar as ondas,
+
+166
+00:08:11,059 --> 00:08:14,813
+validar cada resultado e limitar até onde a divisão pode ir.
+
+167
+00:08:15,463 --> 00:08:16,572
+Na próxima aula,
+
+168
+00:08:16,572 --> 00:08:19,899
+a gente fecha a trilha de agentes com um sistema
+
+169
+00:08:19,899 --> 00:08:22,602
+real que usa quase tudo o que você viu:
+
+170
+00:08:22,602 --> 00:08:23,988
+um agente de código.
+
+171
+00:08:24,288 --> 00:08:25,044
+Até lá.

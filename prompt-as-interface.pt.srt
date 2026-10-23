@@ -1,0 +1,611 @@
+1
+00:00:01,600 --> 00:00:03,697
+Sexta-feira, cinco da tarde.
+
+2
+00:00:03,997 --> 00:00:06,997
+Alguém do time de produto abre o painel de configurações
+
+3
+00:00:06,997 --> 00:00:09,408
+e edita o prompt do classificador de tickets.
+
+4
+00:00:10,058 --> 00:00:13,054
+Troca a palavra urgente por alta prioridade,
+
+5
+00:00:13,054 --> 00:00:15,233
+para soar um pouco mais educado.
+
+6
+00:00:15,533 --> 00:00:17,051
+Ninguém roda teste.
+
+7
+00:00:17,351 --> 00:00:19,599
+Afinal, é só texto.
+
+8
+00:00:20,249 --> 00:00:22,733
+Na segunda, a fila de urgentes está vazia.
+
+9
+00:00:23,033 --> 00:00:25,502
+O código que lia a resposta do modelo
+
+10
+00:00:25,502 --> 00:00:27,370
+procurava a palavra urgente.
+
+11
+00:00:27,670 --> 00:00:30,052
+Metade dos tickets críticos passou o fim
+
+12
+00:00:30,052 --> 00:00:31,958
+de semana inteiro na fila comum.
+
+13
+00:00:32,608 --> 00:00:34,621
+O prompt era uma interface.
+
+14
+00:00:34,921 --> 00:00:36,719
+Ninguém tratou como uma.
+
+15
+00:00:37,019 --> 00:00:39,858
+Nesta aula, você vai ver o que é tratar assim,
+
+16
+00:00:39,858 --> 00:00:42,143
+e as quatro perguntas que transformam
+
+17
+00:00:42,143 --> 00:00:44,242
+um prompt de rascunho em contrato.
+
+18
+00:00:45,442 --> 00:00:47,610
+Um prompt de produção é um contrato
+
+19
+00:00:47,610 --> 00:00:49,903
+de API entre o seu código e o modelo.
+
+20
+00:00:50,203 --> 00:00:53,351
+Ele tem as mesmas partes de qualquer interface
+
+21
+00:00:53,351 --> 00:00:55,336
+que você já versiona e testa.
+
+22
+00:00:55,636 --> 00:00:58,636
+Você nunca deixaria alguém renomear um campo
+
+23
+00:00:58,636 --> 00:01:00,886
+de uma API pública por um painel,
+
+24
+00:01:00,886 --> 00:01:02,181
+numa sexta à tarde.
+
+25
+00:01:02,481 --> 00:01:04,715
+O prompt merece o mesmo respeito.
+
+26
+00:01:05,915 --> 00:01:07,383
+Vamos percorrer o contrato.
+
+27
+00:01:07,683 --> 00:01:09,999
+O código que chama sabe exatamente
+
+28
+00:01:09,999 --> 00:01:12,450
+o que manda e o que espera de volta.
+
+29
+00:01:13,100 --> 00:01:15,455
+A entrada tem um formato definido.
+
+30
+00:01:15,755 --> 00:01:19,340
+Quais variáveis, de que tipo e de onde vêm.
+
+31
+00:01:19,990 --> 00:01:23,426
+O prompt tem nome, versão e dono.
+
+32
+00:01:23,726 --> 00:01:26,624
+Mudar o prompt é mudar a interface.
+
+33
+00:01:27,274 --> 00:01:29,719
+A saída segue um schema, com campos fixos,
+
+34
+00:01:29,719 --> 00:01:32,862
+não um texto livre que alguém vai ter que interpretar.
+
+35
+00:01:33,512 --> 00:01:36,745
+O código valida essa saída antes de usar,
+
+36
+00:01:36,745 --> 00:01:40,766
+igual faria com a resposta de qualquer API externa.
+
+37
+00:01:41,416 --> 00:01:44,008
+E um conjunto de casos de teste, o eval,
+
+38
+00:01:44,008 --> 00:01:46,534
+roda contra toda versão nova do prompt.
+
+39
+00:01:47,184 --> 00:01:49,446
+Aquela sexta à tarde quebrou os passos
+
+40
+00:01:49,446 --> 00:01:51,172
+quatro e seis ao mesmo tempo.
+
+41
+00:01:51,472 --> 00:01:54,865
+A palavra na saída fazia parte do contrato.
+
+42
+00:01:55,165 --> 00:01:58,411
+E ninguém tinha um teste que falhasse quando ela mudou.
+
+43
+00:01:59,611 --> 00:02:01,811
+Antes de qualquer prompt ir para produção,
+
+44
+00:02:01,811 --> 00:02:03,174
+responda quatro perguntas.
+
+45
+00:02:03,824 --> 00:02:04,313
+Entrada.
+
+46
+00:02:04,613 --> 00:02:06,700
+O que entra, e de onde?
+
+47
+00:02:07,000 --> 00:02:11,439
+No classificador: título e corpo do ticket, em texto simples,
+
+48
+00:02:11,439 --> 00:02:13,768
+com dados pessoais já removidos.
+
+49
+00:02:14,418 --> 00:02:14,960
+Saída.
+
+50
+00:02:15,260 --> 00:02:16,604
+Que formato sai?
+
+51
+00:02:16,904 --> 00:02:20,300
+Um campo de prioridade que só pode ser urgente ou normal,
+
+52
+00:02:20,300 --> 00:02:23,042
+e um campo de motivo com uma explicação curta.
+
+53
+00:02:23,692 --> 00:02:24,481
+Versão.
+
+54
+00:02:24,781 --> 00:02:26,345
+Como eu sei qual rodou?
+
+55
+00:02:26,645 --> 00:02:30,794
+Classificador de tickets, versão sete, registrada em todo trace.
+
+56
+00:02:31,444 --> 00:02:32,043
+Teste.
+
+57
+00:02:32,343 --> 00:02:34,142
+Como eu sei que não piorou?
+
+58
+00:02:34,442 --> 00:02:37,594
+Duzentos tickets rotulados, rodados a cada mudança.
+
+59
+00:02:38,244 --> 00:02:42,556
+Se alguma resposta for não sei, o prompt ainda é rascunho.
+
+60
+00:02:42,856 --> 00:02:45,043
+Mesmo que já esteja em produção.
+
+61
+00:02:45,693 --> 00:02:49,440
+E na entrada, escreva também o que não pode entrar.
+
+62
+00:02:49,740 --> 00:02:54,462
+Ticket de banco no Brasil vive trazendo CPF,
+
+63
+00:02:54,462 --> 00:02:58,218
+chave Pix ou pedaço de comprovante.
+
+64
+00:02:58,518 --> 00:03:02,297
+Isso é dado pessoal pela LGPD.
+
+65
+00:03:02,597 --> 00:03:06,051
+O contrato diz que o seu código mascara isso antes da chamada.
+
+66
+00:03:06,351 --> 00:03:09,176
+E o eval tem um caso provando que dado
+
+67
+00:03:09,176 --> 00:03:11,704
+sensível não vaza para o provedor.
+
+68
+00:03:12,354 --> 00:03:14,601
+Isso vale para os casos de teste também.
+
+69
+00:03:14,901 --> 00:03:17,829
+Repositório privado não cancela a lei.
+
+70
+00:03:18,129 --> 00:03:20,991
+Se um CPF real está num caso de teste,
+
+71
+00:03:20,991 --> 00:03:24,454
+ele vai para o provedor a cada rodada do eval.
+
+72
+00:03:24,754 --> 00:03:26,472
+Mascare o caso também.
+
+73
+00:03:27,672 --> 00:03:29,117
+Uma pergunta para você.
+
+74
+00:03:29,417 --> 00:03:31,902
+Na segunda, a fila de urgentes está vazia.
+
+75
+00:03:32,202 --> 00:03:35,902
+O trace de sexta diz classificador de tickets, versão sete.
+
+76
+00:03:36,202 --> 00:03:38,937
+Mas o painel de configurações não registra versão nenhuma.
+
+77
+00:03:39,237 --> 00:03:40,939
+O que isso já te diz?
+
+78
+00:03:43,989 --> 00:03:46,510
+Diz que a mudança passou por fora do contrato.
+
+79
+00:03:46,810 --> 00:03:48,498
+O trace diz versão sete,
+
+80
+00:03:48,498 --> 00:03:50,817
+mas o texto que rodou de fato não
+
+81
+00:03:50,817 --> 00:03:52,997
+é a versão sete do repositório.
+
+82
+00:03:53,297 --> 00:03:55,964
+Você não consegue ligar o que rodou ao arquivo versionado.
+
+83
+00:03:56,264 --> 00:03:58,539
+Então o trace não ajuda a investigar.
+
+84
+00:03:59,189 --> 00:04:01,657
+E só um eval também não salvaria.
+
+85
+00:04:01,957 --> 00:04:04,352
+Ele testaria o arquivo do repositório,
+
+86
+00:04:04,352 --> 00:04:06,684
+enquanto a produção roda outra coisa.
+
+87
+00:04:06,984 --> 00:04:09,828
+O próximo passo é tirar o prompt do painel,
+
+88
+00:04:09,828 --> 00:04:12,341
+versionar o arquivo e recusar qualquer
+
+89
+00:04:12,341 --> 00:04:14,391
+saída que o schema não conhece.
+
+90
+00:04:15,591 --> 00:04:17,313
+A armadilha mais comum é justamente
+
+91
+00:04:17,313 --> 00:04:18,739
+esse painel de configurações.
+
+92
+00:04:19,039 --> 00:04:22,787
+Parece inofensivo, porque o texto está ali, visível.
+
+93
+00:04:23,087 --> 00:04:27,983
+Na prática, é um deploy sem diff, sem revisão e sem eval.
+
+94
+00:04:28,633 --> 00:04:32,682
+E quem editou na sexta não foi irresponsável.
+
+95
+00:04:32,982 --> 00:04:36,103
+O caminho que o produto oferecia é que estava errado.
+
+96
+00:04:36,403 --> 00:04:38,449
+Conserte o caminho, não a pessoa.
+
+97
+00:04:39,099 --> 00:04:40,898
+O outro extremo também quebra.
+
+98
+00:04:41,198 --> 00:04:44,738
+Três cópias do mesmo prompt, em três serviços,
+
+99
+00:04:44,738 --> 00:04:46,354
+cada uma quase igual.
+
+100
+00:04:46,654 --> 00:04:49,997
+Um bug é corrigido numa, e as outras duas ficam desatualizadas.
+
+101
+00:04:50,297 --> 00:04:53,273
+Esse smell se chama scattered prompt strings.
+
+102
+00:04:53,573 --> 00:04:55,588
+A cura é um template versionado só,
+
+103
+00:04:55,588 --> 00:04:57,659
+reaproveitado por todos os serviços.
+
+104
+00:04:58,309 --> 00:05:00,333
+E tem um mais discreto.
+
+105
+00:05:00,633 --> 00:05:04,081
+Digamos que o schema pede prioridade e motivo.
+
+106
+00:05:04,381 --> 00:05:08,604
+Em 4% dos casos, o modelo devolve só a prioridade.
+
+107
+00:05:08,904 --> 00:05:13,174
+E o código preenche um motivo padrão em silêncio e segue.
+
+108
+00:05:13,474 --> 00:05:17,553
+É a mesma fragilidade de procurar a palavra urgente no texto.
+
+109
+00:05:17,853 --> 00:05:20,661
+Saída incompleta tem que falhar na validação,
+
+110
+00:05:20,661 --> 00:05:23,282
+e ir para um retry ou uma fila de revisão.
+
+111
+00:05:23,582 --> 00:05:26,960
+Se o campo é mesmo opcional, diga isso no schema.
+
+112
+00:05:28,160 --> 00:05:31,365
+Agora pegue um prompt seu e escreva o contrato dele,
+
+113
+00:05:31,365 --> 00:05:34,571
+em cinco minutos, num arquivo bem ao lado do prompt.
+
+114
+00:05:34,871 --> 00:05:37,194
+Um nome, uma versão, um dono.
+
+115
+00:05:37,844 --> 00:05:40,155
+O que entra, e o que precisa ficar de fora.
+
+116
+00:05:40,805 --> 00:05:43,827
+Se você não conseguiu preencher a saída sem hesitar,
+
+117
+00:05:43,827 --> 00:05:46,734
+o seu código provavelmente interpreta texto livre.
+
+118
+00:05:47,034 --> 00:05:49,384
+Isso é um smell chamado free text handoff.
+
+119
+00:05:50,034 --> 00:05:52,936
+E se não tem nada para colocar ao lado de eval,
+
+120
+00:05:52,936 --> 00:05:54,356
+isso é untested prompt.
+
+121
+00:05:55,006 --> 00:05:58,801
+Depois, compare o contrato com o código que consome a saída.
+
+122
+00:05:59,101 --> 00:06:01,632
+Se o código procura uma palavra em português
+
+123
+00:06:01,632 --> 00:06:03,932
+e o contrato promete um valor em inglês,
+
+124
+00:06:03,932 --> 00:06:07,325
+você acabou de achar o bug de sexta antes de ele acontecer.
+
+125
+00:06:07,625 --> 00:06:10,454
+E a correção não é traduzir o schema.
+
+126
+00:06:10,754 --> 00:06:15,030
+É ler só o campo validado e apagar a busca pela palavra.
+
+127
+00:06:16,230 --> 00:06:17,814
+Então, o que muda na prática?
+
+128
+00:06:18,114 --> 00:06:22,015
+O prompt mora no repositório, num arquivo próprio.
+
+129
+00:06:22,315 --> 00:06:24,755
+Não espalhado como texto pelo código.
+
+130
+00:06:25,405 --> 00:06:27,246
+Mudança de prompt passa por revisão,
+
+131
+00:06:27,246 --> 00:06:29,190
+como qualquer outra mudança de código.
+
+132
+00:06:29,840 --> 00:06:32,995
+A saída nunca é lida procurando uma palavra no texto.
+
+133
+00:06:33,295 --> 00:06:34,729
+Ela é lida de um campo.
+
+134
+00:06:35,379 --> 00:06:38,688
+E toda chamada registra a versão do prompt no trace,
+
+135
+00:06:38,688 --> 00:06:41,869
+para você saber o que rodou quando algo dá errado.
+
+136
+00:06:42,519 --> 00:06:45,116
+E uma mudança pequena também segue o ritual.
+
+137
+00:06:45,416 --> 00:06:47,744
+Digamos que o produto quer um resumo
+
+138
+00:06:47,744 --> 00:06:49,749
+de cinco frases em vez de três.
+
+139
+00:06:50,049 --> 00:06:51,155
+Você sobe a versão,
+
+140
+00:06:51,155 --> 00:06:53,367
+roda o eval e só publica se a checagem
+
+141
+00:06:53,367 --> 00:06:55,113
+de tamanho continuar passando.
+
+142
+00:06:55,413 --> 00:06:58,238
+O objetivo não é um prompt que nunca muda.
+
+143
+00:06:58,538 --> 00:07:02,316
+É um prompt que dá para mudar com teste, e com caminho de volta.
+
+144
+00:07:03,516 --> 00:07:05,502
+Então, a ideia para levar.
+
+145
+00:07:05,802 --> 00:07:08,074
+Tratar o prompt como interface não
+
+146
+00:07:08,074 --> 00:07:10,079
+torna o modelo determinístico.
+
+147
+00:07:10,379 --> 00:07:13,731
+Deixa o resto do sistema pronto para quando ele não for.
+
+148
+00:07:14,031 --> 00:07:17,213
+E faz o seu time perder o medo de mexer nele.
+
+149
+00:07:17,863 --> 00:07:18,804
+Na próxima aula,
+
+150
+00:07:18,804 --> 00:07:20,980
+a gente vê o que acontece quando essa
+
+151
+00:07:20,980 --> 00:07:22,862
+interface cresce e ninguém poda:
+
+152
+00:07:22,862 --> 00:07:26,215
+o prompt inchado, em que cada incidente deixou uma regra.
+
+153
+00:07:26,515 --> 00:07:27,345
+Até lá.

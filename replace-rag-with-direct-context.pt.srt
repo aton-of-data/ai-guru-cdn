@@ -1,0 +1,627 @@
+1
+00:00:01,600 --> 00:00:04,548
+De volta ao assistente jurídico da aula passada.
+
+2
+00:00:04,848 --> 00:00:09,573
+Um contrato de serviços, dezoito páginas, uns doze mil tokens.
+
+3
+00:00:10,223 --> 00:00:13,823
+O pipeline quebra o contrato em pedaços de quinhentos tokens
+
+4
+00:00:13,823 --> 00:00:16,763
+e busca os quatro mais próximos de cada pergunta.
+
+5
+00:00:17,063 --> 00:00:20,084
+Quatro pedaços de quinhentos dá dois mil tokens.
+
+6
+00:00:20,384 --> 00:00:21,618
+De doze mil.
+
+7
+00:00:22,268 --> 00:00:26,109
+Então, quando alguém perguntou sobre rescindir por atraso,
+
+8
+00:00:26,109 --> 00:00:29,355
+o modelo respondeu olhando um sexto do documento.
+
+9
+00:00:29,655 --> 00:00:30,776
+E não sabia disso.
+
+10
+00:00:31,076 --> 00:00:32,500
+Disse que não tinha multa.
+
+11
+00:00:32,800 --> 00:00:35,411
+A cláusula 14.3 dizia outra coisa.
+
+12
+00:00:36,061 --> 00:00:39,193
+Nesta aula, você vai tirar a busca, com segurança,
+
+13
+00:00:39,193 --> 00:00:41,449
+colocar o contrato inteiro na frente
+
+14
+00:00:41,449 --> 00:00:43,955
+do modelo e manter a conta sob controle.
+
+15
+00:00:45,155 --> 00:00:47,808
+A refatoração cabe em duas frases.
+
+16
+00:00:48,108 --> 00:00:50,576
+Mande o material inteiro no contexto,
+
+17
+00:00:50,576 --> 00:00:52,978
+num bloco fixo no começo da chamada.
+
+18
+00:00:53,278 --> 00:00:54,954
+E ligue o cache de prompt,
+
+19
+00:00:54,954 --> 00:00:58,049
+para não pagar a leitura cheia em toda pergunta.
+
+20
+00:00:58,699 --> 00:01:02,057
+A busca vetorial existe para escolher o pouco que cabe,
+
+21
+00:01:02,057 --> 00:01:03,705
+quando o material é grande.
+
+22
+00:01:04,005 --> 00:01:07,770
+Com material pequeno, essa escolha só tira informação.
+
+23
+00:01:08,070 --> 00:01:11,296
+A quebra separa cláusulas que dependem uma da outra,
+
+24
+00:01:11,296 --> 00:01:13,344
+e a busca erra quando as palavras
+
+25
+00:01:13,344 --> 00:01:15,453
+da pergunta não batem com o texto.
+
+26
+00:01:16,653 --> 00:01:20,202
+Antes, o contrato vira pedaços e embeddings.
+
+27
+00:01:20,502 --> 00:01:22,264
+A pergunta escolhe quatro deles.
+
+28
+00:01:22,564 --> 00:01:25,568
+E o modelo responde com o que a busca escolheu.
+
+29
+00:01:26,218 --> 00:01:29,900
+Depois, o documento inteiro vai num bloco fixo,
+
+30
+00:01:29,900 --> 00:01:32,015
+logo depois das instruções.
+
+31
+00:01:32,665 --> 00:01:36,115
+Na primeira pergunta, esse prefixo é gravado no cache.
+
+32
+00:01:36,765 --> 00:01:40,422
+Nas seguintes, o modelo lê o contrato do cache,
+
+33
+00:01:40,422 --> 00:01:42,289
+por uma fração do custo.
+
+34
+00:01:42,939 --> 00:01:45,989
+E a resposta pode ligar cláusulas distantes,
+
+35
+00:01:45,989 --> 00:01:47,653
+porque nada foi cortado.
+
+36
+00:01:48,853 --> 00:01:51,455
+Então, a mesma pergunta de novo.
+
+37
+00:01:51,755 --> 00:01:56,194
+Com quatro pedaços, o contexto tinha a rescisão e não a multa.
+
+38
+00:01:56,494 --> 00:01:57,877
+Com o contrato inteiro,
+
+39
+00:01:57,877 --> 00:02:00,342
+as duas cláusulas estão no mesmo prefixo.
+
+40
+00:02:00,992 --> 00:02:04,852
+E a instrução pede ao modelo que cite artigo e parágrafo.
+
+41
+00:02:05,152 --> 00:02:07,414
+Então a resposta vira esta.
+
+42
+00:02:07,714 --> 00:02:08,233
+Não.
+
+43
+00:02:08,533 --> 00:02:11,463
+A cláusula 8 permite rescindir por atraso,
+
+44
+00:02:11,463 --> 00:02:14,463
+mas a 14.3 aplica multa por inadimplemento,
+
+45
+00:02:14,463 --> 00:02:17,393
+e atraso na entrega entra nessa definição.
+
+46
+00:02:17,693 --> 00:02:21,014
+É uma resposta que um advogado confere em dez segundos.
+
+47
+00:02:21,664 --> 00:02:23,291
+Um alerta continua valendo.
+
+48
+00:02:23,591 --> 00:02:25,719
+Um contexto enorme não garante
+
+49
+00:02:25,719 --> 00:02:28,344
+que o modelo ache a cláusula do meio.
+
+50
+00:02:28,644 --> 00:02:31,116
+A pesquisa chama isso de lost in the middle.
+
+51
+00:02:31,416 --> 00:02:34,134
+Por isso a condição é caber com folga.
+
+52
+00:02:34,434 --> 00:02:37,910
+Doze mil tokens numa janela grande é folga.
+
+53
+00:02:38,210 --> 00:02:42,752
+Cem mil tokens de anexos empilhados é outro projeto.
+
+54
+00:02:43,952 --> 00:02:45,072
+Uma pergunta para você.
+
+55
+00:02:45,372 --> 00:02:46,473
+Depois da troca,
+
+56
+00:02:46,473 --> 00:02:50,879
+a segunda pergunta do usuário mostra zero tokens lidos do cache.
+
+57
+00:02:51,179 --> 00:02:54,854
+Olhando o prompt, o bloco de sistema começa com a data de hoje,
+
+58
+00:02:54,854 --> 00:02:57,596
+para o modelo saber o dia, e depois o contrato.
+
+59
+00:02:57,896 --> 00:02:58,860
+Qual é a correção?
+
+60
+00:03:01,910 --> 00:03:05,601
+Tire a data do prefixo e mande na mensagem do usuário,
+
+61
+00:03:05,601 --> 00:03:07,583
+depois do documento em cache.
+
+62
+00:03:07,883 --> 00:03:11,133
+O cache reaproveita um começo de prompt idêntico.
+
+63
+00:03:11,433 --> 00:03:13,586
+Uma data que muda todo dia quer dizer
+
+64
+00:03:13,586 --> 00:03:15,739
+que nunca tem nada para reaproveitar.
+
+65
+00:03:16,389 --> 00:03:18,108
+Não é culpa do fornecedor,
+
+66
+00:03:18,108 --> 00:03:21,679
+e fazer cache da mensagem do usuário também não ajuda,
+
+67
+00:03:21,679 --> 00:03:23,795
+porque ela muda a cada pergunta.
+
+68
+00:03:24,095 --> 00:03:26,602
+Instruções e contrato ficam estáveis.
+
+69
+00:03:26,902 --> 00:03:29,566
+Data, usuário e pergunta vêm depois.
+
+70
+00:03:30,766 --> 00:03:32,051
+Agora, o passo a passo.
+
+71
+00:03:32,701 --> 00:03:34,667
+Passo zero, medir.
+
+72
+00:03:34,967 --> 00:03:39,411
+Rode o eval de perguntas e inclua perguntas que cruzam seções,
+
+73
+00:03:39,411 --> 00:03:41,633
+como uma regra e a sua exceção.
+
+74
+00:03:41,933 --> 00:03:45,888
+Anote acerto, custo e latência por pergunta.
+
+75
+00:03:46,188 --> 00:03:49,559
+Essas perguntas cruzadas são o motivo da troca.
+
+76
+00:03:50,209 --> 00:03:51,189
+Confira o tamanho.
+
+77
+00:03:51,489 --> 00:03:56,135
+Conte os tokens com o contador do fornecedor, não no chute.
+
+78
+00:03:56,435 --> 00:03:59,241
+Deixe espaço para a conversa e a resposta.
+
+79
+00:03:59,541 --> 00:04:02,733
+Se não sobra espaço, esta refatoração não se aplica.
+
+80
+00:04:03,383 --> 00:04:05,050
+Monte o prefixo fixo.
+
+81
+00:04:05,350 --> 00:04:07,976
+Instruções primeiro, depois o documento.
+
+82
+00:04:08,276 --> 00:04:11,407
+E nada que varia antes do fim do documento.
+
+83
+00:04:11,707 --> 00:04:14,857
+Nem data, nem id de usuário, nem hora.
+
+84
+00:04:15,507 --> 00:04:18,101
+Ligue o cache de prompt no bloco do documento.
+
+85
+00:04:18,751 --> 00:04:20,010
+Confirme que funciona.
+
+86
+00:04:20,310 --> 00:04:21,925
+Da segunda chamada em diante,
+
+87
+00:04:21,925 --> 00:04:24,932
+o relatório de uso deve mostrar tokens lidos do cache.
+
+88
+00:04:25,232 --> 00:04:28,566
+Se mostrar zero, o prefixo está mudando em algum lugar.
+
+89
+00:04:29,216 --> 00:04:33,694
+Meça de novo e compare acerto e custo por pergunta.
+
+90
+00:04:33,994 --> 00:04:37,469
+As perguntas cruzadas são o teste que importa.
+
+91
+00:04:37,769 --> 00:04:43,442
+No exemplo, a busca acertou 61%, e o documento inteiro, 88%.
+
+92
+00:04:44,092 --> 00:04:46,932
+E só depois que a versão nova estabilizar,
+
+93
+00:04:46,932 --> 00:04:48,758
+remova o pipeline de busca.
+
+94
+00:04:49,058 --> 00:04:51,648
+Não deixe atrás de uma flag, só por garantia.
+
+95
+00:04:51,948 --> 00:04:53,429
+Enquanto os dois existirem,
+
+96
+00:04:53,429 --> 00:04:55,733
+alguém vai só ajustar o número de pedaços,
+
+97
+00:04:55,733 --> 00:04:57,050
+no meio de um incidente.
+
+98
+00:04:58,250 --> 00:04:59,293
+Alguns riscos.
+
+99
+00:04:59,593 --> 00:05:00,932
+O material cresce.
+
+100
+00:05:01,232 --> 00:05:02,811
+Hoje é um contrato.
+
+101
+00:05:03,111 --> 00:05:06,702
+Amanhã são cento e vinte contratos de fornecedores,
+
+102
+00:05:06,702 --> 00:05:09,237
+e o prefixo não cabe mais com folga.
+
+103
+00:05:09,537 --> 00:05:11,880
+O tamanho mudou, então a ferramenta muda.
+
+104
+00:05:12,180 --> 00:05:15,304
+Volte para um índice, filtrado pelo contrato do usuário,
+
+105
+00:05:15,304 --> 00:05:16,866
+e mantenha o contexto direto
+
+106
+00:05:16,866 --> 00:05:18,985
+para o documento único que ainda cabe.
+
+107
+00:05:19,635 --> 00:05:21,209
+Perguntas muito espaçadas.
+
+108
+00:05:21,509 --> 00:05:24,906
+O cache expira depois de alguns minutos sem uso.
+
+109
+00:05:25,206 --> 00:05:28,108
+Com pouco tráfego, o desconto aparece menos.
+
+110
+00:05:28,408 --> 00:05:32,177
+O ganho de acerto nas perguntas cruzadas continua.
+
+111
+00:05:32,827 --> 00:05:34,642
+Partes que o usuário não pode ver.
+
+112
+00:05:34,942 --> 00:05:37,735
+Se alguns usuários só podem ver o anexo de preços,
+
+113
+00:05:37,735 --> 00:05:39,913
+um prompt pedindo ao modelo que esconda
+
+114
+00:05:39,913 --> 00:05:41,756
+o resto não é controle de acesso.
+
+115
+00:05:42,056 --> 00:05:43,632
+Uma pergunta capciosa vaza.
+
+116
+00:05:43,932 --> 00:05:47,022
+A permissão vale antes de montar o contexto,
+
+117
+00:05:47,022 --> 00:05:50,112
+com busca filtrada ou um prefixo por perfil.
+
+118
+00:05:50,762 --> 00:05:53,212
+E achar que caber basta.
+
+119
+00:05:53,512 --> 00:05:56,088
+Se o eval de perguntas cruzadas continua
+
+120
+00:05:56,088 --> 00:05:57,956
+ruim com o documento inteiro,
+
+121
+00:05:57,956 --> 00:05:59,694
+o problema não era a busca.
+
+122
+00:05:59,994 --> 00:06:02,098
+Pode ser o prompt, o modelo,
+
+123
+00:06:02,098 --> 00:06:05,103
+ou um contrato que é ambíguo de verdade.
+
+124
+00:06:05,753 --> 00:06:06,870
+E uma fronteira rápida.
+
+125
+00:06:07,170 --> 00:06:10,666
+Uma loja online pensa em colar o catálogo
+
+126
+00:06:10,666 --> 00:06:13,394
+de oito mil produtos no prefixo,
+
+127
+00:06:13,394 --> 00:06:14,247
+com cache.
+
+128
+00:06:14,547 --> 00:06:16,124
+Isso não é esta refatoração.
+
+129
+00:06:16,424 --> 00:06:19,756
+Não cabe com folga, cada pergunta precisa de poucas linhas,
+
+130
+00:06:19,756 --> 00:06:22,637
+e o preço de um produto é uma consulta pelo código.
+
+131
+00:06:22,937 --> 00:06:25,345
+É uma ferramenta de consulta, ou busca,
+
+132
+00:06:25,345 --> 00:06:27,382
+não um prefixo de oito mil itens.
+
+133
+00:06:28,582 --> 00:06:31,038
+O código fica menor, o que é um bom sinal.
+
+134
+00:06:31,688 --> 00:06:34,302
+O contrato é carregado uma vez, como texto.
+
+135
+00:06:34,952 --> 00:06:37,005
+A parte de sistema tem dois blocos.
+
+136
+00:06:37,305 --> 00:06:41,078
+As instruções, e depois o contrato, marcado para cache.
+
+137
+00:06:41,728 --> 00:06:44,730
+E a pergunta vai sozinha na mensagem do usuário,
+
+138
+00:06:44,730 --> 00:06:46,545
+depois de tudo que é estável.
+
+139
+00:06:46,845 --> 00:06:49,742
+As três linhas que geravam o embedding da pergunta,
+
+140
+00:06:49,742 --> 00:06:53,095
+buscavam no banco e juntavam os pedaços simplesmente somem.
+
+141
+00:06:53,745 --> 00:06:57,510
+Na página, você encontra a mesma mudança nas abas de código.
+
+142
+00:06:57,810 --> 00:07:00,682
+O que muda entre elas é só como cada
+
+143
+00:07:00,682 --> 00:07:02,995
+uma marca o bloco para cache,
+
+144
+00:07:02,995 --> 00:07:06,186
+e onde informa os tokens lidos do cache.
+
+145
+00:07:07,386 --> 00:07:09,573
+Então, a ideia para levar.
+
+146
+00:07:09,873 --> 00:07:12,523
+Quando o material cabe com folga,
+
+147
+00:07:12,523 --> 00:07:15,093
+a busca é um filtro que só tira.
+
+148
+00:07:15,393 --> 00:07:18,177
+Ponha o documento primeiro, a pergunta depois,
+
+149
+00:07:18,177 --> 00:07:20,417
+deixe o cache carregar o custo e meça
+
+150
+00:07:20,417 --> 00:07:22,354
+nas perguntas que cruzam seções.
+
+151
+00:07:23,004 --> 00:07:26,125
+Mas às vezes o material realmente não cabe,
+
+152
+00:07:26,125 --> 00:07:28,011
+e você precisa de pedaços.
+
+153
+00:07:28,311 --> 00:07:29,260
+Na próxima aula,
+
+154
+00:07:29,260 --> 00:07:31,811
+a gente faz cada pedaço carregar o contexto
+
+155
+00:07:31,811 --> 00:07:33,591
+que perdeu quando foi cortado:
+
+156
+00:07:33,591 --> 00:07:34,777
+contextual chunking.
+
+157
+00:07:35,077 --> 00:07:36,184
+Até lá.

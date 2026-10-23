@@ -1,0 +1,517 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.421
+Um time de marketplace precisava moderar anúncios.
+
+00:00:04.721 --> 00:00:07.166
+Conferir o texto, conferir a imagem,
+
+00:00:07.166 --> 00:00:09.203
+conferir o preço e aí decidir.
+
+00:00:09.853 --> 00:00:12.975
+Alguém sugeriu um agente com quatro ferramentas.
+
+00:00:13.275 --> 00:00:14.497
+A demo ficou ótima.
+
+00:00:15.147 --> 00:00:17.146
+Em produção, de vez em quando,
+
+00:00:17.146 --> 00:00:19.811
+o agente decidia que a imagem parecia ok
+
+00:00:19.811 --> 00:00:22.276
+e nem chamava a ferramenta de imagem.
+
+00:00:22.576 --> 00:00:24.621
+Anúncios proibidos foram ao ar.
+
+00:00:25.271 --> 00:00:27.877
+O caminho da moderação era sempre o mesmo.
+
+00:00:28.177 --> 00:00:30.917
+Texto, imagem, preço, decisão.
+
+00:00:31.217 --> 00:00:34.784
+O time deu ao modelo uma liberdade que a tarefa nunca pediu.
+
+00:00:35.084 --> 00:00:38.697
+Nesta aula, você vai aprender a pergunta que teria evitado isso,
+
+00:00:38.697 --> 00:00:42.083
+e a escolher o degrau mais baixo que resolve o seu problema.
+
+00:00:43.283 --> 00:00:46.045
+Todo sistema feito com modelo de linguagem
+
+00:00:46.045 --> 00:00:48.215
+responde uma pergunta de desenho,
+
+00:00:48.215 --> 00:00:49.858
+o time percebendo ou não.
+
+00:00:50.158 --> 00:00:51.701
+Quem decide o próximo passo?
+
+00:00:52.001 --> 00:00:53.643
+O seu código ou o modelo?
+
+00:00:54.843 --> 00:00:56.564
+De um lado, a chain.
+
+00:00:56.864 --> 00:01:00.469
+Uma sequência fixa de chamadas, com o caminho escrito no código.
+
+00:01:00.769 --> 00:01:03.924
+O passo B sempre roda depois do A.
+
+00:01:04.224 --> 00:01:05.217
+Sempre.
+
+00:01:05.867 --> 00:01:07.793
+Do outro lado, o agente.
+
+00:01:08.093 --> 00:01:11.027
+O modelo recebe um objetivo e algumas ferramentas.
+
+00:01:11.327 --> 00:01:13.746
+E a cada turno, decide o que fazer.
+
+00:01:14.046 --> 00:01:17.570
+Chamar uma ferramenta, qual, com quais argumentos, ou parar.
+
+00:01:18.220 --> 00:01:21.412
+Entre esses dois extremos ficam os workflows.
+
+00:01:21.712 --> 00:01:23.315
+Fluxos definidos no código,
+
+00:01:23.315 --> 00:01:26.343
+que usam o modelo em pontos de decisão específicos.
+
+00:01:26.643 --> 00:01:30.113
+Um roteador escolhendo entre três caminhos fixos é um workflow.
+
+00:01:30.413 --> 00:01:32.296
+A estrutura continua sendo do código.
+
+00:01:32.596 --> 00:01:35.314
+O modelo só escolhe entre opções que você desenhou.
+
+00:01:35.964 --> 00:01:39.585
+Então a moderação de anúncios era uma chain de quatro caixas.
+
+00:01:39.885 --> 00:01:43.578
+Transformar em agente não acrescentou inteligência.
+
+00:01:43.878 --> 00:01:46.397
+Acrescentou permissão para pular a caixa da imagem.
+
+00:01:47.597 --> 00:01:50.565
+Pense numa escada de quatro degraus.
+
+00:01:51.215 --> 00:01:53.422
+Embaixo, uma chamada única.
+
+00:01:53.722 --> 00:01:56.841
+Ninguém decide caminho nenhum, é um passo só.
+
+00:01:57.141 --> 00:01:59.148
+Classificar um ticket cabe aqui.
+
+00:01:59.798 --> 00:02:00.508
+Depois, a chain.
+
+00:02:00.808 --> 00:02:03.500
+O código decide, e é sempre igual.
+
+00:02:03.800 --> 00:02:06.544
+Extrair, validar, resumir.
+
+00:02:07.194 --> 00:02:08.212
+Depois, o workflow.
+
+00:02:08.512 --> 00:02:12.067
+O código decide, com escolhas do modelo em pontos marcados.
+
+00:02:12.367 --> 00:02:14.483
+Roteamento é o exemplo clássico.
+
+00:02:15.133 --> 00:02:17.049
+E no topo, o agente.
+
+00:02:17.349 --> 00:02:19.778
+O modelo decide, a cada turno.
+
+00:02:20.078 --> 00:02:22.368
+Como corrigir um bug num repositório,
+
+00:02:22.368 --> 00:02:25.588
+onde o caminho depende do que você descobre no meio.
+
+00:02:26.238 --> 00:02:30.450
+A regra: suba um degrau só quando o de baixo não dá conta.
+
+00:02:30.750 --> 00:02:33.070
+Cada degrau acima traz mais flexibilidade.
+
+00:02:33.370 --> 00:02:35.818
+E também mais custo, mais latência,
+
+00:02:35.818 --> 00:02:38.825
+mais variação e mais dificuldade de testar.
+
+00:02:39.475 --> 00:02:43.141
+O guia da Anthropic sobre como construir agentes eficazes,
+
+00:02:43.141 --> 00:02:45.733
+de dezembro de 2024, traça a mesma linha.
+
+00:02:46.033 --> 00:02:47.535
+Comece com workflows,
+
+00:02:47.535 --> 00:02:49.966
+onde o código orquestra e o modelo
+
+00:02:49.966 --> 00:02:52.254
+preenche os pontos de incerteza.
+
+00:02:52.554 --> 00:02:54.399
+Traga um agente quando você não consegue
+
+00:02:54.399 --> 00:02:55.644
+escrever a sequência antes.
+
+00:02:56.844 --> 00:02:58.495
+Então aqui está o teste.
+
+00:02:58.795 --> 00:02:59.673
+Uma pergunta.
+
+00:02:59.973 --> 00:03:02.091
+Eu consigo desenhar o fluxograma dessa
+
+00:03:02.091 --> 00:03:03.541
+tarefa antes de ela rodar?
+
+00:03:04.191 --> 00:03:07.497
+Se sim, e é sempre igual, é uma chain.
+
+00:03:07.797 --> 00:03:10.001
+A moderação passa fácil.
+
+00:03:10.301 --> 00:03:12.546
+Quatro caixas, sem surpresa.
+
+00:03:13.196 --> 00:03:16.693
+Se sim, mas com ramos conhecidos, é um workflow.
+
+00:03:16.993 --> 00:03:19.271
+Um bot de pedidos costuma ser assim.
+
+00:03:19.571 --> 00:03:22.890
+Se a mensagem cita um número de pedido, consulta o pedido.
+
+00:03:23.190 --> 00:03:25.814
+Se é sobre uma conta, vai para o financeiro.
+
+00:03:26.114 --> 00:03:29.336
+Se não se encaixa em nada, passa para uma pessoa.
+
+00:03:29.636 --> 00:03:31.665
+Os ramos existem antes da execução.
+
+00:03:32.315 --> 00:03:32.980
+E se não,
+
+00:03:32.980 --> 00:03:36.159
+porque o próximo passo depende do resultado
+
+00:03:36.159 --> 00:03:39.116
+anterior de um jeito que você não prevê,
+
+00:03:39.116 --> 00:03:40.003
+aí é agente.
+
+00:03:40.303 --> 00:03:42.763
+Investigar por que um deploy quebrou numa
+
+00:03:42.763 --> 00:03:45.104
+sexta à noite raramente tem fluxograma.
+
+00:03:45.404 --> 00:03:48.454
+O próximo comando depende do log que acabou de aparecer.
+
+00:03:48.754 --> 00:03:51.178
+É ali que o agente se paga.
+
+00:03:51.828 --> 00:03:54.057
+Repare que não é questão de importância.
+
+00:03:54.357 --> 00:03:58.047
+Barrar um anúncio também é importante, e pede uma chain.
+
+00:03:58.347 --> 00:04:01.070
+Importância pede controle, não liberdade.
+
+00:04:02.270 --> 00:04:03.744
+Uma pergunta para você.
+
+00:04:04.044 --> 00:04:06.824
+Você mediu que o agente de moderação chama
+
+00:04:06.824 --> 00:04:09.736
+a ferramenta de imagem em 70% das execuções.
+
+00:04:10.036 --> 00:04:12.946
+A política exige 100%.
+
+00:04:13.246 --> 00:04:15.193
+Que mudança fecha o buraco?
+
+00:04:18.243 --> 00:04:21.792
+Leve a chamada de imagem para o código, antes da decisão,
+
+00:04:21.792 --> 00:04:24.220
+e deixe o modelo só julgar o resultado.
+
+00:04:24.520 --> 00:04:27.764
+Esses 70% são o modelo usando uma liberdade
+
+00:04:27.764 --> 00:04:29.650
+que a política nunca deu.
+
+00:04:30.300 --> 00:04:32.507
+Aumentar o limite de passos não ajudaria.
+
+00:04:32.807 --> 00:04:36.707
+Limite evita loop infinito, não obriga um passo.
+
+00:04:37.007 --> 00:04:41.240
+E um prompt dizendo nunca pule a imagem diminui o pulo,
+
+00:04:41.240 --> 00:04:42.395
+mas nunca zera.
+
+00:04:42.695 --> 00:04:46.762
+O pulo só some de verdade quando deixa de ser decisão do modelo.
+
+00:04:47.962 --> 00:04:49.467
+Vamos dar um número aproximado.
+
+00:04:49.767 --> 00:04:52.830
+Digamos que um fluxo de moderação tem três checagens,
+
+00:04:52.830 --> 00:04:55.084
+cada uma com uns mil tokens de entrada.
+
+00:04:55.734 --> 00:04:58.505
+Numa chain, são sempre três chamadas.
+
+00:04:59.155 --> 00:05:02.503
+Num agente, o modelo pode fazer duas, ou sete,
+
+00:05:02.503 --> 00:05:04.396
+se ficar inseguro e reler.
+
+00:05:05.046 --> 00:05:08.617
+Você troca um custo previsível por um custo com cauda.
+
+00:05:09.267 --> 00:05:10.837
+E o teste também muda.
+
+00:05:11.137 --> 00:05:14.739
+Uma chain tem três contratos, e o eval dela é simples:
+
+00:05:14.739 --> 00:05:16.340
+os três passos passaram?
+
+00:05:16.640 --> 00:05:18.698
+Um agente tem um objetivo e um espaço
+
+00:05:18.698 --> 00:05:20.367
+inteiro de caminhos possíveis.
+
+00:05:20.667 --> 00:05:22.623
+O eval dele precisa de traces,
+
+00:05:22.623 --> 00:05:24.580
+de limite de passos e de casos
+
+00:05:24.580 --> 00:05:26.798
+em que pular um passo foi a falha.
+
+00:05:27.998 --> 00:05:30.812
+O erro mais comum na prática tem nome:
+
+00:05:30.812 --> 00:05:32.960
+agent where a chain would do.
+
+00:05:33.260 --> 00:05:36.023
+Autonomia para um problema que nunca pediu isso.
+
+00:05:36.673 --> 00:05:37.893
+Ele aparece assim.
+
+00:05:38.193 --> 00:05:40.565
+Um time tem um agente com doze ferramentas
+
+00:05:40.565 --> 00:05:42.258
+para cadastrar lojistas novos.
+
+00:05:42.558 --> 00:05:46.547
+E na prática, ele sempre pede os mesmos quatro documentos,
+
+00:05:46.547 --> 00:05:47.579
+na mesma ordem.
+
+00:05:47.879 --> 00:05:49.387
+Isso não é coincidência.
+
+00:05:49.687 --> 00:05:51.011
+É evidência.
+
+00:05:51.311 --> 00:05:54.814
+O fluxograma já existe, escrito pelos traces.
+
+00:05:55.114 --> 00:05:56.154
+Coloque no código.
+
+00:05:56.804 --> 00:05:58.789
+E o erro oposto também existe.
+
+00:05:59.089 --> 00:06:00.790
+Uma chain com trinta ifs,
+
+00:06:00.790 --> 00:06:02.763
+tentando prever toda pergunta
+
+00:06:02.763 --> 00:06:05.281
+que um analista de fraude pode fazer.
+
+00:06:05.581 --> 00:06:08.829
+Cada if novo é um ramo que você inventou sem dados.
+
+00:06:09.129 --> 00:06:12.713
+Quando os ramos explodem, o workflow ficou pequeno.
+
+00:06:13.013 --> 00:06:14.169
+É aí que você sobe.
+
+00:06:14.469 --> 00:06:15.810
+Mas sobe com um eval,
+
+00:06:15.810 --> 00:06:18.876
+montado com os casos que a chain não cobre mais,
+
+00:06:18.876 --> 00:06:21.366
+e com um limite de custo para o agente.
+
+00:06:22.566 --> 00:06:25.016
+O mesmo corte aparece em toda stack.
+
+00:06:25.316 --> 00:06:26.180
+No LangGraph,
+
+00:06:26.180 --> 00:06:30.366
+uma chain ou um workflow é um grafo cujas arestas você escreve.
+
+00:06:30.666 --> 00:06:31.939
+Um agente é um loop de ferramentas.
+
+00:06:32.239 --> 00:06:34.985
+Os ajudantes de agente do LangChain,
+
+00:06:34.985 --> 00:06:37.731
+o OpenAI Agents SDK e o Claude Agent
+
+00:06:37.731 --> 00:06:39.866
+SDK partem todos desse loop.
+
+00:06:40.516 --> 00:06:42.675
+Mas a biblioteca não escolhe o degrau.
+
+00:06:42.975 --> 00:06:43.718
+Você escolhe.
+
+00:06:44.018 --> 00:06:47.653
+Se o fluxograma cabe no papel, o seu código desenha as arestas,
+
+00:06:47.653 --> 00:06:49.210
+seja qual for a biblioteca.
+
+00:06:50.410 --> 00:06:54.801
+Agora pegue três tarefas do seu produto e classifique cada uma.
+
+00:06:55.101 --> 00:06:55.884
+Fluxograma fixo?
+
+00:06:56.184 --> 00:06:56.929
+Ramos?
+
+00:06:57.229 --> 00:06:57.994
+Qual degrau?
+
+00:06:58.644 --> 00:07:04.078
+Resumir uma reunião tem fluxograma fixo, sem ramos.
+
+00:07:04.378 --> 00:07:05.656
+Então é uma chain.
+
+00:07:06.306 --> 00:07:10.251
+Responder um cliente sobre um pedido tem fluxograma fixo,
+
+00:07:10.251 --> 00:07:10.944
+com ramos.
+
+00:07:11.244 --> 00:07:11.903
+Workflow.
+
+00:07:12.553 --> 00:07:16.499
+Investigar por que um deploy falhou não tem fluxograma fixo.
+
+00:07:16.799 --> 00:07:17.470
+Agente.
+
+00:07:18.120 --> 00:07:19.961
+Se uma tarefa que você já resolve
+
+00:07:19.961 --> 00:07:22.024
+com agente caiu em chain ou workflow,
+
+00:07:22.024 --> 00:07:25.092
+você acabou de achar uma candidata para uma refatoração
+
+00:07:25.092 --> 00:07:26.933
+chamada replace agent with chain.
+
+00:07:28.133 --> 00:07:29.931
+Então, a ideia para levar.
+
+00:07:30.231 --> 00:07:32.062
+Autonomia não é funcionalidade.
+
+00:07:32.362 --> 00:07:34.337
+É um custo que você paga quando não
+
+00:07:34.337 --> 00:07:36.255
+consegue escrever o caminho antes.
+
+00:07:36.555 --> 00:07:39.646
+Comece no degrau mais baixo que resolve o problema.
+
+00:07:39.946 --> 00:07:41.634
+Você sempre pode subir depois,
+
+00:07:41.634 --> 00:07:43.828
+com um eval mostrando que valeu a pena.
+
+00:07:44.478 --> 00:07:47.882
+Na próxima aula, a gente constrói direito o primeiro degrau:
+
+00:07:47.882 --> 00:07:51.512
+prompt chaining, poucas etapas curtas, cada uma fácil de testar.
+
+00:07:51.812 --> 00:07:52.641
+Até lá.

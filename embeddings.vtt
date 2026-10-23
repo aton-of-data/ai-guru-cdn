@@ -1,0 +1,427 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.717
+A help center had a search box that matched keywords.
+
+00:00:05.017 --> 00:00:07.782
+A customer typed: I can't get into my account.
+
+00:00:08.082 --> 00:00:09.516
+Zero results.
+
+00:00:10.166 --> 00:00:13.142
+The right article was called: how to reset your password.
+
+00:00:13.442 --> 00:00:15.385
+Not a single word in common.
+
+00:00:15.685 --> 00:00:16.527
+Same topic.
+
+00:00:17.177 --> 00:00:21.762
+So the team switched the search to embeddings, and that question started finding the
+
+00:00:21.762 --> 00:00:22.526
+right article.
+
+00:00:22.826 --> 00:00:24.943
+Two weeks later, a new bug.
+
+00:00:25.243 --> 00:00:30.506
+People searching cancel subscription got, as the very first result: how to subscribe
+
+00:00:30.506 --> 00:00:31.696
+to the annual plan.
+
+00:00:32.346 --> 00:00:35.012
+Similar topic, opposite intent.
+
+00:00:35.312 --> 00:00:40.261
+These two cases show exactly what embeddings capture, and where they mislead.
+
+00:00:40.561 --> 00:00:44.944
+And by the end of this lesson, you'll know when to trust them, and when to reach for
+
+00:00:44.944 --> 00:00:45.727
+something else.
+
+00:00:46.927 --> 00:00:52.567
+An embedding is a list of numbers, a vector, that represents the meaning of a text.
+
+00:00:52.867 --> 00:00:57.664
+An embedding model was trained so that texts with similar meaning become vectors
+
+00:00:57.664 --> 00:00:59.103
+that sit close together.
+
+00:00:59.753 --> 00:01:01.118
+Picture a huge map.
+
+00:01:01.418 --> 00:01:03.275
+Every text gets a point on it.
+
+00:01:03.575 --> 00:01:08.604
+Reset password and can't get into my account land on the same street.
+
+00:01:08.904 --> 00:01:12.773
+Delivery times by region lands in another neighborhood entirely.
+
+00:01:13.973 --> 00:01:15.470
+You start with two texts.
+
+00:01:15.770 --> 00:01:19.082
+A customer's question and a help article, for example.
+
+00:01:19.732 --> 00:01:22.621
+The same embedding model processes both.
+
+00:01:23.271 --> 00:01:28.112
+Each text becomes a vector, with hundreds or thousands of dimensions.
+
+00:01:28.762 --> 00:01:35.066
+A simple calculation, usually cosine similarity, compares the two vectors.
+
+00:01:35.716 --> 00:01:38.463
+And the result tells you how close the meanings are.
+
+00:01:38.763 --> 00:01:40.551
+The meanings, not the words.
+
+00:01:41.201 --> 00:01:43.537
+One rule people learn the hard way.
+
+00:01:43.837 --> 00:01:47.505
+The question and the documents have to go through the same model.
+
+00:01:47.805 --> 00:01:49.860
+Each model draws a different map.
+
+00:01:50.160 --> 00:01:54.946
+Comparing a vector from one model with vectors from another is like comparing a
+
+00:01:54.946 --> 00:01:57.611
+street address with a map of another planet.
+
+00:01:57.911 --> 00:02:01.812
+So if you change the embedding model, you rebuild the whole index.
+
+00:02:03.012 --> 00:02:05.778
+So what does similarity capture well?
+
+00:02:06.078 --> 00:02:07.975
+Synonyms and paraphrases.
+
+00:02:08.275 --> 00:02:12.638
+Get into my account sits close to log in, and to reset password.
+
+00:02:13.288 --> 00:02:16.725
+Different languages, if the model is multilingual.
+
+00:02:17.025 --> 00:02:20.569
+Reembolso, in Portuguese, sits close to refund.
+
+00:02:21.219 --> 00:02:22.830
+And the general topic.
+
+00:02:23.130 --> 00:02:25.546
+Texts about the same theme cluster together.
+
+00:02:26.196 --> 00:02:29.196
+In Brazilian support, this shows up all the time.
+
+00:02:29.496 --> 00:02:34.158
+Pix didn't land, and transfer not credited, share almost no words.
+
+00:02:34.458 --> 00:02:36.127
+They name the same pain.
+
+00:02:36.427 --> 00:02:37.734
+Embeddings catch that.
+
+00:02:38.034 --> 00:02:41.044
+A search that only matches keywords doesn't.
+
+00:02:42.244 --> 00:02:44.025
+Now where it misleads.
+
+00:02:44.325 --> 00:02:45.913
+Negation and intent.
+
+00:02:46.213 --> 00:02:52.242
+Cancel subscription and subscribe to a plan share a topic, and the vector sees the
+
+00:02:52.242 --> 00:02:53.124
+topic first.
+
+00:02:53.774 --> 00:02:55.690
+Numbers and codes.
+
+00:02:55.990 --> 00:03:01.301
+Order forty-five twenty-one and order forty-five twelve end up almost identical.
+
+00:03:01.601 --> 00:03:04.656
+The vector sees: this is an order number.
+
+00:03:04.956 --> 00:03:09.729
+For identifiers, tax IDs and tracking codes, filter in the database.
+
+00:03:10.029 --> 00:03:11.296
+Not by similarity.
+
+00:03:11.946 --> 00:03:13.490
+Rare terms from your domain.
+
+00:03:13.790 --> 00:03:18.198
+Internal acronyms and product names may be unknown to the model.
+
+00:03:18.848 --> 00:03:20.779
+And texts that are too long.
+
+00:03:21.079 --> 00:03:26.428
+A twenty page document becomes one single vector, and the meaning of each passage
+
+00:03:26.428 --> 00:03:27.287
+gets diluted.
+
+00:03:27.587 --> 00:03:31.849
+That's why documents are split into chunks before they become embeddings.
+
+00:03:32.499 --> 00:03:35.778
+That last one is the classic beginner trap.
+
+00:03:36.078 --> 00:03:39.799
+The team embeds a forty page policy as one vector.
+
+00:03:40.099 --> 00:03:45.278
+A question about the return window for electronics hits a blob that mixes vacation,
+
+00:03:45.278 --> 00:03:47.648
+refunds, returns and a code of ethics.
+
+00:03:47.948 --> 00:03:50.718
+The similarity score can even be high.
+
+00:03:51.018 --> 00:03:53.901
+But the useful passage is not isolated.
+
+00:03:54.201 --> 00:03:57.421
+Chunking exists so each vector stands for one topic.
+
+00:03:58.621 --> 00:04:00.094
+Here's one for you.
+
+00:04:00.394 --> 00:04:01.803
+Back to the help center.
+
+00:04:02.103 --> 00:04:07.839
+A customer searches cancel subscription, and the first result is how to subscribe to
+
+00:04:07.839 --> 00:04:08.931
+the annual plan.
+
+00:04:09.231 --> 00:04:10.571
+Is the index broken?
+
+00:04:10.871 --> 00:04:13.052
+What's the right reading of that ranking?
+
+00:04:16.102 --> 00:04:17.549
+The index is fine.
+
+00:04:17.849 --> 00:04:19.348
+The embedding did its job.
+
+00:04:19.648 --> 00:04:21.580
+It clustered the subscription topic.
+
+00:04:21.880 --> 00:04:23.433
+Intent just came out inverted.
+
+00:04:23.733 --> 00:04:27.202
+To break that tie, you need a signal beyond similarity.
+
+00:04:27.502 --> 00:04:31.223
+Keywords, a filter, reranking, or a classifier.
+
+00:04:31.873 --> 00:04:35.982
+And swapping for a model that's better in Portuguese won't fix it either.
+
+00:04:36.282 --> 00:04:40.179
+The same thing happens in English, with cancel and subscribe.
+
+00:04:40.479 --> 00:04:42.172
+The model might nudge the order.
+
+00:04:42.472 --> 00:04:44.284
+The intent limit stays.
+
+00:04:45.484 --> 00:04:48.206
+So where do embeddings show up in practice?
+
+00:04:48.506 --> 00:04:51.055
+Semantic search.
+
+00:04:51.355 --> 00:04:55.382
+Compare the question with chunks of documents, and take the closest.
+
+00:04:56.032 --> 00:04:59.271
+Retrieval for generation, or RAG.
+
+00:04:59.571 --> 00:05:03.075
+Use that search to choose what goes into the model's context.
+
+00:05:03.375 --> 00:05:04.949
+That's the next lesson.
+
+00:05:05.599 --> 00:05:06.293
+Clustering.
+
+00:05:06.593 --> 00:05:11.059
+Group similar tickets or feedback, without labeling anything first.
+
+00:05:11.709 --> 00:05:12.839
+Cheap routing.
+
+00:05:13.139 --> 00:05:15.791
+Compare the message with examples of each route.
+
+00:05:16.091 --> 00:05:17.643
+But watch for ties.
+
+00:05:17.943 --> 00:05:22.954
+A message like I was charged twice for order forty-five twenty-one sits right
+
+00:05:22.954 --> 00:05:24.711
+between billing and orders.
+
+00:05:25.011 --> 00:05:30.851
+Below a threshold, send it to a classifier or a person, instead of forcing first
+
+00:05:30.851 --> 00:05:31.289
+place.
+
+00:05:31.939 --> 00:05:33.737
+And semantic cache.
+
+00:05:34.037 --> 00:05:38.067
+Reuse the answer to a question that's very close to one you already answered.
+
+00:05:38.367 --> 00:05:40.121
+It inherits the same trap.
+
+00:05:40.421 --> 00:05:43.717
+How do I cancel sits close to how do I subscribe.
+
+00:05:44.017 --> 00:05:47.398
+With a loose threshold, the cache serves the wrong answer.
+
+00:05:47.698 --> 00:05:53.065
+So treat the threshold as part of the contract, and test it with opposite intent
+
+00:05:53.065 --> 00:05:53.468
+cases.
+
+00:05:54.668 --> 00:06:00.232
+On the page there's an experiment that runs on your laptop, no API key, with a small
+
+00:06:00.232 --> 00:06:01.822
+open multilingual model.
+
+00:06:02.122 --> 00:06:07.746
+You compare one question against four help articles, and print the scores.
+
+00:06:08.396 --> 00:06:13.284
+Start with I can't get into my account, and watch reset your password come out on
+
+00:06:13.284 --> 00:06:13.525
+top.
+
+00:06:14.175 --> 00:06:19.231
+Then change the question to I want to cancel my subscription, and see where the
+
+00:06:19.231 --> 00:06:20.895
+annual plan article lands.
+
+00:06:21.195 --> 00:06:26.023
+Finally, test order forty-five twenty-one against order forty-five twelve.
+
+00:06:26.323 --> 00:06:30.802
+The numbers will show you, on their own, everything this lesson explained.
+
+00:06:31.452 --> 00:06:32.471
+And one warning.
+
+00:06:32.771 --> 00:06:35.642
+The scores you see belong to this model.
+
+00:06:35.942 --> 00:06:39.787
+Don't copy someone else's threshold from the internet as if it were sacred.
+
+00:06:40.087 --> 00:06:41.797
+Measure your own pairs.
+
+00:06:42.097 --> 00:06:45.675
+The ones that should match, and the ones that must not.
+
+00:06:46.875 --> 00:06:48.990
+So what changes in your designs?
+
+00:06:49.290 --> 00:06:52.251
+Embedding only search is rarely enough.
+
+00:06:52.551 --> 00:06:56.852
+Combining it with keyword search is a pattern called hybrid search.
+
+00:06:57.152 --> 00:06:58.941
+Remember Pix didn't land?
+
+00:06:59.241 --> 00:07:03.337
+With embeddings alone, the right article sat in fifth place.
+
+00:07:03.637 --> 00:07:08.841
+Turning on keywords pushed it to first, because Pix is a rare, valuable term your
+
+00:07:08.841 --> 00:07:10.511
+domain needs to get right.
+
+00:07:11.161 --> 00:07:15.191
+Re-sorting the top results with a model is called reranking.
+
+00:07:15.841 --> 00:07:21.241
+How you cut documents into chunks changes search quality as much as the model does.
+
+00:07:21.891 --> 00:07:26.957
+And identifiers, dates and amounts get exact filters in the database.
+
+00:07:27.257 --> 00:07:32.417
+Pull the order number out of the question, filter by it, and use similarity only on
+
+00:07:32.417 --> 00:07:34.033
+the free text that's left.
+
+00:07:35.233 --> 00:07:37.032
+So here's the idea to take with you.
+
+00:07:37.332 --> 00:07:42.645
+Embeddings put meaning on a map, which is why they find the password article without
+
+00:07:42.645 --> 00:07:43.974
+a single shared word.
+
+00:07:44.274 --> 00:07:47.055
+But a map shows closeness, not direction.
+
+00:07:47.355 --> 00:07:51.646
+Cancel and subscribe are neighbors, and two order numbers look like twins.
+
+00:07:51.946 --> 00:07:56.283
+Use meaning where meaning matters, and exact filters everywhere else.
+
+00:07:56.933 --> 00:08:01.706
+In the next lesson, we'll put embeddings to work in the pattern that grounds a model
+
+00:08:01.706 --> 00:08:04.774
+in your own documents: retrieval augmented generation.
+
+00:08:05.074 --> 00:08:05.904
+See you there.

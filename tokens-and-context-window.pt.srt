@@ -1,0 +1,643 @@
+1
+00:00:01,600 --> 00:00:04,947
+A Júlia montou um chat sobre os manuais internos da empresa.
+
+2
+00:00:05,247 --> 00:00:06,316
+São quarenta.
+
+3
+00:00:06,966 --> 00:00:07,974
+Por segurança,
+
+4
+00:00:07,974 --> 00:00:12,006
+o código dela cola os quarenta manuais em toda pergunta.
+
+5
+00:00:12,306 --> 00:00:13,477
+Funciona.
+
+6
+00:00:13,777 --> 00:00:15,694
+Mas toda resposta é lenta,
+
+7
+00:00:15,694 --> 00:00:19,379
+e a conta do mês veio dez vezes acima da previsão.
+
+8
+00:00:20,029 --> 00:00:21,286
+E tem algo pior.
+
+9
+00:00:21,586 --> 00:00:24,438
+Quando a resposta está no manual vinte e três,
+
+10
+00:00:24,438 --> 00:00:27,041
+às vezes o bot diz que não encontrou nada.
+
+11
+00:00:27,691 --> 00:00:30,882
+Dois conceitos explicam os dois problemas:
+
+12
+00:00:30,882 --> 00:00:33,009
+tokens e janela de contexto.
+
+13
+00:00:33,659 --> 00:00:34,726
+No fim desta aula,
+
+14
+00:00:34,726 --> 00:00:37,098
+você vai saber fazer a conta de qualquer
+
+15
+00:00:37,098 --> 00:00:39,115
+desenho antes de ir para produção.
+
+16
+00:00:39,415 --> 00:00:41,283
+E vai entender por que caber na janela
+
+17
+00:00:41,283 --> 00:00:42,660
+não é o mesmo que funcionar.
+
+18
+00:00:43,860 --> 00:00:46,164
+O modelo não lê letras nem palavras.
+
+19
+00:00:46,464 --> 00:00:50,823
+Ele lê tokens, pedaços de texto cortados por um tokenizador.
+
+20
+00:00:51,123 --> 00:00:54,663
+Uma palavra comum em inglês costuma ser um token.
+
+21
+00:00:54,963 --> 00:00:58,060
+Palavras longas, acentuadas ou raras viram vários.
+
+22
+00:00:58,710 --> 00:01:00,943
+Tokens importam por três motivos.
+
+23
+00:01:01,243 --> 00:01:01,691
+Preço,
+
+24
+00:01:01,691 --> 00:01:06,390
+porque você paga por cada token que entra e cada token que sai.
+
+25
+00:01:06,690 --> 00:01:09,465
+E a saída costuma custar mais.
+
+26
+00:01:10,115 --> 00:01:13,817
+Tempo, porque o modelo escreve um token de cada vez.
+
+27
+00:01:14,117 --> 00:01:16,270
+Resposta longa é resposta lenta.
+
+28
+00:01:16,920 --> 00:01:17,694
+E o limite,
+
+29
+00:01:17,694 --> 00:01:21,779
+porque tudo o que entra e sai precisa caber num espaço só,
+
+30
+00:01:21,779 --> 00:01:23,258
+a janela de contexto.
+
+31
+00:01:23,908 --> 00:01:26,279
+Um detalhe que surpreende.
+
+32
+00:01:26,579 --> 00:01:28,362
+Nem todo texto custa igual.
+
+33
+00:01:28,662 --> 00:01:31,342
+Uma pergunta em português costuma virar mais
+
+34
+00:01:31,342 --> 00:01:33,656
+tokens que a mesma pergunta em inglês.
+
+35
+00:01:33,956 --> 00:01:35,427
+Código cheio de símbolo,
+
+36
+00:01:35,427 --> 00:01:37,634
+XML de nota fiscal e dados com nomes
+
+37
+00:01:37,634 --> 00:01:39,903
+de campo repetidos incham ainda mais.
+
+38
+00:01:40,203 --> 00:01:43,163
+Se o seu produto fala português e cola esses arquivos,
+
+39
+00:01:43,163 --> 00:01:45,739
+a estimativa que você fez de cabeça está baixa.
+
+40
+00:01:46,939 --> 00:01:49,538
+A janela de contexto é o total de tokens
+
+41
+00:01:49,538 --> 00:01:51,423
+que o modelo vê numa chamada.
+
+42
+00:01:51,723 --> 00:01:53,485
+Vamos ver o que tem lá dentro.
+
+43
+00:01:54,135 --> 00:01:56,582
+O prompt de sistema entra em toda chamada.
+
+44
+00:01:56,882 --> 00:02:03,535
+Mil tokens a mais aqui são mil tokens a mais em cada mensagem.
+
+45
+00:02:04,185 --> 00:02:08,536
+Cada ferramenta que você oferece também ocupa espaço, com nome,
+
+46
+00:02:08,536 --> 00:02:09,848
+descrição e schema.
+
+47
+00:02:10,498 --> 00:02:12,492
+O histórico cresce a cada turno.
+
+48
+00:02:12,792 --> 00:02:16,156
+O modelo não tem memória, então você reenvia tudo.
+
+49
+00:02:16,806 --> 00:02:18,831
+Documentos e resultados de ferramentas
+
+50
+00:02:18,831 --> 00:02:20,269
+costumam ser a maior parte.
+
+51
+00:02:20,919 --> 00:02:24,276
+A pergunta do usuário costuma ser a menor.
+
+52
+00:02:24,926 --> 00:02:28,530
+E a resposta também ocupa a janela, com um limite próprio,
+
+53
+00:02:28,530 --> 00:02:29,090
+separado.
+
+54
+00:02:29,740 --> 00:02:32,386
+Esses dois limites vivem sendo confundidos.
+
+55
+00:02:32,686 --> 00:02:35,074
+A janela é o teto da chamada inteira.
+
+56
+00:02:35,374 --> 00:02:40,318
+O limite de saída, chamado max tokens, é o teto só da resposta.
+
+57
+00:02:40,968 --> 00:02:44,727
+Digamos que a janela tem duzentos mil tokens e você
+
+58
+00:02:44,727 --> 00:02:48,265
+já mandou cento e noventa e oito mil de entrada.
+
+59
+00:02:48,565 --> 00:02:51,341
+A resposta fica com uns dois mil, no máximo,
+
+60
+00:02:51,341 --> 00:02:53,991
+mesmo que o limite de saída peça oito mil.
+
+61
+00:02:54,291 --> 00:02:57,830
+A maioria das APIs recusa a chamada quando a soma não cabe.
+
+62
+00:02:58,130 --> 00:03:00,168
+E alguns frameworks, para caber,
+
+63
+00:03:00,168 --> 00:03:03,034
+apagam em silêncio as mensagens mais antigas.
+
+64
+00:03:04,234 --> 00:03:06,873
+De volta à Júlia, com números ilustrativos.
+
+65
+00:03:07,173 --> 00:03:10,053
+Digamos que cada manual tem uns quatro mil tokens.
+
+66
+00:03:10,703 --> 00:03:13,649
+Colar os quarenta manda uns cento e sessenta
+
+67
+00:03:13,649 --> 00:03:16,261
+mil tokens de entrada em cada pergunta.
+
+68
+00:03:16,561 --> 00:03:19,332
+A pergunta dela é uma fração minúscula disso.
+
+69
+00:03:19,632 --> 00:03:21,935
+E ela paga tudo, em toda mensagem,
+
+70
+00:03:21,935 --> 00:03:25,187
+mesmo quando a resposta está em três parágrafos.
+
+71
+00:03:25,837 --> 00:03:28,936
+Agora busque só três trechos relevantes,
+
+72
+00:03:28,936 --> 00:03:30,951
+de quinhentos tokens cada.
+
+73
+00:03:31,251 --> 00:03:34,696
+São uns dois mil tokens, mais o prompt de sistema.
+
+74
+00:03:34,996 --> 00:03:38,141
+A pergunta disputa espaço com muito menos ruído,
+
+75
+00:03:38,141 --> 00:03:40,369
+e o preço cai junto com o tamanho.
+
+76
+00:03:41,019 --> 00:03:42,210
+Mas isso é só a conta.
+
+77
+00:03:42,510 --> 00:03:44,570
+Lembra do manual 23?
+
+78
+00:03:44,870 --> 00:03:47,385
+As janelas ficaram enormes.
+
+79
+00:03:47,685 --> 00:03:50,686
+Isso não quer dizer que o modelo usa bem tudo o que está nelas.
+
+80
+00:03:51,336 --> 00:03:55,933
+Tem um artigo de 2023 chamado Lost in the Middle.
+
+81
+00:03:56,233 --> 00:03:59,596
+Ele mostrou que os modelos tendem a usar melhor o que está
+
+82
+00:03:59,596 --> 00:04:02,843
+no começo e no fim da entrada do que o que está no meio.
+
+83
+00:04:03,143 --> 00:04:05,550
+Os modelos mais novos melhoraram nisso.
+
+84
+00:04:05,850 --> 00:04:07,454
+Mas o princípio vale:
+
+85
+00:04:07,454 --> 00:04:10,509
+todo token irrelevante disputa a atenção
+
+86
+00:04:10,509 --> 00:04:12,648
+do modelo com os relevantes.
+
+87
+00:04:13,298 --> 00:04:15,993
+Por isso o chat da Júlia falhava no manual vinte e três.
+
+88
+00:04:16,293 --> 00:04:18,634
+A informação estava na janela.
+
+89
+00:04:18,934 --> 00:04:22,499
+Só estava afogada entre trinta e nove outros manuais,
+
+90
+00:04:22,499 --> 00:04:23,306
+bem no meio.
+
+91
+00:04:24,506 --> 00:04:25,979
+Uma pergunta para você.
+
+92
+00:04:26,279 --> 00:04:30,235
+O time da Júlia troca para um modelo com uma janela bem maior,
+
+93
+00:04:30,235 --> 00:04:33,298
+duzentos mil tokens em vez de trinta e dois mil.
+
+94
+00:04:33,598 --> 00:04:35,643
+E cola os quarenta manuais de novo.
+
+95
+00:04:35,943 --> 00:04:37,241
+A conta continua alta,
+
+96
+00:04:37,241 --> 00:04:40,311
+e o manual vinte e três ainda some de vez em quando.
+
+97
+00:04:40,611 --> 00:04:42,639
+O que a janela maior resolveu?
+
+98
+00:04:45,689 --> 00:04:47,095
+Nenhum dos dois.
+
+99
+00:04:47,395 --> 00:04:50,270
+Você continua pagando por cada token que manda.
+
+100
+00:04:50,570 --> 00:04:54,108
+E o meio da entrada continua em desvantagem.
+
+101
+00:04:54,408 --> 00:04:57,061
+Janela maior é folga, não estratégia.
+
+102
+00:04:57,361 --> 00:05:01,360
+A correção é escolher trechos, não pedir mais espaço.
+
+103
+00:05:02,560 --> 00:05:04,846
+A armadilha de quem está começando é tratar janela
+
+104
+00:05:04,846 --> 00:05:06,538
+grande como motivo para não escolher.
+
+105
+00:05:06,838 --> 00:05:09,383
+Cabe vira o único critério.
+
+106
+00:05:10,033 --> 00:05:11,697
+A pergunta certa é outra.
+
+107
+00:05:11,997 --> 00:05:14,394
+O que precisa estar aqui para esta pergunta,
+
+108
+00:05:14,394 --> 00:05:16,138
+e o que só está ocupando espaço?
+
+109
+00:05:16,788 --> 00:05:19,446
+Aqui vai uma versão que você vai encontrar na vida real.
+
+110
+00:05:19,746 --> 00:05:23,711
+No turno um, alguém cola um documento de vinte páginas no chat.
+
+111
+00:05:24,011 --> 00:05:27,791
+No turno quinze, pergunta o endereço da loja.
+
+112
+00:05:28,091 --> 00:05:31,318
+E o seu código continua reenviando aquele documento,
+
+113
+00:05:31,318 --> 00:05:34,856
+a cada turno, doze turnos depois de alguém precisar dele.
+
+114
+00:05:35,156 --> 00:05:37,358
+Histórico não é arquivo obrigatório.
+
+115
+00:05:37,658 --> 00:05:41,585
+Mande o que a pergunta precisa, e resuma ou descarte o resto.
+
+116
+00:05:42,785 --> 00:05:45,776
+Agora, o hábito que evita surpresas.
+
+117
+00:05:46,076 --> 00:05:48,206
+Conte os tokens antes de mandar.
+
+118
+00:05:48,506 --> 00:05:51,654
+A API do provedor tem um endpoint só para isso,
+
+119
+00:05:51,654 --> 00:05:55,538
+que não gera resposta e usa o mesmo tokenizador do modelo.
+
+120
+00:05:56,188 --> 00:05:57,747
+Depois, faça a conta do mês.
+
+121
+00:05:58,047 --> 00:06:02,743
+Tokens de entrada, vezes mensagens por dia, vezes trinta.
+
+122
+00:06:03,043 --> 00:06:04,526
+Some a saída média.
+
+123
+00:06:04,826 --> 00:06:08,022
+Multiplique pelo preço do modelo por milhão de tokens.
+
+124
+00:06:08,322 --> 00:06:10,264
+Esse número costuma assustar.
+
+125
+00:06:10,564 --> 00:06:13,516
+E é muito melhor se assustar antes de produção.
+
+126
+00:06:14,166 --> 00:06:15,678
+Vamos fazer uma juntos.
+
+127
+00:06:15,978 --> 00:06:19,597
+Você mediu oito mil tokens de entrada por pergunta,
+
+128
+00:06:19,597 --> 00:06:21,442
+dez mil perguntas por dia.
+
+129
+00:06:21,742 --> 00:06:25,322
+O time quer só adicionar a política de férias,
+
+130
+00:06:25,322 --> 00:06:28,279
+mais seis mil tokens, em toda chamada.
+
+131
+00:06:28,929 --> 00:06:32,273
+Antes, são oitenta milhões de tokens de entrada por dia.
+
+132
+00:06:32,923 --> 00:06:35,888
+Depois, cento e quarenta milhões.
+
+133
+00:06:36,188 --> 00:06:37,943
+A entrada diária quase dobra,
+
+134
+00:06:37,943 --> 00:06:40,303
+e a política vai de carona em perguntas
+
+135
+00:06:40,303 --> 00:06:42,361
+que não têm nada a ver com férias.
+
+136
+00:06:43,011 --> 00:06:45,959
+E não estime dividindo caracteres por quatro.
+
+137
+00:06:46,259 --> 00:06:49,407
+Essa regra às vezes funciona para inglês simples.
+
+138
+00:06:49,707 --> 00:06:53,820
+Para português, código e dados estruturados, ela conta a menos.
+
+139
+00:06:54,120 --> 00:06:57,506
+Meça alguns exemplos reais com o contador do provedor.
+
+140
+00:06:58,706 --> 00:07:00,820
+Então, o que muda nos seus desenhos?
+
+141
+00:07:01,120 --> 00:07:04,356
+Mandar menos e melhor vence mandar tudo.
+
+142
+00:07:04,656 --> 00:07:08,484
+É o que a busca faz, em vez de colar manuais inteiros.
+
+143
+00:07:09,134 --> 00:07:11,353
+O prompt de sistema precisa de dieta.
+
+144
+00:07:11,653 --> 00:07:15,317
+Quando cresce sem controle, vira um smell chamado prompt bloat.
+
+145
+00:07:15,967 --> 00:07:18,288
+Conversas longas apodrecem.
+
+146
+00:07:18,588 --> 00:07:21,862
+Histórico velho confunde o modelo e aumenta o custo.
+
+147
+00:07:22,162 --> 00:07:24,456
+Esse se chama context rot.
+
+148
+00:07:25,106 --> 00:07:29,338
+E as partes fixas do começo da entrada podem ser reaproveitadas
+
+149
+00:07:29,338 --> 00:07:31,690
+entre chamadas com cache de prompt,
+
+150
+00:07:31,690 --> 00:07:33,504
+que corta custo e latência.
+
+151
+00:07:33,804 --> 00:07:36,190
+Só não use o cache como desculpa para colar
+
+152
+00:07:36,190 --> 00:07:38,743
+um arquivo inteiro que a pergunta não precisa.
+
+153
+00:07:39,943 --> 00:07:42,237
+Então, a ideia para guardar.
+
+154
+00:07:42,537 --> 00:07:45,570
+A janela é um orçamento, não um depósito.
+
+155
+00:07:45,870 --> 00:07:48,722
+Cada token que você coloca ali custa dinheiro,
+
+156
+00:07:48,722 --> 00:07:50,582
+custa tempo e disputa atenção.
+
+157
+00:07:50,882 --> 00:07:53,049
+A conta de tokens é a primeira coisa
+
+158
+00:07:53,049 --> 00:07:54,736
+a fazer em qualquer desenho.
+
+159
+00:07:55,386 --> 00:07:59,035
+Na próxima aula, a gente abre aquele sorteio dentro do modelo:
+
+160
+00:07:59,035 --> 00:08:02,567
+amostragem e temperatura, e o que elas controlam de verdade.
+
+161
+00:08:02,867 --> 00:08:03,697
+Até lá.

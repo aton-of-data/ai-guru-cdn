@@ -1,0 +1,707 @@
+1
+00:00:01,600 --> 00:00:03,816
+O tutor de matemática de uma escola roda no WhatsApp.
+
+2
+00:00:04,116 --> 00:00:07,450
+Na aula um, ele combinou com uma aluna: só dicas,
+
+3
+00:00:07,450 --> 00:00:09,083
+nunca a resposta pronta.
+
+4
+00:00:09,383 --> 00:00:13,388
+Na aula seis, ela pediu uma lista de revisão com gabarito,
+
+5
+00:00:13,388 --> 00:00:16,839
+e o tutor deixou, como exceção, para aquela lista.
+
+6
+00:00:17,489 --> 00:00:21,242
+Na aula doze, ela pede ajuda com um problema novo.
+
+7
+00:00:21,542 --> 00:00:23,423
+O histórico tem as duas regras,
+
+8
+00:00:23,423 --> 00:00:25,425
+várias páginas de contas erradas,
+
+9
+00:00:25,425 --> 00:00:28,095
+três mudanças de horário e um recado da mãe.
+
+10
+00:00:28,395 --> 00:00:31,097
+E o modelo devolve a resposta pronta.
+
+11
+00:00:31,397 --> 00:00:35,591
+Ou, no dia seguinte, recusa até a lista de revisão,
+
+12
+00:00:35,591 --> 00:00:37,729
+porque a regra é só dicas.
+
+13
+00:00:38,379 --> 00:00:41,145
+Com números ilustrativos, na aula doze,
+
+14
+00:00:41,145 --> 00:00:43,557
+cada chamada já manda uns nove mil
+
+15
+00:00:43,557 --> 00:00:45,897
+e quinhentos tokens de histórico.
+
+16
+00:00:46,197 --> 00:00:48,970
+Na aula quarenta, passa de dezessete mil.
+
+17
+00:00:49,270 --> 00:00:53,169
+E a regra da aula um disputa com tudo o que veio depois.
+
+18
+00:00:53,469 --> 00:00:55,910
+Você conheceu esse smell na aula passada.
+
+19
+00:00:56,210 --> 00:00:58,225
+Agora vai corrigir, com segurança.
+
+20
+00:00:59,425 --> 00:01:01,720
+Troque os turnos antigos por um resumo.
+
+21
+00:01:02,020 --> 00:01:05,655
+Guarde os fatos que precisam durar num estado explícito,
+
+22
+00:01:05,655 --> 00:01:07,213
+fora do histórico bruto.
+
+23
+00:01:07,513 --> 00:01:09,811
+E mande para o modelo o estado,
+
+24
+00:01:09,811 --> 00:01:12,257
+o resumo e só os turnos recentes.
+
+25
+00:01:13,457 --> 00:01:16,837
+Antes, o histórico inteiro vai em toda chamada.
+
+26
+00:01:17,137 --> 00:01:20,492
+Mensagem, tudo, modelo, resposta.
+
+27
+00:01:21,142 --> 00:01:23,215
+Depois, a mensagem nova chega,
+
+28
+00:01:23,215 --> 00:01:26,256
+e só os últimos turnos ficam na forma bruta.
+
+29
+00:01:26,906 --> 00:01:30,617
+Os fatos duráveis, como preferências, decisões e ids,
+
+30
+00:01:30,617 --> 00:01:34,117
+mais um resumo do resto, ficam num bloco separado.
+
+31
+00:01:34,767 --> 00:01:38,525
+O modelo recebe esse bloco, mais os turnos recentes.
+
+32
+00:01:38,825 --> 00:01:41,274
+E a resposta entra nos turnos recentes.
+
+33
+00:01:41,924 --> 00:01:44,520
+Quando os turnos recentes passam de um limite,
+
+34
+00:01:44,520 --> 00:01:47,567
+uma etapa de compactação atualiza o resumo e os fatos,
+
+35
+00:01:47,567 --> 00:01:49,204
+e descarta os turnos antigos.
+
+36
+00:01:50,404 --> 00:01:54,910
+Aqui está o que o modelo vê depois da compactação da aula doze.
+
+37
+00:01:55,210 --> 00:01:56,205
+O bloco de estado.
+
+38
+00:01:56,505 --> 00:01:57,787
+O nome da aluna.
+
+39
+00:01:58,087 --> 00:02:01,792
+O nível dela por assunto, intermediário em equações,
+
+40
+00:02:01,792 --> 00:02:03,430
+iniciante em geometria.
+
+41
+00:02:03,730 --> 00:02:05,977
+Dicas passo a passo como formato.
+
+42
+00:02:06,627 --> 00:02:08,656
+E a regra, numa linha só.
+
+43
+00:02:08,956 --> 00:02:09,948
+Só dicas.
+
+44
+00:02:10,248 --> 00:02:12,791
+Com a exceção ao lado, e o escopo dela.
+
+45
+00:02:13,091 --> 00:02:15,009
+A lista de revisão da aula seis.
+
+46
+00:02:15,659 --> 00:02:17,984
+Depois, um resumo, em poucas linhas.
+
+47
+00:02:18,284 --> 00:02:21,357
+Aulas um a onze: equações do segundo grau,
+
+48
+00:02:21,357 --> 00:02:23,698
+travada em completar o quadrado.
+
+49
+00:02:23,998 --> 00:02:26,874
+Aula seis, a exceção da lista de revisão.
+
+50
+00:02:27,174 --> 00:02:29,636
+Aula onze, começou geometria.
+
+51
+00:02:29,936 --> 00:02:32,542
+E os oito turnos mais recentes ficam inteiros.
+
+52
+00:02:32,842 --> 00:02:36,835
+O recado da mãe e as contas erradas da aula três não entram.
+
+53
+00:02:38,035 --> 00:02:40,337
+O histórico bruto mistura três coisas.
+
+54
+00:02:40,637 --> 00:02:42,192
+Fatos que ainda valem,
+
+55
+00:02:42,192 --> 00:02:46,431
+contexto que explica o momento e ruído que não importa mais.
+
+56
+00:02:46,731 --> 00:02:49,603
+O modelo recebe os três com o mesmo peso.
+
+57
+00:02:49,903 --> 00:02:52,831
+Separar dá um peso diferente a cada um.
+
+58
+00:02:53,131 --> 00:02:56,300
+Os fatos ficam num bloco curto, sempre presente.
+
+59
+00:02:56,600 --> 00:02:59,528
+O resumo conta a história em poucas linhas.
+
+60
+00:02:59,828 --> 00:03:01,242
+E o ruído vai embora.
+
+61
+00:03:01,892 --> 00:03:05,070
+O estado explícito resolve a regra que muda.
+
+62
+00:03:05,370 --> 00:03:08,645
+Em vez de o modelo achar duas regras contraditórias
+
+63
+00:03:08,645 --> 00:03:10,828
+em pontos diferentes do histórico,
+
+64
+00:03:10,828 --> 00:03:13,397
+existe uma linha, com a exceção ao lado.
+
+65
+00:03:13,697 --> 00:03:15,725
+A compactação atualiza essa linha,
+
+66
+00:03:15,725 --> 00:03:18,587
+e você consegue ler e testar o que ela escreveu.
+
+67
+00:03:19,237 --> 00:03:20,416
+E o custo fica estável.
+
+68
+00:03:20,716 --> 00:03:23,068
+Os turnos recentes têm tamanho limitado,
+
+69
+00:03:23,068 --> 00:03:26,594
+os fatos crescem devagar e o resumo tem um teto de palavras.
+
+70
+00:03:27,794 --> 00:03:28,917
+Uma pergunta para você.
+
+71
+00:03:29,217 --> 00:03:32,263
+Digamos que você acrescenta só um resumo, sem bloco de fatos.
+
+72
+00:03:32,563 --> 00:03:34,778
+Por que o tutor continua errando a regra
+
+73
+00:03:34,778 --> 00:03:36,494
+das dicas com tanta frequência?
+
+74
+00:03:39,544 --> 00:03:42,009
+Porque um resumo é uma narrativa.
+
+75
+00:03:42,309 --> 00:03:45,472
+Um parágrafo mistura a regra atual com a exceção,
+
+76
+00:03:45,472 --> 00:03:47,279
+e as duas voltam a disputar.
+
+77
+00:03:47,579 --> 00:03:50,388
+O modelo não tem um campo único para consultar.
+
+78
+00:03:50,688 --> 00:03:55,077
+Um campo de modo de solução, com o escopo da exceção ao lado,
+
+79
+00:03:55,077 --> 00:03:57,595
+deixa explícito o que está valendo.
+
+80
+00:03:58,795 --> 00:04:00,800
+Passo zero, medir.
+
+81
+00:04:01,100 --> 00:04:04,506
+Monte um eval com sessões longas reais, anonimizadas,
+
+82
+00:04:04,506 --> 00:04:07,718
+com perguntas que dependem de algo dito no começo.
+
+83
+00:04:08,018 --> 00:04:13,116
+A regra das dicas, o id da conta, o CEP de entrega.
+
+84
+00:04:13,416 --> 00:04:14,446
+Anote o acerto,
+
+85
+00:04:14,446 --> 00:04:17,948
+o custo por turno e o tempo até a primeira palavra,
+
+86
+00:04:17,948 --> 00:04:19,253
+no fim das sessões.
+
+87
+00:04:19,903 --> 00:04:21,957
+Liste os fatos duráveis do seu domínio.
+
+88
+00:04:22,257 --> 00:04:25,055
+Ids, preferências, regras combinadas,
+
+89
+00:04:25,055 --> 00:04:28,003
+decisões e exceções com o escopo delas.
+
+90
+00:04:28,303 --> 00:04:29,645
+Eles viram um schema.
+
+91
+00:04:30,295 --> 00:04:33,255
+Escreva o prompt de compactação pedindo duas saídas.
+
+92
+00:04:33,555 --> 00:04:35,836
+Os fatos atualizados, estruturados,
+
+93
+00:04:35,836 --> 00:04:38,118
+e um resumo curto do que aconteceu.
+
+94
+00:04:38,418 --> 00:04:43,301
+E peça a fonte, o turno ou a aula, de cada mudança num fato.
+
+95
+00:04:43,951 --> 00:04:46,706
+Escolha o gatilho, uma contagem de tokens ou de turnos.
+
+96
+00:04:47,006 --> 00:04:49,330
+E sempre mantenha os últimos turnos inteiros.
+
+97
+00:04:49,630 --> 00:04:52,110
+De oito a doze é um ponto de partida comum.
+
+98
+00:04:52,410 --> 00:04:53,985
+Ajuste pelo eval.
+
+99
+00:04:54,635 --> 00:04:57,835
+Rode a compactação fora do caminho crítico quando der,
+
+100
+00:04:57,835 --> 00:04:59,791
+entre turnos ou em segundo plano.
+
+101
+00:05:00,091 --> 00:05:03,127
+A aluna não deveria esperar o resumo da aula
+
+102
+00:05:03,127 --> 00:05:05,749
+onze para receber a dica da aula doze.
+
+103
+00:05:06,399 --> 00:05:09,162
+Guarde o histórico inteiro fora do contexto,
+
+104
+00:05:09,162 --> 00:05:12,741
+para auditoria e para refazer o resumo se ele der errado.
+
+105
+00:05:13,391 --> 00:05:17,898
+Registre toda compactação no trace, com os fatos antes e depois.
+
+106
+00:05:18,198 --> 00:05:23,172
+Se o modo de solução mudou sem a aluna pedir, você vê na hora.
+
+107
+00:05:23,822 --> 00:05:24,928
+E meça de novo.
+
+108
+00:05:25,228 --> 00:05:28,016
+O acerto nas perguntas que dependem dos primeiros
+
+109
+00:05:28,016 --> 00:05:29,779
+turnos deve se manter ou subir.
+
+110
+00:05:30,079 --> 00:05:33,258
+O custo por turno no fim das sessões deve cair.
+
+111
+00:05:34,458 --> 00:05:36,047
+Agora, os riscos.
+
+112
+00:05:36,347 --> 00:05:38,624
+Um resumo que perde o fato certo.
+
+113
+00:05:38,924 --> 00:05:43,108
+Você pega com casos de eval que perguntam sobre fatos antigos,
+
+114
+00:05:43,108 --> 00:05:46,213
+e comparando os fatos antes e depois no trace.
+
+115
+00:05:46,863 --> 00:05:48,890
+Um resumo que inventa.
+
+116
+00:05:49,190 --> 00:05:51,477
+O modelo de compactação pode juntar coisas
+
+117
+00:05:51,477 --> 00:05:53,056
+que nunca foram ditas juntas.
+
+118
+00:05:53,356 --> 00:05:56,612
+A aluna pediu gabarito em todas as listas.
+
+119
+00:05:56,912 --> 00:05:59,906
+Peça fatos com referência ao turno de origem,
+
+120
+00:05:59,906 --> 00:06:02,101
+e recuse qualquer fato sem fonte.
+
+121
+00:06:02,751 --> 00:06:04,252
+Erros que se acumulam.
+
+122
+00:06:04,552 --> 00:06:06,803
+Cada resumo é construído sobre o anterior.
+
+123
+00:06:07,103 --> 00:06:09,496
+Um desvio pequeno na aula oito vira
+
+124
+00:06:09,496 --> 00:06:11,547
+uma regra falsa na aula vinte.
+
+125
+00:06:11,847 --> 00:06:13,612
+Guarde o histórico bruto e refaça
+
+126
+00:06:13,612 --> 00:06:15,269
+a partir dele de vez em quando,
+
+127
+00:06:15,269 --> 00:06:17,034
+não só a partir do último resumo.
+
+128
+00:06:17,684 --> 00:06:20,284
+E um cache de prompt que vive zerando.
+
+129
+00:06:20,584 --> 00:06:23,009
+Se você compacta a cada turno,
+
+130
+00:06:23,009 --> 00:06:25,838
+o começo do contexto muda toda vez,
+
+131
+00:06:25,838 --> 00:06:28,182
+e o cache quase nunca acerta.
+
+132
+00:06:28,482 --> 00:06:32,237
+Compacte em blocos, quando os turnos recentes passam de um teto,
+
+133
+00:06:32,237 --> 00:06:34,994
+para o começo ficar estável entre compactações.
+
+134
+00:06:35,644 --> 00:06:36,988
+E o erro comum.
+
+135
+00:06:37,288 --> 00:06:40,001
+Compactar só quando a janela enche.
+
+136
+00:06:40,301 --> 00:06:43,560
+Se você espera a API recusar o contexto,
+
+137
+00:06:43,560 --> 00:06:48,203
+a sessão já está cara e o modelo já está perdido no meio.
+
+138
+00:06:48,503 --> 00:06:52,052
+O gatilho é um limite que você escolhe, abaixo da janela,
+
+139
+00:06:52,052 --> 00:06:55,600
+no ponto em que o eval ainda acerta as perguntas antigas.
+
+140
+00:06:55,900 --> 00:06:58,192
+Compactar cedo demais também machuca.
+
+141
+00:06:58,492 --> 00:07:01,203
+Você perde detalhe da conversa atual.
+
+142
+00:07:01,503 --> 00:07:04,225
+Por isso os últimos turnos ficam inteiros.
+
+143
+00:07:05,425 --> 00:07:08,328
+Mais um caso, com dinheiro envolvido.
+
+144
+00:07:08,628 --> 00:07:11,767
+O bot de WhatsApp de um banco guarda uma chave Pix no estado.
+
+145
+00:07:12,067 --> 00:07:14,025
+Um turno antigo tinha a chave errada,
+
+146
+00:07:14,025 --> 00:07:15,454
+e ela foi corrigida depois.
+
+147
+00:07:15,754 --> 00:07:19,217
+Depois da compactação, o estado ainda mostra a chave velha.
+
+148
+00:07:19,517 --> 00:07:20,406
+O que falhou?
+
+149
+00:07:20,706 --> 00:07:24,552
+A compactação tratou a correção como mais uma frase no resumo,
+
+150
+00:07:24,552 --> 00:07:27,219
+não como uma atualização do campo da chave.
+
+151
+00:07:27,519 --> 00:07:29,840
+Um fato durável precisa ser um campo.
+
+152
+00:07:30,140 --> 00:07:33,478
+E a correção precisa sobrescrever o valor antigo,
+
+153
+00:07:33,478 --> 00:07:35,862
+com o turno da correção como fonte.
+
+154
+00:07:36,162 --> 00:07:40,361
+Senão o próximo Pix vai para o destino antigo.
+
+155
+00:07:41,561 --> 00:07:43,594
+E quando essa é a ferramenta errada?
+
+156
+00:07:43,894 --> 00:07:45,904
+Uma sessão de atendimento de três turnos,
+
+157
+00:07:45,904 --> 00:07:48,404
+em que o cliente ainda está descrevendo o problema.
+
+158
+00:07:48,704 --> 00:07:50,489
+Não existe passado para compactar.
+
+159
+00:07:50,789 --> 00:07:54,775
+Resumir agora joga fora detalhe que a próxima resposta precisa.
+
+160
+00:07:55,425 --> 00:07:58,952
+E um assistente que cola trinta e sete políticas
+
+161
+00:07:58,952 --> 00:08:01,670
+no prompt de sistema em toda chamada.
+
+162
+00:08:01,970 --> 00:08:03,539
+Isso não é histórico de sessão.
+
+163
+00:08:03,839 --> 00:08:05,230
+É conhecimento colado.
+
+164
+00:08:05,530 --> 00:08:08,687
+Tire do prompt e busque o trecho atual.
+
+165
+00:08:09,887 --> 00:08:12,143
+Então, a ideia para levar.
+
+166
+00:08:12,443 --> 00:08:14,574
+Separe o histórico pelo que ele serve.
+
+167
+00:08:14,874 --> 00:08:18,122
+Fatos que precisam durar viram campos, com fonte.
+
+168
+00:08:18,422 --> 00:08:20,446
+O passado vira uma história curta.
+
+169
+00:08:20,746 --> 00:08:22,172
+O presente fica inteiro.
+
+170
+00:08:22,472 --> 00:08:24,771
+Meça com perguntas sobre o começo,
+
+171
+00:08:24,771 --> 00:08:28,896
+guarde o histórico bruto para auditoria e compacte em blocos.
+
+172
+00:08:29,546 --> 00:08:30,476
+Na próxima aula,
+
+173
+00:08:30,476 --> 00:08:34,081
+vamos olhar o padrão completo para onde essa refatoração leva,
+
+174
+00:08:34,081 --> 00:08:36,464
+inclusive agentes que compactam o próprio
+
+175
+00:08:36,464 --> 00:08:38,034
+trabalho no meio da tarefa:
+
+176
+00:08:38,034 --> 00:08:39,138
+context compaction.
+
+177
+00:08:39,438 --> 00:08:40,277
+Até lá.

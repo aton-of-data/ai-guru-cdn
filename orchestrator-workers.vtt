@@ -1,0 +1,430 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:06.883
+Paula leads the migration of a legacy system, from an old framework to a new one.
+
+00:00:07.183 --> 00:00:08.745
+There are four hundred files.
+
+00:00:09.045 --> 00:00:11.457
+Some only need their imports swapped.
+
+00:00:11.757 --> 00:00:15.496
+Others have logic whose meaning changes in the new framework.
+
+00:00:15.796 --> 00:00:19.311
+And some depend on each other, and have to migrate together.
+
+00:00:19.961 --> 00:00:23.728
+The first attempt was a single agent walking through the files.
+
+00:00:24.028 --> 00:00:28.807
+Halfway through, the context was full, and the early decisions, like how to handle
+
+00:00:28.807 --> 00:00:30.905
+the new event system, had been lost.
+
+00:00:31.555 --> 00:00:35.740
+The second attempt was a script that sent each file to an isolated call.
+
+00:00:36.040 --> 00:00:37.134
+Fast.
+
+00:00:37.434 --> 00:00:41.266
+But files that depended on each other came out inconsistent.
+
+00:00:41.916 --> 00:00:43.482
+What works has both parts.
+
+00:00:43.782 --> 00:00:47.301
+Someone who looks at the whole, and decides how to split it.
+
+00:00:47.601 --> 00:00:50.426
+And workers who do each part, with focus.
+
+00:00:50.726 --> 00:00:54.687
+The split changes for every module, so it can't be fixed in code.
+
+00:00:54.987 --> 00:00:56.429
+That's this lesson.
+
+00:00:57.629 --> 00:01:00.093
+Separate three roles.
+
+00:01:00.393 --> 00:01:06.332
+The orchestrator reads the task and its context, and produces a list of subtasks,
+
+00:01:06.332 --> 00:01:10.511
+each with a self contained instruction, and dependencies.
+
+00:01:10.811 --> 00:01:12.158
+It doesn't do the work.
+
+00:01:12.808 --> 00:01:17.647
+The workers each receive one subtask, do it in their own context, and return a
+
+00:01:17.647 --> 00:01:19.322
+result in an agreed format.
+
+00:01:19.622 --> 00:01:22.991
+Subtasks without dependencies run in parallel.
+
+00:01:23.641 --> 00:01:28.869
+And the synthesizer combines the results, resolves conflicts, and delivers the final
+
+00:01:28.869 --> 00:01:29.367
+product.
+
+00:01:29.667 --> 00:01:33.117
+It's often the orchestrator itself, in a second call.
+
+00:01:33.767 --> 00:01:37.354
+The difference from sectioning is who decides the split.
+
+00:01:37.654 --> 00:01:39.054
+There, your code.
+
+00:01:39.354 --> 00:01:42.171
+Here, the model, looking at the input.
+
+00:01:42.471 --> 00:01:46.587
+If you can write the loop that splits the work before you've seen the input, you
+
+00:01:46.587 --> 00:01:47.977
+don't need an orchestrator.
+
+00:01:48.277 --> 00:01:49.935
+And know the price up front.
+
+00:01:50.235 --> 00:01:53.051
+This pattern buys time and coverage with money.
+
+00:01:53.351 --> 00:01:58.534
+Teams running it at scale have reported using many times the tokens of a regular
+
+00:01:58.534 --> 00:01:58.858
+chat.
+
+00:02:00.058 --> 00:02:04.612
+The task arrives, with the material it needs, or access to it.
+
+00:02:05.262 --> 00:02:08.779
+The orchestrator analyzes it, and decides the split.
+
+00:02:09.429 --> 00:02:11.399
+The plan is a structured object.
+
+00:02:11.699 --> 00:02:16.788
+Subtasks, each one's instruction, dependencies, and a done criterion.
+
+00:02:17.438 --> 00:02:23.082
+Workers run in parallel when there's no dependency, each with its own context and
+
+00:02:23.082 --> 00:02:23.570
+budget.
+
+00:02:24.220 --> 00:02:30.508
+Code validates each result, with a schema, tests or compilation, before moving on.
+
+00:02:31.158 --> 00:02:36.001
+The synthesizer puts everything together, and resolves inconsistencies.
+
+00:02:36.651 --> 00:02:41.141
+And the result goes out, with the plan and the partial results recorded on the
+
+00:02:41.141 --> 00:02:41.487
+trace.
+
+00:02:42.687 --> 00:02:46.708
+Paula asks: migrate the payments module to the new framework.
+
+00:02:47.008 --> 00:02:50.273
+The orchestrator reads the module and returns a plan.
+
+00:02:50.923 --> 00:02:52.344
+Four subtasks.
+
+00:02:52.644 --> 00:02:55.976
+Models, and events, with no dependencies.
+
+00:02:56.276 --> 00:02:58.419
+Then service, which depends on both.
+
+00:02:58.719 --> 00:03:01.167
+Then the API, which depends on the service.
+
+00:03:01.467 --> 00:03:05.413
+Each one with a done criterion, like the models tests pass.
+
+00:03:06.063 --> 00:03:09.151
+Code turns those dependencies into waves.
+
+00:03:09.451 --> 00:03:12.540
+Wave one runs models and events, in parallel.
+
+00:03:12.840 --> 00:03:16.471
+Wave two runs the service, which receives both results.
+
+00:03:16.771 --> 00:03:18.476
+Wave three runs the API.
+
+00:03:18.776 --> 00:03:22.595
+Four workers, three waves, and one synthesis at the end.
+
+00:03:23.245 --> 00:03:25.439
+And notice the conventions at the top.
+
+00:03:25.739 --> 00:03:29.114
+Events use the new event bus, never the old emit.
+
+00:03:29.414 --> 00:03:32.501
+Domain errors inherit from one payment error class.
+
+00:03:32.801 --> 00:03:34.335
+Every worker gets these.
+
+00:03:35.535 --> 00:03:36.713
+Here's one for you.
+
+00:03:37.013 --> 00:03:40.763
+During the migration, two workers return code that compiles.
+
+00:03:41.063 --> 00:03:45.818
+But one handles errors with exceptions, and the other with return codes.
+
+00:03:46.118 --> 00:03:48.334
+The synthesis can't reconcile them.
+
+00:03:48.634 --> 00:03:50.163
+Where's the cheapest fix?
+
+00:03:53.213 --> 00:03:53.951
+In the plan.
+
+00:03:54.251 --> 00:03:58.689
+The orchestrator fixes the error convention, and every worker receives it.
+
+00:03:58.989 --> 00:04:02.520
+Decisions that apply to several parts belong in the plan.
+
+00:04:02.820 --> 00:04:07.672
+When the convention reaches every worker before they start, the parts are compatible
+
+00:04:07.672 --> 00:04:08.770
+from the beginning.
+
+00:04:09.420 --> 00:04:15.009
+A stronger synthesizer that rewrites one side pays to redo work that was born
+
+00:04:15.009 --> 00:04:15.808
+incoherent.
+
+00:04:16.108 --> 00:04:18.079
+And bigger workers don't help either.
+
+00:04:18.379 --> 00:04:23.126
+Each one only sees its own subtask, and can't know what the other one decided.
+
+00:04:23.426 --> 00:04:28.576
+The rule of thumb: every decision that more than one worker must make comes from the
+
+00:04:28.576 --> 00:04:30.967
+orchestrator, before any worker starts.
+
+00:04:32.167 --> 00:04:34.143
+The split is always the same.
+
+00:04:34.443 --> 00:04:37.081
+Per file, per page, per section.
+
+00:04:37.381 --> 00:04:38.598
+Then split in code.
+
+00:04:39.248 --> 00:04:43.093
+The task fits in one agent, with a clean context.
+
+00:04:43.393 --> 00:04:46.577
+An orchestrator adds cost, and points of failure.
+
+00:04:46.877 --> 00:04:51.035
+Start with a single loop, and split only when the context fills up.
+
+00:04:51.685 --> 00:04:55.383
+The parts depend on each other so much that none can run alone.
+
+00:04:55.683 --> 00:05:01.293
+Parallelism disappears, and you pay for the plan and the synthesis without saving
+
+00:05:01.293 --> 00:05:01.916
+any time.
+
+00:05:02.566 --> 00:05:06.444
+And the workers would be decorative roles, passing text along.
+
+00:05:06.744 --> 00:05:12.137
+An analyst, a reviewer and a writer, reading the same context and rewriting the same
+
+00:05:12.137 --> 00:05:13.999
+answer, split no work at all.
+
+00:05:14.649 --> 00:05:15.877
+Quick case.
+
+00:05:16.177 --> 00:05:19.674
+Your team wants a weekly summary of thirty store reports.
+
+00:05:19.974 --> 00:05:25.485
+Each report becomes a paragraph, and a consolidated version comes out at the end.
+
+00:05:25.785 --> 00:05:28.054
+Someone proposes an orchestrator.
+
+00:05:28.354 --> 00:05:29.572
+What do you say?
+
+00:05:29.872 --> 00:05:32.692
+The split is fixed, one report per part.
+
+00:05:32.992 --> 00:05:34.406
+That's a loop in code.
+
+00:05:34.706 --> 00:05:39.361
+You get parallelism and a clean context per report, without the plan call, and
+
+00:05:39.361 --> 00:05:41.211
+without the risk of a bad plan.
+
+00:05:41.861 --> 00:05:43.310
+And a close cousin.
+
+00:05:43.610 --> 00:05:46.419
+Plan then execute also starts with a plan.
+
+00:05:46.719 --> 00:05:48.795
+The difference is who executes.
+
+00:05:49.095 --> 00:05:53.886
+There, a single agent follows the plan step by step, in the same context.
+
+00:05:54.186 --> 00:06:00.244
+Here, each subtask goes to a worker with its own context, and independent ones run
+
+00:06:00.244 --> 00:06:01.500
+at the same time.
+
+00:06:01.800 --> 00:06:05.953
+Use the first when the steps are sequential and need what came before.
+
+00:06:06.253 --> 00:06:11.220
+Use this one when the parts fit in separate contexts, and the volume justifies
+
+00:06:11.220 --> 00:06:11.984
+parallelism.
+
+00:06:13.184 --> 00:06:16.039
+Let's put a price on it, with illustrative numbers.
+
+00:06:16.339 --> 00:06:21.760
+The plan costs about six thousand tokens, each worker twenty thousand, and the
+
+00:06:21.760 --> 00:06:23.636
+synthesis fifteen thousand.
+
+00:06:23.936 --> 00:06:28.723
+With four subtasks, the task spends about one hundred one thousand tokens.
+
+00:06:29.023 --> 00:06:33.796
+If the orchestrator decides on twenty subtasks, the total goes past four hundred
+
+00:06:33.796 --> 00:06:34.751
+twenty thousand.
+
+00:06:35.051 --> 00:06:37.577
+And quality doesn't necessarily rise.
+
+00:06:37.877 --> 00:06:42.321
+That's why the subtask limit lives in the prompt, and also in code.
+
+00:06:42.621 --> 00:06:44.133
+The model picks the split.
+
+00:06:44.433 --> 00:06:46.609
+Code decides how much it may cost.
+
+00:06:47.259 --> 00:06:48.569
+The failure modes.
+
+00:06:48.869 --> 00:06:53.524
+A bad plan, with overlapping subtasks, or one part missing.
+
+00:06:53.824 --> 00:06:58.275
+That spoils everything after it, so evaluate the plan on its own.
+
+00:06:58.575 --> 00:07:03.463
+For twenty real tasks, write down by hand the parts a good plan must cover.
+
+00:07:03.763 --> 00:07:06.184
+A missing part is a coverage failure.
+
+00:07:06.484 --> 00:07:09.672
+Two subtasks touching the same file is overlap.
+
+00:07:09.972 --> 00:07:11.971
+And validate the plan in code too.
+
+00:07:12.271 --> 00:07:15.496
+No cycles, no dependencies pointing nowhere.
+
+00:07:16.146 --> 00:07:17.599
+Over-splitting.
+
+00:07:17.899 --> 00:07:23.091
+Dozens of trivial subtasks, with very short outputs and a high total cost.
+
+00:07:23.741 --> 00:07:25.466
+And incoherence.
+
+00:07:25.766 --> 00:07:29.300
+Workers making different decisions about the same problem.
+
+00:07:29.600 --> 00:07:30.888
+You just saw the fix.
+
+00:07:31.188 --> 00:07:33.285
+Put conventions in the plan.
+
+00:07:33.935 --> 00:07:39.219
+In production, record the plan as a span, with a child span for each worker.
+
+00:07:39.519 --> 00:07:44.643
+Put limits on subtasks and waves per task, with an alert when they hit.
+
+00:07:44.943 --> 00:07:49.074
+And keep an eye on how often each type of subtask has to be retried.
+
+00:07:49.374 --> 00:07:54.434
+A subtask type that always fails is asking for a better worker prompt.
+
+00:07:55.634 --> 00:07:57.826
+So here's the idea to take with you.
+
+00:07:58.126 --> 00:08:01.916
+Use an orchestrator only when the split depends on the content.
+
+00:08:02.216 --> 00:08:07.408
+Let it write a plan with self contained instructions, dependencies, done criteria
+
+00:08:07.408 --> 00:08:08.882
+and shared conventions.
+
+00:08:09.182 --> 00:08:14.813
+Let code run the waves, validate each result, and cap how far the split can go.
+
+00:08:15.463 --> 00:08:21.217
+In the next lesson, we close the agents track with a real system that uses almost
+
+00:08:21.217 --> 00:08:23.988
+everything you've seen: a coding agent.
+
+00:08:24.288 --> 00:08:25.044
+See you there.

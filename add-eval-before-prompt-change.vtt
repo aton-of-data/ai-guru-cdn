@@ -1,0 +1,388 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.127
+You've met this story in the last two lessons.
+
+00:00:04.427 --> 00:00:07.271
+One line changed in the invoice extractor.
+
+00:00:07.571 --> 00:00:09.320
+Three test invoices looked fine.
+
+00:00:09.620 --> 00:00:13.173
+And in production, invoices with discounts got worse.
+
+00:00:13.823 --> 00:00:16.454
+Today we do the refactoring that prevents it.
+
+00:00:16.754 --> 00:00:18.391
+And it has a strange first step.
+
+00:00:18.691 --> 00:00:21.544
+Before you change anything, you change nothing.
+
+00:00:22.194 --> 00:00:25.007
+This refactoring treats three smells.
+
+00:00:25.307 --> 00:00:28.816
+The untested prompt, where changes ship with no test set.
+
+00:00:29.466 --> 00:00:35.480
+The vibe check eval, where someone asks a few questions and eyeballs the answers.
+
+00:00:36.130 --> 00:00:37.660
+And the model pinned prompt.
+
+00:00:37.960 --> 00:00:43.523
+A classifier nobody has dared to move to another model in eight months, because the
+
+00:00:43.523 --> 00:00:45.467
+prompt was tuned on this one.
+
+00:00:45.767 --> 00:00:50.325
+In this lesson, you'll build the safety net that makes all three go away.
+
+00:00:51.525 --> 00:00:54.204
+The solution fits in one sentence.
+
+00:00:54.504 --> 00:01:00.224
+Before any tweak, build a set of real cases with expected answers, run the current
+
+00:01:00.224 --> 00:01:03.850
+version on them, and store the result as a baseline.
+
+00:01:04.150 --> 00:01:08.280
+From then on, every change is compared against that baseline.
+
+00:01:08.930 --> 00:01:11.852
+The baseline is the piece that's usually missing.
+
+00:01:12.152 --> 00:01:17.115
+Without it, a lone number, like ninety-one percent accuracy, doesn't tell you
+
+00:01:17.115 --> 00:01:19.306
+whether the change helped or hurt.
+
+00:01:19.606 --> 00:01:22.350
+With it, every discussion becomes a comparison.
+
+00:01:23.550 --> 00:01:26.694
+Before, the change ships with an opinion.
+
+00:01:26.994 --> 00:01:31.280
+Someone changes the prompt, looks at three cases, and deploys.
+
+00:01:31.930 --> 00:01:34.058
+After, the change ships with a number.
+
+00:01:34.358 --> 00:01:39.025
+Someone proposes a change to the prompt, the model, or a parameter.
+
+00:01:39.675 --> 00:01:44.794
+The eval runs the new version on the versioned dataset, a few times.
+
+00:01:45.444 --> 00:01:50.869
+The result is compared with the previous version, field by field, category by
+
+00:01:50.869 --> 00:01:51.503
+category.
+
+00:01:52.153 --> 00:01:54.696
+With no regression, the change goes ahead.
+
+00:01:55.346 --> 00:02:00.381
+With a regression, the change stops, and the cases that got worse come up for
+
+00:02:00.381 --> 00:02:00.970
+analysis.
+
+00:02:01.620 --> 00:02:05.843
+Here's what that looks like on the pull request, as an illustrative report.
+
+00:02:06.143 --> 00:02:08.811
+Version six against version seven.
+
+00:02:09.111 --> 00:02:11.012
+The issuer field holds.
+
+00:02:11.312 --> 00:02:12.385
+The date holds.
+
+00:02:12.685 --> 00:02:16.660
+And the total drops six points, on the discounted invoices.
+
+00:02:17.310 --> 00:02:19.776
+The run fails, across three runs.
+
+00:02:20.076 --> 00:02:22.228
+Friday's bug never reaches production.
+
+00:02:23.428 --> 00:02:26.815
+The problem with testing by hand isn't laziness.
+
+00:02:27.115 --> 00:02:28.269
+It's statistics.
+
+00:02:28.569 --> 00:02:33.734
+Three examples won't catch a six point drop in a category that shows up in fifteen
+
+00:02:33.734 --> 00:02:34.804
+percent of cases.
+
+00:02:35.104 --> 00:02:39.286
+A set of dozens of real cases, run a few times, will.
+
+00:02:39.936 --> 00:02:43.124
+The baseline turns a number into a comparison.
+
+00:02:43.424 --> 00:02:47.155
+That's what ends the it got better, it got worse debate.
+
+00:02:47.805 --> 00:02:50.484
+And the eval changes how the team behaves.
+
+00:02:50.784 --> 00:02:55.103
+When deleting a prompt paragraph costs a few minutes of measurement, people start
+
+00:02:55.103 --> 00:02:57.770
+cleaning the prompt, instead of only adding rules.
+
+00:02:58.970 --> 00:02:59.802
+Step zero.
+
+00:03:00.102 --> 00:03:01.870
+Don't change anything yet.
+
+00:03:02.170 --> 00:03:03.460
+Freeze the current prompt.
+
+00:03:03.760 --> 00:03:08.531
+The baseline belongs to the version that's live, not the one you want to ship.
+
+00:03:09.181 --> 00:03:10.656
+Gather real cases.
+
+00:03:10.956 --> 00:03:16.065
+Start with thirty to a hundred production inputs, anonymized, covering the main
+
+00:03:16.065 --> 00:03:18.717
+categories and the bugs you already know.
+
+00:03:19.017 --> 00:03:24.849
+Invoices with a discount, with service tax, with more than one line item.
+
+00:03:25.499 --> 00:03:27.955
+Label the expected result.
+
+00:03:28.255 --> 00:03:31.539
+For extraction and classification, the right value.
+
+00:03:31.839 --> 00:03:36.484
+For open text, criteria you can verify, or a rubric.
+
+00:03:37.134 --> 00:03:39.491
+Pick the simplest grading that works.
+
+00:03:39.791 --> 00:03:45.315
+Exact match, a rule in code, or a model as judge when there's no alternative.
+
+00:03:45.615 --> 00:03:49.399
+And if the judge is a model, measure how often it agrees with a person.
+
+00:03:50.049 --> 00:03:55.321
+Run the current version three to five times, and store the mean and the spread, per
+
+00:03:55.321 --> 00:03:55.893
+category.
+
+00:03:56.193 --> 00:03:57.381
+That's your baseline.
+
+00:03:58.031 --> 00:04:03.434
+Version the dataset and the script in the same repository as the prompt.
+
+00:04:04.084 --> 00:04:07.855
+Now, finally, make the change, and run the same eval.
+
+00:04:08.505 --> 00:04:11.408
+Compare per category, not only the average.
+
+00:04:11.708 --> 00:04:14.923
+Agree with the team on which drop blocks a deploy.
+
+00:04:15.223 --> 00:04:20.889
+And wire the eval into your pipeline, so every prompt change runs it automatically.
+
+00:04:22.089 --> 00:04:23.562
+Here's one for you.
+
+00:04:23.862 --> 00:04:28.383
+You ran the eval once on the new version and got ninety-four percent.
+
+00:04:28.683 --> 00:04:34.439
+The baseline is ninety-two, plus or minus three points, over five runs.
+
+00:04:34.739 --> 00:04:35.441
+Can you ship?
+
+00:04:38.491 --> 00:04:39.291
+Not yet.
+
+00:04:39.591 --> 00:04:44.019
+A single run inside the baseline's noise band isn't an improvement.
+
+00:04:44.319 --> 00:04:48.319
+You may just be looking at variation the baseline already had.
+
+00:04:48.619 --> 00:04:52.994
+Run the new version three to five times, and compare the mean and the range per
+
+00:04:52.994 --> 00:04:54.490
+category with the baseline.
+
+00:04:54.790 --> 00:04:55.810
+Then decide.
+
+00:04:56.460 --> 00:04:59.781
+And write the ship or block rule before you see the numbers.
+
+00:05:00.081 --> 00:05:03.749
+Afterwards, everyone finds a reason to like the result they wanted.
+
+00:05:04.949 --> 00:05:06.102
+Now the traps.
+
+00:05:06.402 --> 00:05:09.894
+The first is the average that hides a rare queue.
+
+00:05:10.194 --> 00:05:13.406
+Overall accuracy rises one point.
+
+00:05:13.706 --> 00:05:15.520
+The chargeback queue drops twenty.
+
+00:05:15.820 --> 00:05:19.906
+If your pipeline looks only at the mean, the pull request passes.
+
+00:05:20.206 --> 00:05:26.233
+The fix is to fail the pull request if any agreed category drops past its threshold,
+
+00:05:26.233 --> 00:05:28.960
+and to print the cases that got worse.
+
+00:05:29.260 --> 00:05:31.782
+That turns the number into a fix.
+
+00:05:32.432 --> 00:05:35.023
+A dataset that doesn't look like production.
+
+00:05:35.323 --> 00:05:39.702
+A team had forty cases, invented on a whiteboard, all easy.
+
+00:05:40.002 --> 00:05:44.705
+The pipeline always passed, and production failed on service invoices.
+
+00:05:45.005 --> 00:05:49.937
+Replace the whiteboard with real anonymized invoices, including the errors you've
+
+00:05:49.937 --> 00:05:50.728
+already seen.
+
+00:05:51.378 --> 00:05:52.938
+Overfitting to the eval.
+
+00:05:53.238 --> 00:05:57.905
+Tweaking the prompt until it passes the fifty cases can make the rest of production
+
+00:05:57.905 --> 00:05:58.242
+worse.
+
+00:05:58.542 --> 00:06:02.641
+Hold out part of the dataset, and use it only for the final decision.
+
+00:06:03.291 --> 00:06:05.764
+A judge nobody evaluated.
+
+00:06:06.064 --> 00:06:10.673
+If grading uses a model, check its agreement with a person from time to time.
+
+00:06:11.323 --> 00:06:13.656
+And noise mistaken for improvement.
+
+00:06:13.956 --> 00:06:15.048
+We just saw that one.
+
+00:06:16.248 --> 00:06:17.543
+Now the payoff.
+
+00:06:17.843 --> 00:06:21.199
+The team wants to move the ticket classifier to a cheaper model.
+
+00:06:21.499 --> 00:06:23.992
+What needs to exist before you run the test?
+
+00:06:24.642 --> 00:06:29.262
+A dataset of real tickets with the right queue, covering every queue, including the
+
+00:06:29.262 --> 00:06:29.819
+rare ones.
+
+00:06:30.469 --> 00:06:32.204
+The current model's baseline.
+
+00:06:32.504 --> 00:06:35.855
+Accuracy per queue, averaged over a few runs.
+
+00:06:36.505 --> 00:06:39.462
+A decision rule, written before the test.
+
+00:06:39.762 --> 00:06:44.968
+For example, no queue may drop more than two points, and the average may not drop.
+
+00:06:45.618 --> 00:06:49.890
+And the cost per thousand tickets for both models, to weigh against the quality
+
+00:06:49.890 --> 00:06:50.485
+difference.
+
+00:06:51.135 --> 00:06:56.766
+With that, the switch becomes an afternoon of work, and a decision backed by a
+
+00:06:56.766 --> 00:06:57.271
+number.
+
+00:06:57.571 --> 00:06:58.488
+Not a bet.
+
+00:06:58.788 --> 00:07:02.102
+And don't wait for the provider to retire your current model.
+
+00:07:02.402 --> 00:07:07.178
+That's the worst moment to start, switching under a deadline, with no baseline.
+
+00:07:07.478 --> 00:07:11.121
+Build the eval now, while the current model still runs.
+
+00:07:12.321 --> 00:07:14.119
+So here's the idea to take with you.
+
+00:07:14.419 --> 00:07:17.678
+The eval comes before the change, never after.
+
+00:07:17.978 --> 00:07:25.184
+Freeze what's live, measure it on real cases, a few times, and write down the rule.
+
+00:07:25.484 --> 00:07:28.282
+Then change, and compare per category.
+
+00:07:28.582 --> 00:07:33.493
+That's what turns fear of touching the prompt into an afternoon of measured work.
+
+00:07:34.143 --> 00:07:39.047
+In the next lesson, we'll look at the machine that runs all of this for you, on
+
+00:07:39.047 --> 00:07:40.971
+every change: the eval harness.
+
+00:07:41.271 --> 00:07:42.101
+See you there.

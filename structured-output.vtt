@@ -1,0 +1,403 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:06.608
+Bianca works in finance, and she automated reading the invoices her suppliers send.
+
+00:00:06.908 --> 00:00:12.509
+Every company in Brazil is identified by a tax ID, fourteen digits with two check
+
+00:00:12.509 --> 00:00:13.754
+digits at the end.
+
+00:00:14.404 --> 00:00:19.909
+Her prompt asked: return the issuer's tax ID, the issue date and the total amount,
+
+00:00:19.909 --> 00:00:21.185
+as structured data.
+
+00:00:21.485 --> 00:00:24.345
+In the first week, it worked on almost everything.
+
+00:00:24.995 --> 00:00:26.740
+Then the odd cases started.
+
+00:00:27.040 --> 00:00:31.231
+One reply opened with a friendly sentence: sure, here's the data.
+
+00:00:31.531 --> 00:00:36.036
+Another returned the total as text, with the currency symbol, when the system
+
+00:00:36.036 --> 00:00:37.089
+expected a number.
+
+00:00:37.389 --> 00:00:40.166
+A third gave the field a different name.
+
+00:00:40.816 --> 00:00:43.380
+Each case became one more patch in the code.
+
+00:00:43.680 --> 00:00:48.531
+The parser grew larger than the business logic, and it still failed a few times a
+
+00:00:48.531 --> 00:00:48.770
+day.
+
+00:00:49.070 --> 00:00:53.959
+In this lesson, you'll see how to get the model to deliver data your code can use
+
+00:00:53.959 --> 00:00:54.985
+without guessing.
+
+00:00:55.285 --> 00:00:57.156
+And why that's only half of the job.
+
+00:00:58.356 --> 00:01:00.860
+The fix starts with a change of mindset.
+
+00:01:01.160 --> 00:01:06.666
+Stop asking for a format in the prompt text, and start declaring the format as part
+
+00:01:06.666 --> 00:01:07.462
+of the call.
+
+00:01:08.112 --> 00:01:13.674
+Current APIs accept a schema, a description of the fields, their types and their
+
+00:01:13.674 --> 00:01:14.717
+allowed values.
+
+00:01:15.017 --> 00:01:18.513
+And they constrain generation so the output follows it.
+
+00:01:18.813 --> 00:01:23.613
+It's the difference between handing someone a blank sheet of paper, and handing them
+
+00:01:23.613 --> 00:01:25.156
+a form with labeled fields.
+
+00:01:25.806 --> 00:01:27.846
+But here's the part people miss.
+
+00:01:28.146 --> 00:01:30.633
+The schema guarantees shape, not truth.
+
+00:01:31.283 --> 00:01:35.114
+A tax ID can have fourteen digits and still be invalid.
+
+00:01:35.414 --> 00:01:39.709
+So the second half of the pattern is checking business rules in code.
+
+00:01:40.009 --> 00:01:43.626
+Check digits, a date in the past, a positive amount.
+
+00:01:43.926 --> 00:01:47.612
+Shape guaranteed by the API, content checked by you.
+
+00:01:48.812 --> 00:01:50.436
+Let's follow one invoice.
+
+00:01:50.736 --> 00:01:53.786
+The input is the text that needs to become data.
+
+00:01:54.436 --> 00:01:55.968
+The call carries the schema.
+
+00:01:56.268 --> 00:01:59.468
+The model can only generate outputs in that shape.
+
+00:02:00.118 --> 00:02:03.923
+The SDK turns the response into a typed object.
+
+00:02:04.223 --> 00:02:07.690
+No regular expressions, no hunting for braces.
+
+00:02:08.340 --> 00:02:11.749
+Then your code checks the rules the schema can't express.
+
+00:02:12.399 --> 00:02:15.926
+Valid data goes straight into the accounting system.
+
+00:02:16.576 --> 00:02:21.775
+And data with the right shape, but suspicious content, goes to a person for review.
+
+00:02:22.975 --> 00:02:25.067
+Here's a real invoice from a bakery.
+
+00:02:25.367 --> 00:02:31.737
+A tax ID, an issue date in August, a total of one thousand two hundred thirty-four
+
+00:02:31.737 --> 00:02:35.387
+dollars, and two items, bread rolls and coffee.
+
+00:02:36.037 --> 00:02:41.659
+With return the data in the prompt, a realistic reply had three shape failures at
+
+00:02:41.659 --> 00:02:42.006
+once.
+
+00:02:42.306 --> 00:02:48.261
+Text around the data, the wrong field name, and the total as text with a currency
+
+00:02:48.261 --> 00:02:48.776
+symbol.
+
+00:02:49.076 --> 00:02:51.646
+Bianca's parser needed three fixes.
+
+00:02:51.946 --> 00:02:53.793
+The next week, a fourth showed up.
+
+00:02:54.443 --> 00:02:59.310
+With a declared schema, the API can only emit four fields.
+
+00:02:59.610 --> 00:03:05.091
+The issuer's tax ID, the issue date, the total as a number, and the list of items.
+
+00:03:05.391 --> 00:03:08.045
+The SDK hands back an object.
+
+00:03:08.695 --> 00:03:12.024
+And then Bianca's code still has work to do.
+
+00:03:12.324 --> 00:03:15.300
+The tax ID has to pass the check digit rule.
+
+00:03:15.950 --> 00:03:18.286
+The items have to add up to the total.
+
+00:03:18.936 --> 00:03:21.147
+And the issue date can't be in the future.
+
+00:03:21.447 --> 00:03:26.243
+If any of these fail, the invoice goes to review, with the list of what failed.
+
+00:03:27.443 --> 00:03:28.916
+Here's one for you.
+
+00:03:29.216 --> 00:03:32.489
+The model returned an object exactly in the schema.
+
+00:03:32.789 --> 00:03:35.218
+The tax ID has fourteen digits.
+
+00:03:35.518 --> 00:03:37.390
+But the check digits don't match.
+
+00:03:37.690 --> 00:03:39.479
+What does the pattern say to do?
+
+00:03:42.529 --> 00:03:46.940
+Validate the check digits in code, and send it to human review when they fail.
+
+00:03:47.240 --> 00:03:48.557
+Shape isn't truth.
+
+00:03:48.857 --> 00:03:54.970
+An invalid fourteen digit value passes a text schema and breaks the issuer's record.
+
+00:03:55.620 --> 00:03:58.965
+And asking again, over and over, until it passes?
+
+00:03:59.265 --> 00:04:03.209
+A retry on the same document usually returns the same misread.
+
+00:04:03.509 --> 00:04:09.143
+The review queue exists exactly for the case where the source is unreadable, or the
+
+00:04:09.143 --> 00:04:10.297
+model misread it.
+
+00:04:11.497 --> 00:04:13.658
+Structured output isn't for everything.
+
+00:04:13.958 --> 00:04:19.242
+If the output is text for a person to read, like a chat reply, forcing a schema only
+
+00:04:19.242 --> 00:04:20.563
+stiffens the writing.
+
+00:04:20.863 --> 00:04:22.217
+Nobody's going to parse it.
+
+00:04:22.867 --> 00:04:27.419
+If it's a short free text the code only displays, same thing.
+
+00:04:28.069 --> 00:04:33.881
+And if your schema would be one field called answer, of type text, it guarantees
+
+00:04:33.881 --> 00:04:34.462
+nothing.
+
+00:04:34.762 --> 00:04:36.355
+It just adds ceremony.
+
+00:04:37.005 --> 00:04:38.807
+Now the most common mistake.
+
+00:04:39.107 --> 00:04:41.626
+Every invoice has an issuer.
+
+00:04:41.926 --> 00:04:44.412
+But not every service contract has a penalty.
+
+00:04:44.712 --> 00:04:49.284
+If the penalty field is required, the model invents something like ten percent
+
+00:04:49.284 --> 00:04:51.980
+standard, just so it doesn't break the schema.
+
+00:04:52.630 --> 00:04:56.953
+So mark as optional whatever can really be missing.
+
+00:04:57.253 --> 00:04:58.219
+And measure it.
+
+00:04:58.519 --> 00:05:03.867
+In your eval, include documents where the field doesn't exist, and count how often
+
+00:05:03.867 --> 00:05:07.324
+the model returns empty, versus how often it invents.
+
+00:05:07.624 --> 00:05:10.982
+And prefer a closed list of values over open text.
+
+00:05:11.282 --> 00:05:15.299
+An open text field is how super urgent ends up in your priority column.
+
+00:05:16.499 --> 00:05:20.183
+With a native schema, the output is almost always valid.
+
+00:05:20.483 --> 00:05:22.921
+So valid stops being a metric.
+
+00:05:23.221 --> 00:05:24.893
+It hides content errors.
+
+00:05:25.543 --> 00:05:30.009
+Evaluate field by field, against labeled values.
+
+00:05:30.309 --> 00:05:31.709
+And normalize first.
+
+00:05:32.009 --> 00:05:37.136
+The invoice says one thousand two hundred thirty-four dollars with a comma, and the
+
+00:05:37.136 --> 00:05:38.557
+label holds the number.
+
+00:05:38.857 --> 00:05:44.146
+Compare text to text, and the eval punishes formatting while a wrong tax ID with the
+
+00:05:44.146 --> 00:05:46.160
+right punctuation slips through.
+
+00:05:46.810 --> 00:05:52.194
+Measure the invention rate on documents where the field truly doesn't exist.
+
+00:05:52.844 --> 00:05:57.016
+And track what goes to human review, and how much of it was a real error.
+
+00:05:57.316 --> 00:06:02.958
+In production, a validation rule that suddenly fires a lot usually means a supplier
+
+00:06:02.958 --> 00:06:04.386
+changed their layout.
+
+00:06:05.036 --> 00:06:12.025
+Version the schema the way you version the prompt, and record both on every trace.
+
+00:06:12.325 --> 00:06:16.696
+A new required field pushes invention on old documents.
+
+00:06:16.996 --> 00:06:21.058
+A removed field breaks code that still reads the old name.
+
+00:06:21.708 --> 00:06:23.380
+And one security point.
+
+00:06:23.680 --> 00:06:26.559
+Structured output removes one class of risk.
+
+00:06:26.859 --> 00:06:30.928
+Your code stops interpreting free text that could contain anything.
+
+00:06:31.228 --> 00:06:36.226
+But the field values still come from a model that read an outside document.
+
+00:06:36.526 --> 00:06:38.746
+Treat them as untrusted input.
+
+00:06:39.046 --> 00:06:43.023
+A description field copied into a web page can carry a script.
+
+00:06:43.323 --> 00:06:47.267
+A field pasted into a database query is an injection.
+
+00:06:47.567 --> 00:06:52.356
+Escape before displaying, use parameters in queries, and never execute a field as
+
+00:06:52.356 --> 00:06:52.652
+code.
+
+00:06:53.852 --> 00:06:57.385
+On the page, the same extraction comes in four versions.
+
+00:06:57.685 --> 00:07:03.158
+They all start the same way: one call, with the schema attached, that returns a
+
+00:07:03.158 --> 00:07:04.059
+typed object.
+
+00:07:04.709 --> 00:07:06.528
+Then three checks in code.
+
+00:07:06.828 --> 00:07:09.588
+The check digits, the date, and the sum.
+
+00:07:09.888 --> 00:07:12.159
+Anything that fails goes to review.
+
+00:07:12.459 --> 00:07:14.300
+Everything else is saved.
+
+00:07:14.950 --> 00:07:19.230
+What changes between versions is the provider and the type system.
+
+00:07:19.530 --> 00:07:23.369
+In Python, one class defines both the schema and the type.
+
+00:07:23.669 --> 00:07:29.049
+In TypeScript, a Zod object does the same, and the compiler knows every field.
+
+00:07:29.349 --> 00:07:34.240
+There's a version on OpenAI's SDK with the very same schema.
+
+00:07:34.540 --> 00:07:39.415
+And LangChain wraps both providers, so the business checks don't change when the
+
+00:07:39.415 --> 00:07:40.085
+model does.
+
+00:07:41.285 --> 00:07:43.084
+So here's the idea to take with you.
+
+00:07:43.384 --> 00:07:45.360
+Don't ask the model for a format.
+
+00:07:45.660 --> 00:07:48.672
+Declare it, and let the API hold the shape.
+
+00:07:48.972 --> 00:07:54.295
+Then check the content in code, because a perfect form can still be filled in wrong.
+
+00:07:54.945 --> 00:07:59.081
+In the next lesson, we'll use this same idea in the other direction: the model
+
+00:07:59.081 --> 00:08:01.945
+filling in a form that asks your code to do something.
+
+00:08:02.245 --> 00:08:04.159
+Tools and function calling.
+
+00:08:04.459 --> 00:08:05.289
+See you there.

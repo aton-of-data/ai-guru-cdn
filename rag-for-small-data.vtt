@@ -1,0 +1,391 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:06.636
+A legal assistant answers questions about one services contract.
+
+00:00:06.936 --> 00:00:08.049
+Eighteen pages.
+
+00:00:08.349 --> 00:00:10.412
+About twelve thousand tokens.
+
+00:00:11.062 --> 00:00:14.275
+The team built it the way the tutorials show.
+
+00:00:14.575 --> 00:00:20.183
+Split the contract into small chunks, turn each chunk into an embedding, store them
+
+00:00:20.183 --> 00:00:21.602
+in a vector database.
+
+00:00:21.902 --> 00:00:27.303
+For each question, retrieve the four most similar chunks, and let the model answer.
+
+00:00:27.953 --> 00:00:29.413
+Then a user asks.
+
+00:00:29.713 --> 00:00:33.672
+Can I terminate without a penalty if the supplier delivers late?
+
+00:00:33.972 --> 00:00:36.486
+The search brings back the termination clause.
+
+00:00:36.786 --> 00:00:41.865
+It doesn't bring back the penalties clause, which sits on another page and says
+
+00:00:41.865 --> 00:00:44.372
+contractual default, not late delivery.
+
+00:00:45.022 --> 00:00:47.908
+The model answers yes, no penalty.
+
+00:00:48.208 --> 00:00:51.116
+Clause fourteen point three says the opposite.
+
+00:00:51.416 --> 00:00:53.990
+And here's the detail that makes this a smell.
+
+00:00:54.290 --> 00:00:58.131
+The whole contract fit comfortably in the model's context.
+
+00:00:58.431 --> 00:01:03.603
+In this lesson, you'll learn to spot when retrieval is a bet you didn't need to
+
+00:01:03.603 --> 00:01:03.930
+make.
+
+00:01:05.130 --> 00:01:06.493
+Here's the core of it.
+
+00:01:06.793 --> 00:01:09.718
+The search finds chunks that look like the question.
+
+00:01:10.018 --> 00:01:12.531
+It doesn't find the chunks you need to answer it.
+
+00:01:13.181 --> 00:01:17.301
+Delivers late sounds close to deadlines and termination.
+
+00:01:17.601 --> 00:01:22.897
+The penalties clause talks about default, and in vector space it sits far away.
+
+00:01:23.197 --> 00:01:27.783
+So the model answers from a fifth of the contract, and it doesn't know what was left
+
+00:01:27.783 --> 00:01:28.002
+out.
+
+00:01:28.652 --> 00:01:33.471
+When the whole document fits, let the model that read everything decide what's
+
+00:01:33.471 --> 00:01:34.027
+relevant.
+
+00:01:34.327 --> 00:01:37.056
+Not a search that only read the question.
+
+00:01:38.256 --> 00:01:39.955
+Let's walk the pipeline.
+
+00:01:40.605 --> 00:01:43.430
+It starts with material that's small and complete.
+
+00:01:43.730 --> 00:01:46.071
+One contract, every clause in it.
+
+00:01:46.721 --> 00:01:47.784
+Then it gets split.
+
+00:01:48.084 --> 00:01:51.522
+And the split separates clauses that depend on each other.
+
+00:01:51.822 --> 00:01:56.090
+The rule is on page four, the exception is on page eleven.
+
+00:01:56.740 --> 00:01:59.932
+The chunks become vectors, and go into the database.
+
+00:02:00.582 --> 00:02:03.222
+For each question, the search picks a few.
+
+00:02:03.522 --> 00:02:07.471
+And it misses when the words don't match, even when the meaning does.
+
+00:02:08.121 --> 00:02:12.696
+And the model answers from a fraction of the material, with full confidence.
+
+00:02:12.996 --> 00:02:17.097
+Nothing in the prompt tells it that clause fourteen exists.
+
+00:02:17.747 --> 00:02:19.209
+So, the signs.
+
+00:02:19.509 --> 00:02:24.266
+The total content is small, tens of pages, and would fit whole in the context
+
+00:02:24.266 --> 00:02:24.699
+window.
+
+00:02:25.349 --> 00:02:30.442
+There's chunking, embeddings and a vector database, for a handful of documents.
+
+00:02:31.092 --> 00:02:35.004
+The wrong answers trace back to the search missing the right passage.
+
+00:02:35.304 --> 00:02:39.090
+Especially questions that combine distant parts of the document.
+
+00:02:39.740 --> 00:02:45.167
+And the team spends more time tuning chunk sizes than solving the user's problem.
+
+00:02:46.367 --> 00:02:48.887
+Nobody builds this out of carelessness.
+
+00:02:49.187 --> 00:02:50.574
+There are good reasons.
+
+00:02:51.224 --> 00:02:55.109
+RAG became the default answer for AI over documents.
+
+00:02:55.409 --> 00:02:58.632
+It's the first architecture every tutorial shows.
+
+00:02:59.282 --> 00:03:00.605
+Context windows grew.
+
+00:03:00.905 --> 00:03:05.020
+What needed retrieval a few years ago now fits whole, with room to spare.
+
+00:03:05.670 --> 00:03:07.828
+It was designed for future scale.
+
+00:03:08.128 --> 00:03:10.764
+What if there are a thousand contracts?
+
+00:03:11.064 --> 00:03:12.263
+Maybe there will be.
+
+00:03:12.563 --> 00:03:13.839
+Today there's one.
+
+00:03:14.489 --> 00:03:17.420
+And the cost of context was misjudged.
+
+00:03:17.720 --> 00:03:22.631
+Sending the whole document on every question sounds expensive, until you count
+
+00:03:22.631 --> 00:03:23.576
+prompt caching.
+
+00:03:24.776 --> 00:03:25.905
+Here's one for you.
+
+00:03:26.205 --> 00:03:31.112
+The assistant misses a question because the exception clause didn't come back from
+
+00:03:31.112 --> 00:03:31.770
+the search.
+
+00:03:32.070 --> 00:03:35.939
+A colleague proposes going from four chunks to eight per question.
+
+00:03:36.239 --> 00:03:38.431
+The whole contract is twenty four chunks.
+
+00:03:38.731 --> 00:03:39.585
+What do you say?
+
+00:03:42.635 --> 00:03:44.451
+Eight chunks fixes this question.
+
+00:03:44.751 --> 00:03:46.971
+The next one may depend on the ninth.
+
+00:03:47.271 --> 00:03:51.621
+You're still betting that the search is right, for material that already fit whole.
+
+00:03:52.271 --> 00:03:55.466
+And swapping the embedding model doesn't solve it either.
+
+00:03:55.766 --> 00:03:59.779
+A better embedding brings similar words closer.
+
+00:04:00.079 --> 00:04:04.927
+It doesn't connect a clause to an exception that looks nothing like the question.
+
+00:04:05.227 --> 00:04:10.446
+With twelve thousand tokens, send everything, and measure it on the eval.
+
+00:04:11.646 --> 00:04:14.464
+The treatment is the next lesson's refactoring.
+
+00:04:14.764 --> 00:04:17.114
+Replace RAG with direct context.
+
+00:04:17.414 --> 00:04:21.937
+Send the whole document, and use prompt caching so you don't pay full price for
+
+00:04:21.937 --> 00:04:23.598
+reading it on every question.
+
+00:04:24.248 --> 00:04:27.182
+One detail decides whether the cache works.
+
+00:04:27.482 --> 00:04:32.441
+The document has to sit at the start of the prompt, byte for byte the same on every
+
+00:04:32.441 --> 00:04:32.740
+call.
+
+00:04:33.390 --> 00:04:34.974
+The question comes after.
+
+00:04:35.274 --> 00:04:40.163
+If the question comes first, the start of the prompt changes every time, and the
+
+00:04:40.163 --> 00:04:41.202
+cache never hits.
+
+00:04:41.852 --> 00:04:44.109
+A team learned that the hard way.
+
+00:04:44.409 --> 00:04:48.759
+They switched to the whole contract, and the bill went up far more than expected.
+
+00:04:49.059 --> 00:04:52.386
+The trace showed the question sitting in front of the contract.
+
+00:04:52.686 --> 00:04:54.738
+The fix wasn't going back to RAG.
+
+00:04:55.038 --> 00:04:56.423
+It was moving one line.
+
+00:04:57.073 --> 00:04:58.966
+What you get back is worth it.
+
+00:04:59.266 --> 00:05:01.989
+The model sees the links between clauses.
+
+00:05:02.289 --> 00:05:06.131
+There's no chunking, no index, no retrieval to tune.
+
+00:05:06.431 --> 00:05:11.496
+And the citations get more precise, because the model sees each clause with its
+
+00:05:11.496 --> 00:05:12.779
+number and its page.
+
+00:05:13.979 --> 00:05:15.110
+Now the other side.
+
+00:05:15.410 --> 00:05:17.713
+This isn't a rule against RAG.
+
+00:05:18.363 --> 00:05:23.117
+If the material doesn't fit, or grows fast, you need retrieval.
+
+00:05:23.417 --> 00:05:28.074
+A knowledge base of four thousand articles that changes every week, with hybrid
+
+00:05:28.074 --> 00:05:29.607
+search, is not this smell.
+
+00:05:29.907 --> 00:05:32.482
+There, retrieval pays for itself.
+
+00:05:33.132 --> 00:05:35.219
+Access control is the subtle one.
+
+00:05:35.519 --> 00:05:38.490
+An HR handbook with thirty pages fits easily.
+
+00:05:38.790 --> 00:05:44.030
+But if each employee may only see the section for their own role, sending everything
+
+00:05:44.030 --> 00:05:47.149
+shows the model sections that person must not see.
+
+00:05:47.449 --> 00:05:52.655
+Filtered retrieval, or a context built per role in code, is how you enforce the
+
+00:05:52.655 --> 00:05:53.380
+permission.
+
+00:05:54.030 --> 00:05:58.780
+And if caching doesn't apply to your traffic, and the question volume is very high,
+
+00:05:58.780 --> 00:06:01.584
+work out the cost per question before you decide.
+
+00:06:02.234 --> 00:06:05.068
+And the common mistake runs the other way too.
+
+00:06:05.368 --> 00:06:10.540
+A forty page manual, questions about isolated sections, retrieval almost always
+
+00:06:10.540 --> 00:06:11.587
+right, low cost.
+
+00:06:11.887 --> 00:06:15.092
+Small material alone isn't a reason to rebuild it.
+
+00:06:15.392 --> 00:06:17.739
+Run both versions on the eval.
+
+00:06:18.039 --> 00:06:22.299
+If direct context is more accurate at the same cost, switch.
+
+00:06:22.599 --> 00:06:25.664
+If they tie, keep the one that's simpler to maintain.
+
+00:06:26.864 --> 00:06:27.938
+What to watch.
+
+00:06:28.238 --> 00:06:32.042
+In the eval, tag every wrong answer by cause.
+
+00:06:32.342 --> 00:06:35.052
+Was the right passage in the prompt or not?
+
+00:06:35.352 --> 00:06:40.510
+If most errors are passages that never arrived, that's this smell, in numbers.
+
+00:06:41.160 --> 00:06:46.193
+Keep a set of questions that need two distant sections, like the rule and its
+
+00:06:46.193 --> 00:06:46.846
+exception.
+
+00:06:47.146 --> 00:06:50.096
+Those are the ones chunking breaks first.
+
+00:06:50.746 --> 00:06:54.501
+And after the switch, watch the cache hit rate in the trace.
+
+00:06:54.801 --> 00:06:58.918
+A rate near zero means something in the start of the prompt is changing.
+
+00:06:59.218 --> 00:07:02.866
+A date, a user name, or the question in the wrong place.
+
+00:07:04.066 --> 00:07:06.216
+So here's the idea to take with you.
+
+00:07:06.516 --> 00:07:11.024
+Retrieval is a bet that the search will find what the answer needs.
+
+00:07:11.324 --> 00:07:15.180
+When the document fits in the window, you don't have to place that bet.
+
+00:07:15.480 --> 00:07:19.316
+Give the model the whole thing, and let it decide what matters.
+
+00:07:19.966 --> 00:07:25.235
+In the next lesson, we'll do the refactoring step by step, safely, with the cache in
+
+00:07:25.235 --> 00:07:28.309
+the right place: replace RAG with direct context.
+
+00:07:28.609 --> 00:07:29.315
+See you there.

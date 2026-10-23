@@ -1,0 +1,647 @@
+1
+00:00:01,600 --> 00:00:04,964
+Um agente de navegador baixa faturas do portal de um fornecedor.
+
+2
+00:00:05,264 --> 00:00:09,733
+Toda noite ele entra, percorre as páginas e salva cada fatura.
+
+3
+00:00:10,383 --> 00:00:13,410
+Uma noite, o portal mudou o botão de próxima página.
+
+4
+00:00:13,710 --> 00:00:16,960
+Ele continuava na tela, mas não carregava nada.
+
+5
+00:00:17,610 --> 00:00:19,316
+Aqui está o trace da manhã seguinte.
+
+6
+00:00:19,616 --> 00:00:21,947
+Passo quatrocentos e doze, clicar em próxima página.
+
+7
+00:00:22,247 --> 00:00:22,835
+Ok.
+
+8
+00:00:23,135 --> 00:00:24,328
+Ler a página.
+
+9
+00:00:24,628 --> 00:00:28,391
+Faturas um a vinte, de trezentas e quarenta.
+
+10
+00:00:28,691 --> 00:00:29,431
+Clicar de novo.
+
+11
+00:00:29,731 --> 00:00:30,318
+Ok.
+
+12
+00:00:30,618 --> 00:00:31,595
+Ler de novo.
+
+13
+00:00:31,895 --> 00:00:33,655
+Faturas um a vinte.
+
+14
+00:00:34,305 --> 00:00:37,656
+Até o passo dois mil trezentos e dezoito.
+
+15
+00:00:38,306 --> 00:00:40,871
+Ninguém escreveu um bug naquele loop.
+
+16
+00:00:41,171 --> 00:00:44,801
+Ele só não tinha fim, além de quando o modelo acha que terminou.
+
+17
+00:00:45,101 --> 00:00:46,915
+E o modelo nunca achou.
+
+18
+00:00:47,215 --> 00:00:47,940
+Nesta aula,
+
+19
+00:00:47,940 --> 00:00:51,433
+você vai aprender a achar esse smell antes da fatura,
+
+20
+00:00:51,433 --> 00:00:53,212
+e como é um fim de verdade.
+
+21
+00:00:54,412 --> 00:00:56,548
+Repare em dois detalhes daquele trace.
+
+22
+00:00:57,198 --> 00:01:00,932
+O clique responde ok, mesmo quando nada muda.
+
+23
+00:01:01,582 --> 00:01:03,723
+E a leitura da página sempre mostra
+
+24
+00:01:03,723 --> 00:01:05,802
+as mesmas vinte primeiras faturas.
+
+25
+00:01:06,102 --> 00:01:09,417
+A prova de que o agente estava preso estava ali.
+
+26
+00:01:09,717 --> 00:01:11,519
+Mas nenhum código olhava para ela.
+
+27
+00:01:12,169 --> 00:01:13,753
+O formato do smell é este.
+
+28
+00:01:14,053 --> 00:01:17,318
+O modelo pede uma ação que parece sensata.
+
+29
+00:01:17,968 --> 00:01:22,316
+A ferramenta responde sem erro, mesmo sem progresso nenhum.
+
+30
+00:01:22,966 --> 00:01:27,110
+Cada turno reenvia o histórico inteiro, que cresce a cada passo.
+
+31
+00:01:27,760 --> 00:01:31,362
+A única saída do loop é o modelo decidir parar.
+
+32
+00:01:32,012 --> 00:01:33,747
+E quando ele não decide,
+
+33
+00:01:33,747 --> 00:01:36,929
+quem para a execução é a fatura do provedor.
+
+34
+00:01:37,579 --> 00:01:38,708
+Como identificar?
+
+35
+00:01:39,008 --> 00:01:42,711
+O código do agente diz while true, ou while not done,
+
+36
+00:01:42,711 --> 00:01:44,317
+sem contador de passos.
+
+37
+00:01:44,967 --> 00:01:48,022
+Não há limite de tempo, de tokens nem de dinheiro por execução.
+
+38
+00:01:48,672 --> 00:01:50,808
+Ninguém sabe dizer o que acontece
+
+39
+00:01:50,808 --> 00:01:53,332
+se o modelo nunca der a resposta final.
+
+40
+00:01:53,632 --> 00:01:58,188
+E a execução mais cara do mês custou dezenas de vezes a mediana.
+
+41
+00:01:58,838 --> 00:02:02,446
+O trace mostra a mesma ferramenta, com os mesmos argumentos,
+
+42
+00:02:02,446 --> 00:02:03,769
+várias vezes seguidas.
+
+43
+00:02:04,419 --> 00:02:07,628
+E o único alarme que toca é o do cartão de crédito.
+
+44
+00:02:08,828 --> 00:02:10,615
+O protótipo nasceu assim.
+
+45
+00:02:10,915 --> 00:02:13,331
+Os exemplos mais simples de agente usam while true,
+
+46
+00:02:13,331 --> 00:02:15,557
+e o loop foi para produção do jeito que estava.
+
+47
+00:02:16,207 --> 00:02:17,977
+Funciona no teste.
+
+48
+00:02:18,277 --> 00:02:22,041
+Nas tarefas de demo, o modelo termina em cinco passos.
+
+49
+00:02:22,341 --> 00:02:25,524
+Ninguém testou o portal com o botão quebrado.
+
+50
+00:02:26,174 --> 00:02:28,208
+Ferramentas que mentem por omissão.
+
+51
+00:02:28,508 --> 00:02:33,125
+Ok, como resultado de um clique, não diz se algo mudou.
+
+52
+00:02:33,425 --> 00:02:36,600
+O modelo não tem como perceber que está preso.
+
+53
+00:02:37,250 --> 00:02:39,206
+E o provedor parece um limite.
+
+54
+00:02:39,506 --> 00:02:41,919
+As pessoas acham que a janela de contexto
+
+55
+00:02:41,919 --> 00:02:43,567
+uma hora vai parar o agente.
+
+56
+00:02:43,867 --> 00:02:47,274
+Mas muitos frameworks cortam o histórico antigo para caber.
+
+57
+00:02:47,574 --> 00:02:49,397
+E aí o loop roda para sempre.
+
+58
+00:02:50,597 --> 00:02:53,506
+Agora, o custo, com números ilustrativos.
+
+59
+00:02:53,806 --> 00:02:56,166
+Digamos que o prompt de sistema e as descrições
+
+60
+00:02:56,166 --> 00:02:58,074
+das ferramentas somam três mil tokens,
+
+61
+00:02:58,074 --> 00:03:00,133
+e cada turno acrescenta uns quatrocentos.
+
+62
+00:03:00,433 --> 00:03:03,054
+Uma execução normal de dez turnos manda uns
+
+63
+00:03:03,054 --> 00:03:05,309
+cinquenta e dois mil tokens no total.
+
+64
+00:03:05,609 --> 00:03:07,710
+Uma presa, de duzentos turnos,
+
+65
+00:03:07,710 --> 00:03:10,511
+manda uns oito milhões e seiscentos mil.
+
+66
+00:03:11,161 --> 00:03:13,075
+Vinte vezes mais turnos,
+
+67
+00:03:13,075 --> 00:03:16,665
+e mais de cento e sessenta vezes mais tokens.
+
+68
+00:03:16,965 --> 00:03:19,894
+O custo cresce com o quadrado do número de passos,
+
+69
+00:03:19,894 --> 00:03:22,999
+porque cada turno paga de novo tudo o que veio antes.
+
+70
+00:03:23,299 --> 00:03:25,711
+Uma única execução presa pode custar mais
+
+71
+00:03:25,711 --> 00:03:27,653
+que um dia inteiro de uso normal.
+
+72
+00:03:28,303 --> 00:03:30,110
+E o dinheiro é a parte menor.
+
+73
+00:03:30,410 --> 00:03:33,669
+O loop come a cota de requisições da conta e derruba
+
+74
+00:03:33,669 --> 00:03:36,364
+outras execuções que dividem a mesma chave.
+
+75
+00:03:37,014 --> 00:03:40,781
+Se a ferramenta presa tem efeito colateral, como enviar,
+
+76
+00:03:40,781 --> 00:03:43,674
+criar ou pagar, cada turno repete o efeito.
+
+77
+00:03:44,324 --> 00:03:48,388
+E um trace com milhares de passos é quase impossível de ler.
+
+78
+00:03:49,588 --> 00:03:50,940
+Uma pergunta para você.
+
+79
+00:03:51,240 --> 00:03:53,448
+Um agente roda em while true.
+
+80
+00:03:53,748 --> 00:03:57,000
+Mas a ferramenta dele tem limite de dez chamadas por minuto,
+
+81
+00:03:57,000 --> 00:03:59,114
+então ele nunca gasta muito por minuto.
+
+82
+00:03:59,414 --> 00:04:01,428
+Isso é um unbounded loop?
+
+83
+00:04:04,478 --> 00:04:05,048
+Sim.
+
+84
+00:04:05,348 --> 00:04:08,425
+Limite de taxa controla velocidade, não o total.
+
+85
+00:04:08,725 --> 00:04:11,238
+Um loop preso a dez chamadas por minuto ainda
+
+86
+00:04:11,238 --> 00:04:13,528
+faz mais de catorze mil chamadas por dia.
+
+87
+00:04:13,828 --> 00:04:16,185
+Ele só espalha o custo no tempo.
+
+88
+00:04:16,485 --> 00:04:19,772
+E a janela de contexto também não é um freio confiável.
+
+89
+00:04:20,072 --> 00:04:23,125
+Muitos frameworks descartam mensagens antigas para caber,
+
+90
+00:04:23,125 --> 00:04:26,231
+e o loop continua pagando uma janela cheia, em todo turno.
+
+91
+00:04:27,431 --> 00:04:31,061
+O tratamento é uma refatoração chamada add loop budget.
+
+92
+00:04:31,361 --> 00:04:33,558
+E o orçamento tem quatro partes.
+
+93
+00:04:33,858 --> 00:04:36,144
+A última é a que todo mundo esquece.
+
+94
+00:04:36,794 --> 00:04:37,992
+Um limite de passos.
+
+95
+00:04:38,292 --> 00:04:39,684
+Escolha pelos seus traces.
+
+96
+00:04:39,984 --> 00:04:43,239
+Se 99% das execuções terminam em até quinze passos,
+
+97
+00:04:43,239 --> 00:04:47,261
+um limite de quarenta dá folga, sem permitir uma noite inteira.
+
+98
+00:04:47,911 --> 00:04:49,735
+Limites de tempo e de custo.
+
+99
+00:04:50,035 --> 00:04:52,345
+Passos podem ser baratos ou caros.
+
+100
+00:04:52,645 --> 00:04:55,397
+Um limite de dinheiro por execução pega o caso
+
+101
+00:04:55,397 --> 00:04:58,149
+em que poucos passos mandam contextos enormes.
+
+102
+00:04:58,799 --> 00:05:00,309
+Um detector de repetição.
+
+103
+00:05:00,609 --> 00:05:03,320
+A mesma ferramenta, com os mesmos argumentos,
+
+104
+00:05:03,320 --> 00:05:06,693
+três vezes seguidas, quer dizer que o agente está preso.
+
+105
+00:05:06,993 --> 00:05:08,315
+Pare antes do limite.
+
+106
+00:05:08,965 --> 00:05:10,899
+E o comportamento no limite.
+
+107
+00:05:11,199 --> 00:05:15,769
+Devolva o que foi feito, explique onde parou e registre o caso.
+
+108
+00:05:16,069 --> 00:05:19,100
+Um agente que para com uma exceção silenciosa,
+
+109
+00:05:19,100 --> 00:05:22,855
+e faz a tarefa sumir, ainda deixa o usuário sem resposta.
+
+110
+00:05:23,155 --> 00:05:26,267
+O limite existe, mas o tratamento não terminou.
+
+111
+00:05:26,917 --> 00:05:30,436
+A maioria dos frameworks de agente já te dá a primeira peça,
+
+112
+00:05:30,436 --> 00:05:33,837
+como um número máximo de turnos, ou um limite de recursão.
+
+113
+00:05:34,137 --> 00:05:35,336
+O resto você escreve.
+
+114
+00:05:35,636 --> 00:05:38,832
+E junto com o orçamento, revise as suas ferramentas.
+
+115
+00:05:39,132 --> 00:05:41,237
+Um resultado que diz o que mudou,
+
+116
+00:05:41,237 --> 00:05:43,788
+como página dois de dezessete carregada,
+
+117
+00:05:43,788 --> 00:05:46,595
+ajuda o modelo a perceber quando está preso.
+
+118
+00:05:46,895 --> 00:05:50,051
+O padrão de destino se chama stop conditions,
+
+119
+00:05:50,051 --> 00:05:51,875
+e está a duas aulas daqui.
+
+120
+00:05:52,525 --> 00:05:54,834
+E uma semana depois de colocar o limite,
+
+121
+00:05:54,834 --> 00:05:57,317
+digamos que 2% das execuções terminam nele.
+
+122
+00:05:57,617 --> 00:05:59,824
+Não suba o limite para quatrocentos.
+
+123
+00:06:00,124 --> 00:06:01,371
+Sem ler os traces,
+
+124
+00:06:01,371 --> 00:06:04,283
+você só deixa as execuções presas gastarem
+
+125
+00:06:04,283 --> 00:06:06,363
+dez vezes mais antes de parar.
+
+126
+00:06:06,663 --> 00:06:08,359
+E não ignore também.
+
+127
+00:06:08,659 --> 00:06:10,694
+Leia esses traces, ache a causa,
+
+128
+00:06:10,694 --> 00:06:14,572
+como um resultado vago de ferramenta ou uma página que mudou,
+
+129
+00:06:14,572 --> 00:06:16,988
+e transforme cada um num caso de eval.
+
+130
+00:06:17,288 --> 00:06:19,982
+Eles são a melhor fonte de casos difíceis que você tem.
+
+131
+00:06:21,182 --> 00:06:23,071
+Dois casos para afiar o olho.
+
+132
+00:06:23,371 --> 00:06:25,341
+Um job percorre trezentas notas,
+
+133
+00:06:25,341 --> 00:06:28,972
+chamando o modelo uma vez por nota, sem contador de passos.
+
+134
+00:06:29,272 --> 00:06:30,439
+Isso é esse smell?
+
+135
+00:06:30,739 --> 00:06:31,139
+Não.
+
+136
+00:06:31,439 --> 00:06:35,110
+A lista é finita, e quem decide o próximo turno é o código,
+
+137
+00:06:35,110 --> 00:06:35,919
+não o modelo.
+
+138
+00:06:36,219 --> 00:06:39,192
+O loop termina na nota trezentos, de qualquer jeito.
+
+139
+00:06:39,842 --> 00:06:42,376
+E um agente com limite de trinta passos,
+
+140
+00:06:42,376 --> 00:06:44,909
+em que cada passo pode criar subagentes,
+
+141
+00:06:44,909 --> 00:06:48,393
+que também têm trinta passos e também criam subagentes.
+
+142
+00:06:48,693 --> 00:06:50,049
+Cada nível tem limite.
+
+143
+00:06:50,349 --> 00:06:52,179
+O total, não.
+
+144
+00:06:52,479 --> 00:06:55,201
+Esse é um smell parente, subagent recursion.
+
+145
+00:06:55,501 --> 00:06:58,977
+O orçamento precisa cobrir a árvore inteira, não cada nó.
+
+146
+00:07:00,177 --> 00:07:01,521
+Quando dá para relaxar?
+
+147
+00:07:01,821 --> 00:07:04,308
+Um assistente de código no seu terminal,
+
+148
+00:07:04,308 --> 00:07:07,727
+com você olhando e podendo interromper a qualquer hora,
+
+149
+00:07:07,727 --> 00:07:09,095
+tolera um limite alto.
+
+150
+00:07:09,395 --> 00:07:10,444
+Coloque um mesmo assim.
+
+151
+00:07:10,744 --> 00:07:14,570
+E nenhum agente de produção, rodando sem uma pessoa olhando,
+
+152
+00:07:14,570 --> 00:07:16,164
+deveria rodar sem limite.
+
+153
+00:07:17,364 --> 00:07:19,620
+Então, a ideia para levar.
+
+154
+00:07:19,920 --> 00:07:21,864
+O modelo pode dizer que terminou,
+
+155
+00:07:21,864 --> 00:07:23,691
+mas não pode ser o único freio.
+
+156
+00:07:23,991 --> 00:07:26,833
+Passos, tempo e dinheiro pertencem ao seu código,
+
+157
+00:07:26,833 --> 00:07:28,863
+junto com uma checagem de repetição
+
+158
+00:07:28,863 --> 00:07:31,358
+e uma resposta clara quando o limite chega.
+
+159
+00:07:31,658 --> 00:07:35,295
+Aí a execução mais cara do mês é um número que você escolheu.
+
+160
+00:07:35,945 --> 00:07:39,682
+Na próxima aula, a gente monta esse orçamento passo a passo:
+
+161
+00:07:39,682 --> 00:07:40,679
+add loop budget.
+
+162
+00:07:40,979 --> 00:07:41,733
+Até lá.

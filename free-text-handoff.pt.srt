@@ -1,0 +1,627 @@
+1
+00:00:01,600 --> 00:00:04,397
+Agora que você sabe medir, a gente começa a consertar.
+
+2
+00:00:04,697 --> 00:00:05,230
+Primeiro,
+
+3
+00:00:05,230 --> 00:00:08,666
+um smell que quase todo time que constrói com modelos tem,
+
+4
+00:00:08,666 --> 00:00:11,510
+e quase ninguém percebe até o fechamento do mês.
+
+5
+00:00:12,160 --> 00:00:14,435
+Uma empresa extrai dados de contratos
+
+6
+00:00:14,435 --> 00:00:16,340
+de fornecedores em duas etapas.
+
+7
+00:00:16,640 --> 00:00:20,081
+A primeira lê o contrato e lista os dados principais.
+
+8
+00:00:20,381 --> 00:00:23,285
+A segunda pega esse texto e preenche
+
+9
+00:00:23,285 --> 00:00:25,624
+o cadastro no ERP da empresa.
+
+10
+00:00:26,274 --> 00:00:28,573
+E entre as duas etapas, tem isto.
+
+11
+00:00:28,873 --> 00:00:32,247
+Uma expressão regular que procura a palavra Total,
+
+12
+00:00:32,247 --> 00:00:33,866
+dois pontos e um número.
+
+13
+00:00:34,516 --> 00:00:36,126
+Funcionou por três meses.
+
+14
+00:00:36,426 --> 00:00:40,305
+Aí um dia, o modelo começou a escrever valor total do contrato,
+
+15
+00:00:40,305 --> 00:00:41,475
+em vez de só total.
+
+16
+00:00:41,775 --> 00:00:44,075
+A expressão regular não achou nada.
+
+17
+00:00:44,375 --> 00:00:45,900
+O total ficou vazio.
+
+18
+00:00:46,200 --> 00:00:50,036
+E cento e quarenta contratos entraram no sistema sem valor,
+
+19
+00:00:50,036 --> 00:00:51,662
+antes de alguém perceber.
+
+20
+00:00:52,312 --> 00:00:53,360
+Nada quebrou.
+
+21
+00:00:53,660 --> 00:00:55,556
+Nenhuma exceção, nenhum alerta.
+
+22
+00:00:55,856 --> 00:00:57,838
+O dado só estava vazio.
+
+23
+00:00:58,138 --> 00:01:01,509
+Nesta aula, você vai aprender a reconhecer esse smell,
+
+24
+00:01:01,509 --> 00:01:03,195
+por que ele é tão tentador,
+
+25
+00:01:03,195 --> 00:01:06,753
+e a refatoração que elimina essa classe inteira de erros.
+
+26
+00:01:07,953 --> 00:01:09,142
+O formato é este.
+
+27
+00:01:09,442 --> 00:01:13,096
+A primeira etapa produz um texto feito para uma pessoa ler.
+
+28
+00:01:13,746 --> 00:01:17,020
+E esse texto é a única interface entre as duas etapas.
+
+29
+00:01:17,670 --> 00:01:20,385
+O código, ou às vezes o próximo modelo,
+
+30
+00:01:20,385 --> 00:01:22,891
+tenta adivinhar onde está cada dado.
+
+31
+00:01:23,541 --> 00:01:25,951
+Quando o palpite acerta, tudo funciona.
+
+32
+00:01:26,601 --> 00:01:30,447
+Quando o modelo muda o jeito de escrever, o dado some,
+
+33
+00:01:30,447 --> 00:01:31,230
+sem alarme.
+
+34
+00:01:31,880 --> 00:01:32,876
+Como identificar?
+
+35
+00:01:33,176 --> 00:01:37,607
+Uma etapa devolve prosa, e a próxima usa uma expressão regular,
+
+36
+00:01:37,607 --> 00:01:40,701
+um split, ou procura a linha que começa com.
+
+37
+00:01:41,351 --> 00:01:44,613
+O código tolera vários nomes para o mesmo campo.
+
+38
+00:01:44,913 --> 00:01:47,334
+Total, valor total, total geral.
+
+39
+00:01:47,984 --> 00:01:50,983
+A segunda etapa é outra chamada ao modelo,
+
+40
+00:01:50,983 --> 00:01:54,767
+cujo único trabalho é entender o formato da primeira.
+
+41
+00:01:55,417 --> 00:01:59,364
+Mudar uma palavra num prompt quebra um parser em outro arquivo.
+
+42
+00:02:00,014 --> 00:02:02,721
+E campos que faltam viram vazio em silêncio,
+
+43
+00:02:02,721 --> 00:02:04,198
+em vez de gerar um erro.
+
+44
+00:02:05,398 --> 00:02:08,671
+Normalmente começa com um protótipo numa janela de chat.
+
+45
+00:02:08,971 --> 00:02:10,723
+Alguém testou o prompt,
+
+46
+00:02:10,723 --> 00:02:14,228
+gostou da resposta em texto e colou no código.
+
+47
+00:02:14,528 --> 00:02:16,568
+No chat, texto é o produto.
+
+48
+00:02:16,868 --> 00:02:19,564
+Num pipeline, texto é um fio desencapado.
+
+49
+00:02:20,214 --> 00:02:21,674
+Texto parece flexível.
+
+50
+00:02:21,974 --> 00:02:23,855
+Você não precisa decidir nomes,
+
+51
+00:02:23,855 --> 00:02:26,645
+tipos ou o que é obrigatório antes de começar.
+
+52
+00:02:26,945 --> 00:02:28,692
+Um schema obriga você a decidir.
+
+53
+00:02:29,342 --> 00:02:31,219
+E funciona, por um tempo.
+
+54
+00:02:31,519 --> 00:02:33,759
+Os modelos costumam repetir o formato,
+
+55
+00:02:33,759 --> 00:02:35,468
+até o dia em que não repetem.
+
+56
+00:02:35,768 --> 00:02:39,701
+O modelo mudou, o prompt mudou, ou só a entrada mudou.
+
+57
+00:02:40,001 --> 00:02:43,333
+Um contrato que diz montante em vez de total.
+
+58
+00:02:43,983 --> 00:02:46,829
+E aqui está a armadilha de quem está começando.
+
+59
+00:02:47,129 --> 00:02:50,874
+Pedir JSON no prompt, responda só com JSON,
+
+60
+00:02:50,874 --> 00:02:52,703
+e achar que resolveu.
+
+61
+00:02:53,003 --> 00:02:54,185
+Isso continua sendo texto.
+
+62
+00:02:54,485 --> 00:02:56,364
+O modelo pode embrulhar em formatação,
+
+63
+00:02:56,364 --> 00:02:58,638
+acrescentar uma vírgula ou esquecer uma chave.
+
+64
+00:02:59,838 --> 00:03:02,109
+O pior custo é dado ruim em silêncio.
+
+65
+00:03:02,409 --> 00:03:04,033
+Nada quebra.
+
+66
+00:03:04,333 --> 00:03:08,619
+Cento e quarenta contratos sem total não geram exceção nenhuma.
+
+67
+00:03:08,919 --> 00:03:11,980
+O financeiro só vê o buraco no fechamento do mês.
+
+68
+00:03:12,630 --> 00:03:15,248
+Depois, acoplamento escondido.
+
+69
+00:03:15,548 --> 00:03:19,334
+O prompt da primeira etapa vira parte do contrato da segunda,
+
+70
+00:03:19,334 --> 00:03:20,638
+e ninguém sabe disso.
+
+71
+00:03:20,938 --> 00:03:24,847
+O parser mora em outro arquivo, outro repositório,
+
+72
+00:03:24,847 --> 00:03:26,255
+talvez outro time.
+
+73
+00:03:26,905 --> 00:03:28,106
+Depois, medo.
+
+74
+00:03:28,406 --> 00:03:31,507
+Qualquer ajuste de prompt ou troca de modelo vira risco.
+
+75
+00:03:31,807 --> 00:03:33,858
+O time para de melhorar o extrator,
+
+76
+00:03:33,858 --> 00:03:36,964
+porque a expressão regular do financeiro vai quebrar.
+
+77
+00:03:37,614 --> 00:03:38,954
+E tokens desperdiçados.
+
+78
+00:03:39,254 --> 00:03:41,533
+Prosa feita para um parser gasta saída
+
+79
+00:03:41,533 --> 00:03:43,212
+com palavras que ninguém lê.
+
+80
+00:03:43,512 --> 00:03:47,150
+O valor total do contrato, impostos inclusos, é.
+
+81
+00:03:47,450 --> 00:03:50,549
+Dezenas de tokens que um campo só não precisa.
+
+82
+00:03:51,749 --> 00:03:53,144
+Uma pergunta para você.
+
+83
+00:03:53,444 --> 00:03:57,095
+O time pediu JSON no prompt, com as chaves total e data,
+
+84
+00:03:57,095 --> 00:03:58,594
+e o código faz o parse.
+
+85
+00:03:58,894 --> 00:04:02,443
+Uma vez por semana, a execução quebra por uma vírgula a mais,
+
+86
+00:04:02,443 --> 00:04:05,294
+ou uma marcação de formatação em volta do objeto.
+
+87
+00:04:05,594 --> 00:04:08,542
+Qual próximo passo elimina essa classe inteira de erro?
+
+88
+00:04:11,592 --> 00:04:14,451
+Usar a saída estruturada da API, com um schema,
+
+89
+00:04:14,451 --> 00:04:16,276
+e validar os campos no código.
+
+90
+00:04:16,576 --> 00:04:19,268
+O formato deixa de ser um pedido ao
+
+91
+00:04:19,268 --> 00:04:21,883
+modelo e vira uma garantia da API.
+
+92
+00:04:22,533 --> 00:04:25,809
+Tentar de novo até o parse funcionar esconde a instabilidade.
+
+93
+00:04:26,109 --> 00:04:28,622
+E no dia em que a variação for um texto
+
+94
+00:04:28,622 --> 00:04:30,362
+onde devia haver um número,
+
+95
+00:04:30,362 --> 00:04:32,811
+o parse funciona, e o dado ruim entra.
+
+96
+00:04:33,111 --> 00:04:36,982
+Colocar três exemplos de JSON válido baixa a taxa,
+
+97
+00:04:36,982 --> 00:04:38,143
+mas nunca zera.
+
+98
+00:04:38,443 --> 00:04:40,661
+Você ainda dependeria do modelo obedecer
+
+99
+00:04:40,661 --> 00:04:42,046
+uma instrução de formato.
+
+100
+00:04:43,246 --> 00:04:45,968
+O tratamento é uma refatoração chamada replace
+
+101
+00:04:45,968 --> 00:04:47,921
+free text with structured output.
+
+102
+00:04:48,221 --> 00:04:51,064
+O contrato entre as etapas fica explícito.
+
+103
+00:04:51,714 --> 00:04:55,289
+O CNPJ do fornecedor, a chave de acesso da nota,
+
+104
+00:04:55,289 --> 00:04:58,790
+que pode faltar, o total, com tipo de dinheiro,
+
+105
+00:04:58,790 --> 00:05:00,653
+e a lista de vencimentos.
+
+106
+00:05:01,303 --> 00:05:03,106
+A API garante a forma.
+
+107
+00:05:03,406 --> 00:05:06,819
+O código lê o campo total, não uma frase.
+
+108
+00:05:07,119 --> 00:05:11,283
+Valor total do contrato simplesmente não tem mais como existir.
+
+109
+00:05:11,583 --> 00:05:15,099
+E um campo obrigatório que falta vira erro na hora.
+
+110
+00:05:15,399 --> 00:05:17,910
+O documento vai para revisão humana,
+
+111
+00:05:17,910 --> 00:05:20,561
+em vez de entrar no sistema como zero.
+
+112
+00:05:21,211 --> 00:05:22,867
+E muitas vezes tem um bônus.
+
+113
+00:05:23,167 --> 00:05:25,127
+Se a segunda etapa só existia
+
+114
+00:05:25,127 --> 00:05:27,492
+para transformar o texto em campos,
+
+115
+00:05:27,492 --> 00:05:28,506
+ela pode sumir.
+
+116
+00:05:28,806 --> 00:05:31,356
+A primeira chamada já devolve os campos.
+
+117
+00:05:32,006 --> 00:05:34,573
+Mas schema não substitui eval.
+
+118
+00:05:34,873 --> 00:05:37,597
+Uma forma correta ainda pode trazer o CNPJ
+
+119
+00:05:37,597 --> 00:05:39,931
+de uma empresa que não é a emissora.
+
+120
+00:05:40,231 --> 00:05:43,122
+O eval mede se o valor está certo.
+
+121
+00:05:43,422 --> 00:05:47,726
+O schema garante que o valor chegou como valor.
+
+122
+00:05:48,926 --> 00:05:50,268
+Quando dá para ignorar?
+
+123
+00:05:50,568 --> 00:05:52,839
+Quando o destino é uma pessoa.
+
+124
+00:05:53,139 --> 00:05:55,103
+Uma resposta de chat ou um e-mail
+
+125
+00:05:55,103 --> 00:05:56,949
+para um cliente deve ser texto.
+
+126
+00:05:57,249 --> 00:05:59,650
+O smell é texto entre máquinas.
+
+127
+00:06:00,300 --> 00:06:01,888
+Quando o texto é o produto.
+
+128
+00:06:02,188 --> 00:06:05,460
+Uma etapa escreve o rascunho de um artigo, e outra revisa.
+
+129
+00:06:05,760 --> 00:06:09,462
+Elas trocam texto de forma legítima.
+
+130
+00:06:09,762 --> 00:06:12,140
+Estruture o que o código usa de fato,
+
+131
+00:06:12,140 --> 00:06:15,867
+como a lista de problemas encontrados, ou se foi aprovado.
+
+132
+00:06:16,167 --> 00:06:17,641
+Não o artigo em si.
+
+133
+00:06:18,291 --> 00:06:20,483
+E um protótipo descartável tudo bem.
+
+134
+00:06:20,783 --> 00:06:24,442
+No dia em que o parser for para o sistema de verdade,
+
+135
+00:06:24,442 --> 00:06:25,754
+o schema vai junto.
+
+136
+00:06:26,404 --> 00:06:28,648
+Um último caso, para afiar o olho.
+
+137
+00:06:28,948 --> 00:06:32,153
+Um classificador de tickets responde com uma palavra só,
+
+138
+00:06:32,153 --> 00:06:35,244
+cobrança, pedido ou outro, e o código compara o texto.
+
+139
+00:06:35,544 --> 00:06:39,566
+Às vezes volta Cobrança com maiúscula e ponto final,
+
+140
+00:06:39,566 --> 00:06:41,886
+e o ticket cai na fila errada.
+
+141
+00:06:42,186 --> 00:06:43,299
+Isso é esse smell?
+
+142
+00:06:43,599 --> 00:06:44,249
+É.
+
+143
+00:06:44,549 --> 00:06:46,549
+Mesmo uma palavra é texto livre,
+
+144
+00:06:46,549 --> 00:06:49,299
+se o seu código depende da forma exata dela.
+
+145
+00:06:49,599 --> 00:06:53,424
+Um schema com uma lista fechada de valores resolve,
+
+146
+00:06:53,424 --> 00:06:54,624
+com um campo só.
+
+147
+00:06:55,824 --> 00:06:57,809
+Então, a ideia para levar.
+
+148
+00:06:58,109 --> 00:06:59,404
+Texto é para pessoas.
+
+149
+00:06:59,704 --> 00:07:02,306
+Quando uma etapa entrega dado para o código,
+
+150
+00:07:02,306 --> 00:07:05,499
+ou para outra etapa, o contrato precisa ser um schema,
+
+151
+00:07:05,499 --> 00:07:06,327
+não uma frase.
+
+152
+00:07:06,627 --> 00:07:09,461
+Senão o seu sistema funciona até o dia em que o modelo
+
+153
+00:07:09,461 --> 00:07:11,666
+achar um jeito mais bonito de dizer total.
+
+154
+00:07:12,316 --> 00:07:16,632
+Na próxima aula, a gente faz a refatoração em si, passo a passo,
+
+155
+00:07:16,632 --> 00:07:18,250
+com eval antes e depois:
+
+156
+00:07:18,250 --> 00:07:21,015
+replace free text with structured output.
+
+157
+00:07:21,315 --> 00:07:22,145
+Até lá.

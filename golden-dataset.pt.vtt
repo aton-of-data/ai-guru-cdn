@@ -1,0 +1,577 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.380
+O Marcos montou o primeiro eval do classificador
+
+00:00:04.380 --> 00:00:05.654
+de tickets numa tarde.
+
+00:00:05.954 --> 00:00:10.295
+Ele pediu ao próprio modelo que gerasse cem tickets de exemplo,
+
+00:00:10.295 --> 00:00:12.018
+cada um com a fila certa.
+
+00:00:12.668 --> 00:00:15.216
+O eval deu 96%.
+
+00:00:15.516 --> 00:00:16.351
+E em produção,
+
+00:00:16.351 --> 00:00:18.857
+o time de atendimento reclamava de tickets
+
+00:00:18.857 --> 00:00:20.647
+na fila errada todo santo dia.
+
+00:00:21.297 --> 00:00:23.835
+Quando olhou tickets reais, ele entendeu.
+
+00:00:24.135 --> 00:00:26.969
+Os clientes escrevem com erro de digitação.
+
+00:00:27.269 --> 00:00:28.738
+Misturam dois assuntos.
+
+00:00:29.038 --> 00:00:32.077
+Colam print e respondem e-mail antigo.
+
+00:00:32.377 --> 00:00:34.571
+Os cem tickets gerados eram limpos,
+
+00:00:34.571 --> 00:00:36.764
+curtos e sempre sobre uma coisa só.
+
+00:00:37.064 --> 00:00:40.311
+O eval media um mundo que não existia.
+
+00:00:40.961 --> 00:00:42.646
+E tinha um problema mais sutil.
+
+00:00:42.946 --> 00:00:46.626
+O mesmo modelo que escreveu os tickets também classificava.
+
+00:00:46.926 --> 00:00:49.563
+Ele escreveu do jeito que ele entendia,
+
+00:00:49.563 --> 00:00:51.389
+então acertava quase todos.
+
+00:00:51.689 --> 00:00:53.395
+O eval era um espelho.
+
+00:00:54.045 --> 00:00:54.853
+Pior ainda.
+
+00:00:55.153 --> 00:00:58.061
+Quando um ticket real caía na fila errada,
+
+00:00:58.061 --> 00:01:02.145
+alguém corrigia o prompt, mas o caso nunca entrava no eval.
+
+00:01:02.445 --> 00:01:03.606
+Três meses depois,
+
+00:01:03.606 --> 00:01:06.767
+o mesmo erro voltava com outra mudança de prompt.
+
+00:01:07.067 --> 00:01:07.841
+Nesta aula,
+
+00:01:07.841 --> 00:01:12.059
+você vai aprender de onde vêm os casos de um eval confiável,
+
+00:01:12.059 --> 00:01:14.872
+e como mantê-los confiáveis com o tempo.
+
+00:01:16.072 --> 00:01:19.957
+A resposta é tratar o dataset como um ativo do produto.
+
+00:01:20.257 --> 00:01:23.753
+Com dono, versões e regras do que entra.
+
+00:01:24.403 --> 00:01:25.543
+Origem real.
+
+00:01:25.843 --> 00:01:28.912
+Os casos vêm da produção, anonimizados.
+
+00:01:29.212 --> 00:01:32.583
+Casos sintéticos só entram para cobrir lacunas conhecidas,
+
+00:01:32.583 --> 00:01:34.502
+e ficam marcados como sintéticos.
+
+00:01:35.152 --> 00:01:36.582
+Rótulos revisados.
+
+00:01:36.882 --> 00:01:40.623
+A resposta esperada vem de alguém que conhece o domínio.
+
+00:01:40.923 --> 00:01:43.240
+E casos difíceis ganham uma segunda revisão.
+
+00:01:43.890 --> 00:01:45.579
+Cobertura por categoria.
+
+00:01:45.879 --> 00:01:49.062
+Toda categoria tem casos, inclusive as raras,
+
+00:01:49.062 --> 00:01:51.185
+e casos difíceis de propósito.
+
+00:01:51.835 --> 00:01:53.132
+Crescimento por bug.
+
+00:01:53.432 --> 00:01:57.326
+Todo erro de produção vira um caso, antes de ser corrigido.
+
+00:01:57.976 --> 00:01:59.281
+E separação.
+
+00:01:59.581 --> 00:02:02.111
+Uma parte do dataset é para desenvolvimento.
+
+00:02:02.411 --> 00:02:05.321
+Outra fica guardada, só para a decisão final,
+
+00:02:05.321 --> 00:02:07.067
+para você não sobreajustar.
+
+00:02:07.717 --> 00:02:11.352
+Das cinco, o crescimento por bug é a que mais rende com o tempo.
+
+00:02:11.652 --> 00:02:14.055
+Um dataset que só recebe casos no dia
+
+00:02:14.055 --> 00:02:17.173
+em que foi criado envelhece junto com o produto.
+
+00:02:17.473 --> 00:02:21.901
+Um que recebe todo erro de produção vira a memória do time.
+
+00:02:22.201 --> 00:02:25.710
+Tudo o que quebrou uma vez fica vigiado para sempre.
+
+00:02:26.360 --> 00:02:27.814
+E a ordem importa.
+
+00:02:28.114 --> 00:02:32.184
+Registre o caso, rode o eval e veja o caso falhar.
+
+00:02:32.484 --> 00:02:33.708
+Só então corrija.
+
+00:02:34.008 --> 00:02:38.601
+Se o caso não falha antes da correção, ele não reproduz o bug.
+
+00:02:38.901 --> 00:02:40.772
+E o teste não protege nada.
+
+00:02:41.972 --> 00:02:43.215
+Aqui está o fluxo.
+
+00:02:43.515 --> 00:02:45.708
+Os casos novos vêm de dois lugares.
+
+00:02:46.008 --> 00:02:49.247
+Amostras do tráfego de produção, e bugs reportados.
+
+00:02:49.897 --> 00:02:52.372
+Dados pessoais são removidos ou mascarados,
+
+00:02:52.372 --> 00:02:53.753
+antes de qualquer coisa.
+
+00:02:54.403 --> 00:02:57.201
+Um especialista do domínio rotula a resposta esperada.
+
+00:02:57.501 --> 00:02:59.947
+Casos ambíguos ganham uma segunda revisão.
+
+00:03:00.597 --> 00:03:02.711
+O dataset é versionado como código,
+
+00:03:02.711 --> 00:03:05.792
+com histórico de quem acrescentou o quê, e por quê.
+
+00:03:06.442 --> 00:03:08.769
+Uma parte serve para iterar no prompt.
+
+00:03:09.069 --> 00:03:12.242
+A outra só é usada na decisão de deploy.
+
+00:03:12.892 --> 00:03:16.366
+E o eval harness roda o sistema contra tudo isso.
+
+00:03:17.566 --> 00:03:20.517
+Vamos seguir um bug até ele entrar no dataset.
+
+00:03:20.817 --> 00:03:23.003
+Numa segunda, o atendimento sinaliza um ticket.
+
+00:03:23.303 --> 00:03:27.369
+Paguei o boleto, mas o pedido 4521 continua pendente,
+
+00:03:27.369 --> 00:03:29.286
+e quero trocar o tamanho.
+
+00:03:29.586 --> 00:03:31.121
+Ele foi para a fila de pedidos.
+
+00:03:31.421 --> 00:03:33.598
+O financeiro só viu dois dias depois.
+
+00:03:34.248 --> 00:03:37.184
+A pessoa de plantão acha o trace do ticket
+
+00:03:37.184 --> 00:03:39.770
+e manda para o dataset com um clique.
+
+00:03:40.070 --> 00:03:42.880
+Ele cai na fila de rotulagem, já mascarado.
+
+00:03:43.530 --> 00:03:45.332
+Quem rotula aplica o guia.
+
+00:03:45.632 --> 00:03:49.340
+Dois assuntos, e o pagamento trava o pedido, então é financeiro.
+
+00:03:49.640 --> 00:03:52.884
+Como é um caso difícil, uma segunda pessoa confirma.
+
+00:03:53.534 --> 00:03:57.799
+O caso entra, marcado como vindo de um bug, com o motivo.
+
+00:03:58.099 --> 00:04:01.751
+O eval roda no prompt atual, e o caso novo falha.
+
+00:04:02.051 --> 00:04:04.135
+Esperado financeiro, veio pedidos.
+
+00:04:04.435 --> 00:04:05.041
+Ótimo.
+
+00:04:05.341 --> 00:04:07.514
+Agora ele reproduz o bug.
+
+00:04:08.164 --> 00:04:11.178
+Aí o prompt ganha a regra do assunto que trava,
+
+00:04:11.178 --> 00:04:13.551
+com um exemplo que não é esse ticket.
+
+00:04:14.201 --> 00:04:15.996
+O eval roda de novo.
+
+00:04:16.296 --> 00:04:20.623
+O caso passa, e você confere se nada que passava agora falha.
+
+00:04:20.923 --> 00:04:22.974
+Só então o bug é fechado.
+
+00:04:23.274 --> 00:04:24.809
+E daqui a seis meses,
+
+00:04:24.809 --> 00:04:28.537
+quando alguém reescrever o prompt por outro motivo,
+
+00:04:28.537 --> 00:04:32.192
+aquele caso continua lá, e avisa se o erro voltar.
+
+00:04:32.842 --> 00:04:36.310
+E esse guia de rotulagem é o que faz duas pessoas concordarem.
+
+00:04:36.610 --> 00:04:39.992
+É um documento curto que responde as dúvidas que vão aparecer.
+
+00:04:40.292 --> 00:04:41.528
+Dois assuntos?
+
+00:04:41.828 --> 00:04:44.776
+Use a fila do que trava o cliente.
+
+00:04:45.076 --> 00:04:46.320
+Só um print?
+
+00:04:46.620 --> 00:04:48.034
+Rotule pelo conteúdo dele.
+
+00:04:48.334 --> 00:04:49.073
+Na dúvida?
+
+00:04:49.373 --> 00:04:52.189
+Liste as duas e mande para segunda revisão.
+
+00:04:52.489 --> 00:04:56.872
+Todo empate novo achado na revisão vira regra no guia.
+
+00:04:57.172 --> 00:04:59.871
+E o guia é versionado junto com o dataset,
+
+00:04:59.871 --> 00:05:02.248
+porque rótulos e regras andam juntos.
+
+00:05:03.448 --> 00:05:04.783
+Uma pergunta para você.
+
+00:05:05.083 --> 00:05:07.861
+A fila jurídica é 2% dos tickets.
+
+00:05:08.161 --> 00:05:12.738
+A sua amostra aleatória de duzentos casos trouxe quatro deles,
+
+00:05:12.738 --> 00:05:15.027
+e o eval mostra 75% nessa fila.
+
+00:05:15.327 --> 00:05:16.490
+O que você conclui?
+
+00:05:19.540 --> 00:05:22.909
+Que com quatro casos o número quase não diz nada.
+
+00:05:23.209 --> 00:05:25.641
+Um erro vale vinte e cinco pontos.
+
+00:05:25.941 --> 00:05:29.229
+Um único ticket estranho explica os 75%.
+
+00:05:29.529 --> 00:05:31.488
+Puxe mais casos dessa fila.
+
+00:05:32.138 --> 00:05:36.255
+E não ignore porque 2% quase não mexe na média.
+
+00:05:36.555 --> 00:05:40.117
+Pesar pouco na média não quer dizer custar pouco.
+
+00:05:40.417 --> 00:05:43.584
+Um ticket jurídico na fila errada pode virar processo.
+
+00:05:43.884 --> 00:05:47.430
+Categorias raras e caras merecem cobertura própria.
+
+00:05:48.630 --> 00:05:50.900
+Por isso a amostra é estratificada.
+
+00:05:51.200 --> 00:05:54.704
+Você puxa de propósito mais casos das categorias raras,
+
+00:05:54.704 --> 00:05:56.807
+até cada uma ter algumas dezenas.
+
+00:05:57.107 --> 00:05:59.367
+Numa categoria com vinte casos,
+
+00:05:59.367 --> 00:06:02.138
+cada erro mexe cinco pontos no placar.
+
+00:06:02.438 --> 00:06:04.606
+Numa com quatro, vinte e cinco.
+
+00:06:05.256 --> 00:06:07.587
+O efeito colateral é que a média simples
+
+00:06:07.587 --> 00:06:09.277
+deixa de refletir a produção.
+
+00:06:09.577 --> 00:06:11.895
+Então mostre cada categoria separada.
+
+00:06:12.195 --> 00:06:14.452
+E calcule o placar geral ponderado pela
+
+00:06:14.452 --> 00:06:16.419
+frequência real de cada categoria.
+
+00:06:17.069 --> 00:06:19.814
+E antes de comemorar dois pontos de ganho,
+
+00:06:19.814 --> 00:06:21.448
+veja quais casos mudaram.
+
+00:06:21.748 --> 00:06:24.978
+Em cem casos, dois pontos são dois tickets.
+
+00:06:26.178 --> 00:06:28.407
+Então, dado sintético é proibido?
+
+00:06:28.707 --> 00:06:29.451
+Não.
+
+00:06:29.751 --> 00:06:33.007
+Digamos que o time quer dobrar o eval esta semana,
+
+00:06:33.007 --> 00:06:35.026
+e alguém sugere pedir ao modelo
+
+00:06:35.026 --> 00:06:37.371
+de produção trezentos tickets novos,
+
+00:06:37.371 --> 00:06:38.218
+já rotulados.
+
+00:06:38.518 --> 00:06:41.005
+Volume não compensa origem.
+
+00:06:41.305 --> 00:06:44.014
+Casos gerados pelo modelo que você está avaliando
+
+00:06:44.014 --> 00:06:45.618
+tendem a ser fáceis para ele.
+
+00:06:45.918 --> 00:06:48.193
+O eval acaba medindo a si mesmo.
+
+00:06:48.843 --> 00:06:50.972
+Mas uma proibição total vai longe demais.
+
+00:06:51.272 --> 00:06:55.518
+Sem casos sintéticos, uma categoria rara pode ficar sem nenhum.
+
+00:06:55.818 --> 00:06:57.900
+Use para preencher lacunas conhecidas.
+
+00:06:58.200 --> 00:07:01.215
+Pegue casos reais difíceis e gere variações,
+
+00:07:01.215 --> 00:07:04.711
+com erro de digitação, dois assuntos, outro idioma.
+
+00:07:05.011 --> 00:07:08.155
+Marque como sintético e revise os rótulos.
+
+00:07:09.355 --> 00:07:10.508
+Agora, as armadilhas.
+
+00:07:10.808 --> 00:07:12.587
+Quem escreveu o prompt rotula sozinho.
+
+00:07:12.887 --> 00:07:16.006
+A tendência é rotular do jeito que o prompt já responde.
+
+00:07:16.306 --> 00:07:18.658
+Chame alguém do atendimento ou do financeiro.
+
+00:07:19.308 --> 00:07:21.752
+Apagar o caso que sempre falha.
+
+00:07:22.052 --> 00:07:25.291
+Se um caso falha em todas as versões, revise o rótulo.
+
+00:07:25.591 --> 00:07:27.190
+Se o rótulo está certo,
+
+00:07:27.190 --> 00:07:30.457
+esse caso é exatamente o que o dataset precisa.
+
+00:07:31.107 --> 00:07:32.565
+Espiar a parte guardada.
+
+00:07:32.865 --> 00:07:34.460
+Olhar ela a cada iteração,
+
+00:07:34.460 --> 00:07:36.974
+e ficar com a versão que foi melhor nela,
+
+00:07:36.974 --> 00:07:39.550
+transforma ela em dado de desenvolvimento.
+
+00:07:40.200 --> 00:07:43.634
+E copiar casos do eval para o prompt como exemplos.
+
+00:07:43.934 --> 00:07:45.751
+O eval passa de memória,
+
+00:07:45.751 --> 00:07:48.780
+e o placar sobe sem a produção melhorar.
+
+00:07:49.980 --> 00:07:52.142
+Em produção, facilite.
+
+00:07:52.442 --> 00:07:54.884
+Um botão ou um comando que manda um trace
+
+00:07:54.884 --> 00:07:56.790
+direto para a fila de rotulagem.
+
+00:07:57.440 --> 00:08:00.669
+Um painel com o tamanho do dataset por categoria,
+
+00:08:00.669 --> 00:08:03.437
+e a data do caso mais recente de cada uma.
+
+00:08:04.087 --> 00:08:06.968
+Um alerta quando uma categoria nova aparece
+
+00:08:06.968 --> 00:08:09.179
+em produção sem casos no dataset.
+
+00:08:09.829 --> 00:08:13.104
+E uma fila de rotulagem com dono e prazo.
+
+00:08:13.404 --> 00:08:16.867
+Fila sem dono vira cemitério de traces.
+
+00:08:17.517 --> 00:08:20.253
+E lembre que o dataset guarda dado real.
+
+00:08:20.553 --> 00:08:23.983
+Mascarar só CPF e e-mail não basta.
+
+00:08:24.283 --> 00:08:28.214
+Tickets trazem nome, endereço, telefone, número de cartão e,
+
+00:08:28.214 --> 00:08:29.786
+às vezes, dado de saúde.
+
+00:08:30.086 --> 00:08:32.326
+Rode uma detecção mais completa,
+
+00:08:32.326 --> 00:08:34.984
+revise uma amostra na mão a cada lote,
+
+00:08:34.984 --> 00:08:36.944
+e restrinja quem tem acesso.
+
+00:08:38.144 --> 00:08:40.129
+Então, a ideia para levar.
+
+00:08:40.429 --> 00:08:43.742
+Um eval é tão honesto quanto os casos dele.
+
+00:08:44.042 --> 00:08:48.002
+Tire da produção, e rotule com gente que conhece o domínio.
+
+00:08:48.302 --> 00:08:50.531
+Cubra as categorias raras de propósito,
+
+00:08:50.531 --> 00:08:52.702
+guarde uma fatia que você nunca espia,
+
+00:08:52.702 --> 00:08:55.502
+e transforme todo bug num caso antes de corrigir.
+
+00:08:55.802 --> 00:08:57.917
+Esse arquivo vira a memória do seu time.
+
+00:08:58.567 --> 00:08:59.533
+Na próxima aula,
+
+00:08:59.533 --> 00:09:02.009
+a gente coloca esses evals para trabalhar
+
+00:09:02.009 --> 00:09:04.062
+num smell que quase todo time tem,
+
+00:09:04.062 --> 00:09:06.961
+e quase ninguém percebe até o fechamento do mês:
+
+00:09:06.961 --> 00:09:09.015
+texto passado entre duas máquinas.
+
+00:09:09.315 --> 00:09:10.520
+Free-text handoff.
+
+00:09:10.820 --> 00:09:11.649
+Até lá.

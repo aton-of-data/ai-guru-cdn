@@ -1,0 +1,481 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.941
+Um marketplace modera os anúncios com um agente.
+
+00:00:05.241 --> 00:00:08.486
+Ele recebe o anúncio, quatro ferramentas, conferir texto,
+
+00:00:08.486 --> 00:00:11.503
+conferir imagem, conferir preço e publicar a decisão.
+
+00:00:11.804 --> 00:00:15.548
+E um prompt que diz: revise o anúncio e decida.
+
+00:00:16.198 --> 00:00:18.670
+Aqui estão dois traces do mesmo dia.
+
+00:00:18.970 --> 00:00:20.868
+O primeiro parece perfeito.
+
+00:00:21.168 --> 00:00:23.658
+Texto, imagem, preço, decisão.
+
+00:00:23.958 --> 00:00:26.256
+Quatro turnos, uns onze segundos.
+
+00:00:26.906 --> 00:00:28.493
+O segundo é mais rápido.
+
+00:00:28.793 --> 00:00:31.013
+Texto, e aí o modelo escreve:
+
+00:00:31.013 --> 00:00:33.845
+a imagem parece coerente com o texto.
+
+00:00:34.145 --> 00:00:35.459
+E aprova.
+
+00:00:35.759 --> 00:00:37.437
+A checagem de imagem nunca rodou.
+
+00:00:38.087 --> 00:00:39.679
+Olhe essa frase de novo.
+
+00:00:39.979 --> 00:00:43.812
+O modelo deu opinião sobre uma imagem que nunca analisou.
+
+00:00:44.112 --> 00:00:47.484
+E o anúncio 88214 tinha uma imagem proibida.
+
+00:00:48.134 --> 00:00:51.958
+Ninguém do time queria que a checagem de imagem fosse opcional.
+
+00:00:52.258 --> 00:00:56.183
+A regra era clara: todo anúncio passa pelas três checagens.
+
+00:00:56.483 --> 00:00:58.785
+Mas essa regra morava num prompt.
+
+00:00:59.085 --> 00:01:03.173
+E prompt é uma sugestão forte, não uma garantia.
+
+00:01:03.473 --> 00:01:04.129
+Nesta aula,
+
+00:01:04.129 --> 00:01:07.290
+você vai aprender a achar esse smell nos seus traces,
+
+00:01:07.290 --> 00:01:09.736
+e a refatoração que acaba com ele de vez.
+
+00:01:10.936 --> 00:01:12.293
+O que está acontecendo é isto.
+
+00:01:12.593 --> 00:01:16.746
+Hoje, a cada turno, o modelo escolhe qual checagem rodar.
+
+00:01:17.046 --> 00:01:18.156
+Ou se para.
+
+00:01:18.806 --> 00:01:22.308
+Então nada garante que toda checagem rode.
+
+00:01:22.958 --> 00:01:25.055
+Mas a tarefa tem um caminho fixo.
+
+00:01:25.355 --> 00:01:28.461
+Numa chain, o código sempre roda as três checagens.
+
+00:01:28.761 --> 00:01:32.810
+E o modelo só entra onde precisa de julgamento de verdade:
+
+00:01:32.810 --> 00:01:34.904
+pesar os resultados e decidir.
+
+00:01:35.554 --> 00:01:37.054
+Como reconhecer?
+
+00:01:37.354 --> 00:01:39.815
+Você consegue desenhar o fluxograma da tarefa,
+
+00:01:39.815 --> 00:01:40.939
+e ele é sempre igual.
+
+00:01:41.589 --> 00:01:44.457
+O prompt do agente lista os passos em ordem.
+
+00:01:44.757 --> 00:01:46.524
+Primeiro faça isto, depois aquilo.
+
+00:01:46.824 --> 00:01:50.606
+Se você está escrevendo a ordem no prompt, você já sabe a ordem.
+
+00:01:51.256 --> 00:01:53.494
+Os traces mostram ordens diferentes,
+
+00:01:53.494 --> 00:01:56.788
+passos pulados ou repetidos, para entradas parecidas.
+
+00:01:57.438 --> 00:02:01.124
+O número de turnos varia muito, sem motivo de negócio.
+
+00:02:01.774 --> 00:02:04.407
+E quando dá errado, a explicação é:
+
+00:02:04.407 --> 00:02:06.890
+o agente achou que não precisava.
+
+00:02:08.090 --> 00:02:09.893
+Agente virou o padrão.
+
+00:02:10.193 --> 00:02:12.834
+Frameworks e tutoriais começam com agente,
+
+00:02:12.834 --> 00:02:16.292
+e ele parece mais moderno que uma sequência de funções.
+
+00:02:16.942 --> 00:02:18.554
+A demo convence.
+
+00:02:18.854 --> 00:02:22.448
+Em dez testes, o agente fez tudo na ordem certa.
+
+00:02:22.748 --> 00:02:25.672
+A variação aparece nas milhares de execuções.
+
+00:02:26.322 --> 00:02:28.339
+Flexibilidade para o futuro.
+
+00:02:28.639 --> 00:02:30.859
+E se um dia a gente quiser pular a checagem
+
+00:02:30.859 --> 00:02:32.459
+de preço em algumas categorias?
+
+00:02:32.759 --> 00:02:35.345
+Flexibilidade que talvez seja útil
+
+00:02:35.345 --> 00:02:38.159
+um dia custa confiabilidade todo dia.
+
+00:02:38.809 --> 00:02:41.053
+E juntar tudo parece mais simples.
+
+00:02:41.353 --> 00:02:44.312
+Um prompt e quatro ferramentas parecem menos
+
+00:02:44.312 --> 00:02:46.800
+código que quatro funções encadeadas.
+
+00:02:47.100 --> 00:02:48.576
+O código some.
+
+00:02:48.876 --> 00:02:52.318
+A complexidade fica, escondida no comportamento do modelo.
+
+00:02:53.518 --> 00:02:55.868
+O custo começa na confiabilidade.
+
+00:02:56.168 --> 00:02:59.943
+Passos obrigatórios viram opcionais.
+
+00:03:00.243 --> 00:03:02.981
+Em moderação, compliance ou finanças,
+
+00:03:02.981 --> 00:03:05.275
+um passo pulado é um incidente.
+
+00:03:05.925 --> 00:03:08.201
+E taxa pequena vira volume de verdade.
+
+00:03:08.501 --> 00:03:12.597
+Digamos que o marketplace modera cinquenta mil anúncios por dia.
+
+00:03:12.897 --> 00:03:16.768
+Se o agente pula a imagem em só 0, 1% das execuções,
+
+00:03:16.768 --> 00:03:19.821
+são cinquenta anúncios por dia publicados
+
+00:03:19.821 --> 00:03:21.682
+sem ninguém olhar a foto.
+
+00:03:22.332 --> 00:03:24.854
+Em um mês, mil e quinhentos.
+
+00:03:25.154 --> 00:03:27.540
+Uma taxa que parece ótima no eval vira
+
+00:03:27.540 --> 00:03:29.425
+volume de verdade em produção.
+
+00:03:30.075 --> 00:03:30.932
+Depois, dinheiro.
+
+00:03:31.232 --> 00:03:35.186
+Cada turno do agente reenvia o contexto inteiro e paga mais
+
+00:03:35.186 --> 00:03:38.672
+uma chamada para decidir algo que o código já sabia.
+
+00:03:38.972 --> 00:03:40.305
+Naquele trace perfeito,
+
+00:03:40.305 --> 00:03:42.970
+três das quatro chamadas ao modelo só serviram
+
+00:03:42.970 --> 00:03:44.999
+para escolher a próxima ferramenta.
+
+00:03:45.649 --> 00:03:46.595
+Depois, latência.
+
+00:03:46.895 --> 00:03:49.500
+As checagens rodam uma depois da outra,
+
+00:03:49.500 --> 00:03:51.371
+esperando o modelo escolher.
+
+00:03:51.671 --> 00:03:53.300
+Elas poderiam rodar ao mesmo tempo.
+
+00:03:53.950 --> 00:03:55.013
+E teste.
+
+00:03:55.313 --> 00:03:57.824
+Um fluxo fixo é fácil de testar.
+
+00:03:58.124 --> 00:04:01.139
+Um agente precisa de um eval estatístico só
+
+00:04:01.139 --> 00:04:04.014
+para provar que sempre faz a mesma coisa.
+
+00:04:05.214 --> 00:04:06.637
+Uma pergunta para você.
+
+00:04:06.937 --> 00:04:10.215
+Para garantir a checagem de imagem, o time escreveu,
+
+00:04:10.215 --> 00:04:12.673
+em maiúsculas: sempre rode check image.
+
+00:04:12.973 --> 00:04:16.617
+A taxa de pulo caiu de 2% para 0, 3%.
+
+00:04:16.917 --> 00:04:18.274
+O problema está resolvido?
+
+00:04:21.324 --> 00:04:22.067
+Não.
+
+00:04:22.367 --> 00:04:24.649
+A garantia continua estatística.
+
+00:04:24.949 --> 00:04:28.459
+Enquanto o modelo decide, o passo pode ser pulado.
+
+00:04:28.759 --> 00:04:31.571
+Com cinquenta mil anúncios por dia, 0,
+
+00:04:31.571 --> 00:04:35.788
+3% são cento e cinquenta anúncios sem checagem de imagem.
+
+00:04:36.438 --> 00:04:39.160
+E um modelo melhor também não leva a zero.
+
+00:04:39.460 --> 00:04:42.865
+Ele baixa a taxa de novo, mas o problema é o desenho,
+
+00:04:42.865 --> 00:04:44.600
+não a capacidade do modelo.
+
+00:04:44.900 --> 00:04:46.944
+Passo obrigatório precisa ser código.
+
+00:04:47.244 --> 00:04:49.839
+Aí a taxa é zero, por construção.
+
+00:04:50.139 --> 00:04:53.160
+Prompt mais alto também empurra para outro smell,
+
+00:04:53.160 --> 00:04:54.146
+o rule stacking,
+
+00:04:54.146 --> 00:04:57.721
+em que regras em maiúsculas se acumulam e brigam entre si.
+
+00:04:58.921 --> 00:05:03.271
+O tratamento é uma refatoração chamada replace agent with chain.
+
+00:05:03.571 --> 00:05:07.302
+E a versão em chain do moderador cabe em poucas linhas.
+
+00:05:07.952 --> 00:05:10.661
+As três checagens não dependem uma da outra,
+
+00:05:10.661 --> 00:05:13.308
+então o código roda as três ao mesmo tempo.
+
+00:05:13.958 --> 00:05:17.726
+Depois o modelo é chamado uma vez, com os três resultados,
+
+00:05:17.726 --> 00:05:19.090
+para pesar e decidir.
+
+00:05:19.740 --> 00:05:23.674
+Agora, pular a imagem exige apagar uma linha de código,
+
+00:05:23.674 --> 00:05:25.105
+com revisão e teste.
+
+00:05:25.405 --> 00:05:27.517
+O modelo fica onde agrega valor.
+
+00:05:27.817 --> 00:05:30.238
+E a latência vira a da checagem mais lenta,
+
+00:05:30.238 --> 00:05:33.728
+mais uma chamada ao modelo, em vez de quatro chamadas em fila.
+
+00:05:34.378 --> 00:05:37.218
+Aí o time descobre que anúncio de veículo
+
+00:05:37.218 --> 00:05:39.365
+precisa de uma quarta checagem,
+
+00:05:39.365 --> 00:05:40.889
+no documento do carro.
+
+00:05:41.189 --> 00:05:43.210
+As outras categorias continuam com três.
+
+00:05:43.510 --> 00:05:46.663
+Você deveria voltar para o agente, já que o caminho agora varia?
+
+00:05:47.313 --> 00:05:48.056
+Não.
+
+00:05:48.356 --> 00:05:49.109
+O caminho varia,
+
+00:05:49.109 --> 00:05:51.508
+mas de um jeito que você conhece antes da execução.
+
+00:05:51.808 --> 00:05:56.933
+Isso é um if na categoria, ou uma rota separada para veículos.
+
+00:05:57.233 --> 00:05:58.928
+Ramo conhecido é roteamento.
+
+00:05:59.228 --> 00:06:02.857
+E cada ramo continua sendo uma chain, com todo passo garantido.
+
+00:06:03.157 --> 00:06:07.255
+Escrever isso no prompt só traria o mesmo smell de volta,
+
+00:06:07.255 --> 00:06:08.334
+agora num ramo.
+
+00:06:09.534 --> 00:06:12.191
+Esse smell não é uma regra contra agentes.
+
+00:06:12.491 --> 00:06:15.683
+Quando o caminho realmente depende do que você descobre,
+
+00:06:15.683 --> 00:06:17.278
+agente é a ferramenta certa.
+
+00:06:17.578 --> 00:06:20.748
+Um agente de suporte recebe: o sistema está lento.
+
+00:06:21.048 --> 00:06:25.922
+Pelo que encontra, ele decide se olha logs, métricas,
+
+00:06:25.922 --> 00:06:28.497
+deploys recentes ou o banco.
+
+00:06:28.797 --> 00:06:29.984
+Isso não é esse smell.
+
+00:06:30.284 --> 00:06:34.238
+É investigação aberta, o caso clássico de agente.
+
+00:06:34.538 --> 00:06:36.260
+O que ele precisa é de orçamento
+
+00:06:36.260 --> 00:06:37.981
+de passos e condições de parada.
+
+00:06:38.631 --> 00:06:41.174
+Um agente também pode ser um bom protótipo,
+
+00:06:41.174 --> 00:06:43.834
+para descobrir quais passos a tarefa precisa.
+
+00:06:44.134 --> 00:06:46.225
+Quando os traces começarem a se repetir,
+
+00:06:46.225 --> 00:06:47.845
+transforme o caminho em código.
+
+00:06:48.495 --> 00:06:51.761
+E se pular um passo é mesmo aceitável, e barato,
+
+00:06:51.761 --> 00:06:54.074
+a flexibilidade pode valer a pena.
+
+00:06:54.724 --> 00:06:57.006
+Um último caso.
+
+00:06:57.306 --> 00:07:00.813
+Um agente de relatórios sempre chama as mesmas três ferramentas,
+
+00:07:00.813 --> 00:07:04.210
+na mesma ordem, e nunca pulou nenhuma em seis meses de traces.
+
+00:07:04.510 --> 00:07:06.450
+Ainda vale refatorar?
+
+00:07:06.750 --> 00:07:08.556
+Vale, mas sem pressa.
+
+00:07:08.856 --> 00:07:11.104
+O comportamento dele já é uma chain.
+
+00:07:11.404 --> 00:07:14.266
+Transformar em código corta custo e latência,
+
+00:07:14.266 --> 00:07:18.146
+e troca uma garantia estatística por uma garantia de verdade.
+
+00:07:18.446 --> 00:07:21.037
+Faça junto com a próxima mudança nesse fluxo.
+
+00:07:22.237 --> 00:07:24.222
+Então, a ideia para levar.
+
+00:07:24.522 --> 00:07:26.975
+Se você consegue escrever os passos no prompt,
+
+00:07:26.975 --> 00:07:28.469
+consegue escrever no código.
+
+00:07:28.769 --> 00:07:32.368
+E no código, um passo obrigatório roda sempre.
+
+00:07:32.668 --> 00:07:36.046
+Deixe o julgamento para o modelo, e a ordem para o seu código.
+
+00:07:36.696 --> 00:07:37.639
+Na próxima aula,
+
+00:07:37.639 --> 00:07:41.236
+a gente fecha esta trilha com um sistema real que junta tudo:
+
+00:07:41.236 --> 00:07:44.360
+um bot de atendimento com escalonamento para humanos.
+
+00:07:44.660 --> 00:07:45.490
+Até lá.

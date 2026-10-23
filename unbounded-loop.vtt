@@ -1,0 +1,412 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.964
+A browser agent downloads bills from a supplier's portal.
+
+00:00:05.264 --> 00:00:09.733
+Every night it logs in, walks through the pages, and saves each invoice.
+
+00:00:10.383 --> 00:00:13.410
+One night, the portal changed its next page button.
+
+00:00:13.710 --> 00:00:16.960
+It was still on the screen, but it didn't load anything.
+
+00:00:17.610 --> 00:00:19.316
+Here's the next morning's trace.
+
+00:00:19.616 --> 00:00:21.947
+Step four hundred twelve, click next page.
+
+00:00:22.247 --> 00:00:22.835
+Okay.
+
+00:00:23.135 --> 00:00:24.328
+Read the page.
+
+00:00:24.628 --> 00:00:28.391
+Invoices one to twenty, of three hundred forty.
+
+00:00:28.691 --> 00:00:29.431
+Click again.
+
+00:00:29.731 --> 00:00:30.318
+Okay.
+
+00:00:30.618 --> 00:00:31.595
+Read again.
+
+00:00:31.895 --> 00:00:33.655
+Invoices one to twenty.
+
+00:00:34.305 --> 00:00:37.656
+All the way to step two thousand three hundred eighteen.
+
+00:00:38.306 --> 00:00:40.871
+Nobody wrote a bug into that loop.
+
+00:00:41.171 --> 00:00:44.801
+It simply had no end, other than when the model thinks it's done.
+
+00:00:45.101 --> 00:00:46.915
+And the model never thought so.
+
+00:00:47.215 --> 00:00:52.013
+In this lesson, you'll learn to spot this smell before the bill does, and what a
+
+00:00:52.013 --> 00:00:53.212
+real end looks like.
+
+00:00:54.412 --> 00:00:56.548
+Look at two details in that trace.
+
+00:00:57.198 --> 00:01:00.932
+The click answers okay, even when nothing changes.
+
+00:01:01.582 --> 00:01:05.802
+And reading the page always shows the same first twenty invoices.
+
+00:01:06.102 --> 00:01:09.417
+The evidence that the agent was stuck was right there.
+
+00:01:09.717 --> 00:01:11.519
+But no code was looking at it.
+
+00:01:12.169 --> 00:01:13.753
+Here's the shape of the smell.
+
+00:01:14.053 --> 00:01:17.318
+The model requests an action that looks sensible.
+
+00:01:17.968 --> 00:01:22.316
+The tool responds without an error, even with no real progress.
+
+00:01:22.966 --> 00:01:27.110
+Every turn resends the whole history, which grows with each step.
+
+00:01:27.760 --> 00:01:31.362
+The loop's only exit is the model deciding to stop.
+
+00:01:32.012 --> 00:01:36.929
+And when it doesn't decide, the provider's invoice is what stops the run.
+
+00:01:37.579 --> 00:01:38.708
+How do you spot it?
+
+00:01:39.008 --> 00:01:44.317
+The agent's code says while true, or while not done, with no step counter.
+
+00:01:44.967 --> 00:01:48.022
+There's no time, token or money limit per run.
+
+00:01:48.672 --> 00:01:53.332
+Nobody can say what happens if the model never gives a final answer.
+
+00:01:53.632 --> 00:01:58.188
+And the month's most expensive run cost dozens of times the median.
+
+00:01:58.838 --> 00:02:03.769
+The trace shows the same tool, with the same arguments, several times in a row.
+
+00:02:04.419 --> 00:02:07.628
+And the only alarm that goes off is the credit card's.
+
+00:02:08.828 --> 00:02:10.615
+The prototype was born this way.
+
+00:02:10.915 --> 00:02:15.557
+The simplest agent examples use while true, and the loop shipped unchanged.
+
+00:02:16.207 --> 00:02:17.977
+It works in testing.
+
+00:02:18.277 --> 00:02:22.041
+On demo tasks, the model finishes in five steps.
+
+00:02:22.341 --> 00:02:25.524
+Nobody tested the portal with a broken button.
+
+00:02:26.174 --> 00:02:28.208
+Tools that lie by omission.
+
+00:02:28.508 --> 00:02:33.125
+Okay, as the result of a click, doesn't say whether anything changed.
+
+00:02:33.425 --> 00:02:36.600
+The model has no way to notice it's stuck.
+
+00:02:37.250 --> 00:02:39.206
+And the provider looks like a cap.
+
+00:02:39.506 --> 00:02:43.567
+People assume the context window will eventually stop the agent.
+
+00:02:43.867 --> 00:02:47.274
+But many frameworks trim old history to make it fit.
+
+00:02:47.574 --> 00:02:49.397
+And then the loop runs forever.
+
+00:02:50.597 --> 00:02:53.506
+Now the cost, with illustrative numbers.
+
+00:02:53.806 --> 00:02:58.495
+Say the system prompt and the tool descriptions are three thousand tokens, and each
+
+00:02:58.495 --> 00:03:00.133
+turn adds about four hundred.
+
+00:03:00.433 --> 00:03:05.309
+A normal run of ten turns sends about fifty-two thousand tokens in total.
+
+00:03:05.609 --> 00:03:10.511
+A stuck run of two hundred turns sends about eight point six million.
+
+00:03:11.161 --> 00:03:16.665
+Twenty times more turns, and over one hundred sixty times more tokens.
+
+00:03:16.965 --> 00:03:21.732
+Cost grows with the square of the step count, because every turn pays again for
+
+00:03:21.732 --> 00:03:22.999
+everything before it.
+
+00:03:23.299 --> 00:03:27.653
+A single stuck run can cost more than a whole day of normal use.
+
+00:03:28.303 --> 00:03:30.110
+And money is the smaller part.
+
+00:03:30.410 --> 00:03:35.761
+The loop eats the account's request quota, and takes down other runs sharing the
+
+00:03:35.761 --> 00:03:36.364
+same key.
+
+00:03:37.014 --> 00:03:42.878
+If the stuck tool has a side effect, like sending, creating or paying, every turn
+
+00:03:42.878 --> 00:03:43.674
+repeats it.
+
+00:03:44.324 --> 00:03:48.388
+And a trace with thousands of steps is close to unreadable.
+
+00:03:49.588 --> 00:03:50.940
+Here's one for you.
+
+00:03:51.240 --> 00:03:53.448
+An agent runs in while true.
+
+00:03:53.748 --> 00:03:58.692
+But its tool has a rate limit of ten calls per minute, so it never spends much per
+
+00:03:58.692 --> 00:03:59.114
+minute.
+
+00:03:59.414 --> 00:04:01.428
+Is this an unbounded loop?
+
+00:04:04.478 --> 00:04:05.048
+Yes.
+
+00:04:05.348 --> 00:04:08.425
+A rate limit controls speed, not the total.
+
+00:04:08.725 --> 00:04:13.528
+A loop stuck at ten calls a minute still makes over fourteen thousand calls a day.
+
+00:04:13.828 --> 00:04:16.185
+It only spreads the cost over time.
+
+00:04:16.485 --> 00:04:19.772
+And the context window isn't a reliable brake either.
+
+00:04:20.072 --> 00:04:24.876
+Many frameworks drop old messages to fit, and the loop keeps paying for a full
+
+00:04:24.876 --> 00:04:26.231
+window, on every turn.
+
+00:04:27.431 --> 00:04:31.061
+The treatment is a refactoring called add loop budget.
+
+00:04:31.361 --> 00:04:33.558
+And the budget has four parts.
+
+00:04:33.858 --> 00:04:36.144
+The last one is the one people forget.
+
+00:04:36.794 --> 00:04:37.992
+A step cap.
+
+00:04:38.292 --> 00:04:39.684
+Pick it from your traces.
+
+00:04:39.984 --> 00:04:44.979
+If ninety-nine percent of runs finish within fifteen steps, a cap of forty leaves
+
+00:04:44.979 --> 00:04:47.261
+room, without allowing a whole night.
+
+00:04:47.911 --> 00:04:49.735
+Time and cost caps.
+
+00:04:50.035 --> 00:04:52.345
+Steps can be cheap or expensive.
+
+00:04:52.645 --> 00:04:58.149
+A money limit per run catches the case where a few steps send huge contexts.
+
+00:04:58.799 --> 00:05:00.309
+A repetition detector.
+
+00:05:00.609 --> 00:05:06.269
+The same tool, with the same arguments, three times in a row, means the agent is
+
+00:05:06.269 --> 00:05:06.693
+stuck.
+
+00:05:06.993 --> 00:05:08.315
+Stop before the cap.
+
+00:05:08.965 --> 00:05:10.899
+And behavior at the cap.
+
+00:05:11.199 --> 00:05:15.769
+Return what was done, explain where it stopped, and record the case.
+
+00:05:16.069 --> 00:05:20.960
+An agent that stops with a silent exception, and makes the task disappear, still
+
+00:05:20.960 --> 00:05:22.855
+leaves the user with no answer.
+
+00:05:23.155 --> 00:05:26.267
+The cap exists, but the treatment isn't finished.
+
+00:05:26.917 --> 00:05:32.009
+Most agent frameworks already give you the first piece, as a maximum number of
+
+00:05:32.009 --> 00:05:33.837
+turns, or a recursion limit.
+
+00:05:34.137 --> 00:05:35.336
+You write the rest.
+
+00:05:35.636 --> 00:05:38.832
+And along with the budget, review your tools.
+
+00:05:39.132 --> 00:05:44.975
+A result that says what changed, like page two of seventeen loaded, helps the model
+
+00:05:44.975 --> 00:05:46.595
+notice when it's stuck.
+
+00:05:46.895 --> 00:05:51.519
+The pattern you're heading for is called stop conditions, and it's two lessons
+
+00:05:51.519 --> 00:05:51.875
+ahead.
+
+00:05:52.525 --> 00:05:57.317
+And a week after you set the cap, say two percent of runs end there.
+
+00:05:57.617 --> 00:05:59.824
+Don't raise the cap to four hundred.
+
+00:06:00.124 --> 00:06:05.739
+Without reading the traces, you'd only let stuck runs spend ten times more before
+
+00:06:05.739 --> 00:06:06.363
+stopping.
+
+00:06:06.663 --> 00:06:08.359
+And don't ignore them either.
+
+00:06:08.659 --> 00:06:14.468
+Read those traces, find the cause, like a vague tool result or a page that changed,
+
+00:06:14.468 --> 00:06:16.988
+and turn each one into an eval case.
+
+00:06:17.288 --> 00:06:19.982
+They're the best source of hard cases you have.
+
+00:06:21.182 --> 00:06:23.071
+Two cases to sharpen the eye.
+
+00:06:23.371 --> 00:06:28.485
+A job walks three hundred invoices, calling the model once per invoice, with no step
+
+00:06:28.485 --> 00:06:28.972
+counter.
+
+00:06:29.272 --> 00:06:30.439
+Is that this smell?
+
+00:06:30.739 --> 00:06:31.139
+No.
+
+00:06:31.439 --> 00:06:35.919
+The list is finite, and the code decides the next turn, not the model.
+
+00:06:36.219 --> 00:06:39.192
+The loop ends at invoice three hundred, either way.
+
+00:06:39.842 --> 00:06:45.011
+And an agent with a thirty step limit, where each step can spawn subagents, which
+
+00:06:45.011 --> 00:06:48.393
+also have thirty steps, and can also spawn subagents.
+
+00:06:48.693 --> 00:06:50.049
+Each level has a cap.
+
+00:06:50.349 --> 00:06:52.179
+The total doesn't.
+
+00:06:52.479 --> 00:06:55.201
+That's a related smell, subagent recursion.
+
+00:06:55.501 --> 00:06:58.977
+The budget has to cover the whole tree, not each node.
+
+00:07:00.177 --> 00:07:01.521
+When can you relax?
+
+00:07:01.821 --> 00:07:07.310
+A coding assistant in your terminal, with you watching and able to interrupt at any
+
+00:07:07.310 --> 00:07:09.095
+time, tolerates a high cap.
+
+00:07:09.395 --> 00:07:10.444
+Set one anyway.
+
+00:07:10.744 --> 00:07:15.799
+And no production agent, running without a person watching, should ever run without
+
+00:07:15.799 --> 00:07:16.164
+a cap.
+
+00:07:17.364 --> 00:07:19.620
+So here's the idea to take with you.
+
+00:07:19.920 --> 00:07:23.691
+The model can say it's done, but it can't be the only brake.
+
+00:07:23.991 --> 00:07:29.566
+Steps, time and money belong to your code, along with a repetition check and a clear
+
+00:07:29.566 --> 00:07:31.358
+answer when the cap is hit.
+
+00:07:31.658 --> 00:07:35.295
+Then the most expensive run of the month is a number you chose.
+
+00:07:35.945 --> 00:07:40.679
+In the next lesson, we'll build that budget step by step: add loop budget.
+
+00:07:40.979 --> 00:07:41.733
+See you there.

@@ -1,0 +1,663 @@
+1
+00:00:01,600 --> 00:00:04,587
+O time de marketing tem um agente que transforma
+
+2
+00:00:04,587 --> 00:00:06,516
+um briefing num post publicado.
+
+3
+00:00:06,816 --> 00:00:09,775
+Ele pesquisa o assunto, escreve o rascunho,
+
+4
+00:00:09,775 --> 00:00:13,078
+revisa contra o guia da marca e publica no blog.
+
+5
+00:00:13,378 --> 00:00:14,573
+Tudo no mesmo loop,
+
+6
+00:00:14,573 --> 00:00:17,404
+com o mesmo contexto e as mesmas ferramentas.
+
+7
+00:00:18,054 --> 00:00:21,456
+Aqui está a configuração dele.
+
+8
+00:00:21,756 --> 00:00:23,564
+Você é o agente de conteúdo.
+
+9
+00:00:23,864 --> 00:00:26,225
+Pesquise, escreva, revise com rigor,
+
+10
+00:00:26,225 --> 00:00:28,783
+e só publique quando estiver excelente.
+
+11
+00:00:29,433 --> 00:00:30,409
+E as ferramentas.
+
+12
+00:00:30,709 --> 00:00:34,393
+Buscar na web, abrir página, ler o guia da marca,
+
+13
+00:00:34,393 --> 00:00:37,702
+escrever e editar o rascunho, checar plágio.
+
+14
+00:00:38,002 --> 00:00:41,249
+E também publicar o post, postar nas redes,
+
+15
+00:00:41,249 --> 00:00:44,118
+atualizar o CRM e mandar a newsletter.
+
+16
+00:00:44,768 --> 00:00:45,476
+Numa sexta,
+
+17
+00:00:45,476 --> 00:00:49,336
+o agente publicou um rascunho com números de um concorrente,
+
+18
+00:00:49,336 --> 00:00:52,360
+copiados de uma página que ele leu na pesquisa.
+
+19
+00:00:52,660 --> 00:00:54,655
+A etapa de revisão estava no prompt.
+
+20
+00:00:54,955 --> 00:00:56,469
+Mas era o mesmo modelo,
+
+21
+00:00:56,469 --> 00:00:59,432
+com o mesmo contexto cheio de páginas da web,
+
+22
+00:00:59,432 --> 00:01:01,144
+revisando o próprio texto,
+
+23
+00:01:01,144 --> 00:01:04,304
+com a ferramenta de publicar à mão o tempo todo.
+
+24
+00:01:04,604 --> 00:01:07,913
+Nesta aula, você vai aprender a enxergar esse smell,
+
+25
+00:01:07,913 --> 00:01:09,250
+e onde fazer o corte.
+
+26
+00:01:10,450 --> 00:01:11,271
+O formato é este.
+
+27
+00:01:11,571 --> 00:01:13,633
+A tarefa inteira vai para um agente só.
+
+28
+00:01:14,283 --> 00:01:16,018
+Ele tem todas as ferramentas,
+
+29
+00:01:16,018 --> 00:01:18,889
+e um prompt que tenta descrever todos os papéis.
+
+30
+00:01:19,539 --> 00:01:22,812
+Conteúdo não confiável da pesquisa entra
+
+31
+00:01:22,812 --> 00:01:26,495
+no mesmo contexto que vai decidir se publica.
+
+32
+00:01:27,145 --> 00:01:31,692
+Quem revisa é quem escreveu, olhando o mesmo material.
+
+33
+00:01:32,342 --> 00:01:34,305
+E a ferramenta com efeito colateral está
+
+34
+00:01:34,305 --> 00:01:35,974
+disponível desde o primeiro passo.
+
+35
+00:01:36,624 --> 00:01:37,723
+Como identificar?
+
+36
+00:01:38,023 --> 00:01:40,572
+Um agente só cuida de etapas de natureza diferente.
+
+37
+00:01:40,872 --> 00:01:46,097
+Pesquisa, produção, revisão e execução, tudo misturado.
+
+38
+00:01:46,747 --> 00:01:49,586
+Toda ferramenta, de leitura e de efeito colateral,
+
+39
+00:01:49,586 --> 00:01:51,290
+está disponível em todo passo.
+
+40
+00:01:51,940 --> 00:01:54,883
+O prompt de sistema descreve vários papéis.
+
+41
+00:01:55,183 --> 00:01:58,230
+Você é pesquisador, redator e revisor.
+
+42
+00:01:58,880 --> 00:02:03,161
+A revisão acontece no mesmo contexto que produziu o trabalho.
+
+43
+00:02:03,461 --> 00:02:04,747
+E no fim da tarefa,
+
+44
+00:02:04,747 --> 00:02:08,810
+esse contexto ainda carrega todo o material bruto do começo.
+
+45
+00:02:09,460 --> 00:02:14,474
+E um problema numa etapa obriga a mudar o prompt de todas.
+
+46
+00:02:15,674 --> 00:02:16,723
+Começa pequeno.
+
+47
+00:02:17,023 --> 00:02:19,066
+O agente só escrevia rascunhos.
+
+48
+00:02:19,366 --> 00:02:21,501
+Publicar era só mais uma ferramenta.
+
+49
+00:02:22,151 --> 00:02:23,681
+Um agente só parece mais simples.
+
+50
+00:02:23,981 --> 00:02:26,408
+Um prompt, um loop, um deploy.
+
+51
+00:02:26,708 --> 00:02:29,317
+Dividir parece complexidade à toa.
+
+52
+00:02:29,967 --> 00:02:31,782
+Modelos bons dão conta na demo.
+
+53
+00:02:32,082 --> 00:02:34,770
+Em tarefas curtas, o agente único funciona bem.
+
+54
+00:02:35,070 --> 00:02:38,386
+O problema só aparece em escala, ou nos casos estranhos.
+
+55
+00:02:39,036 --> 00:02:41,013
+E ninguém desenha as fronteiras.
+
+56
+00:02:41,313 --> 00:02:44,595
+Sem alguém perguntar quais etapas existem de verdade,
+
+57
+00:02:44,595 --> 00:02:45,647
+elas se misturam.
+
+58
+00:02:46,847 --> 00:02:48,649
+O primeiro custo é qualidade.
+
+59
+00:02:48,949 --> 00:02:51,426
+Revisão no mesmo contexto tende a concordar
+
+60
+00:02:51,426 --> 00:02:52,809
+com o que foi produzido.
+
+61
+00:02:53,109 --> 00:02:55,230
+O modelo relê o próprio raciocínio,
+
+62
+00:02:55,230 --> 00:02:57,169
+não o resultado com olhos novos.
+
+63
+00:02:57,819 --> 00:02:59,170
+Depois, segurança.
+
+64
+00:02:59,470 --> 00:03:02,781
+Conteúdo não confiável lido na pesquisa fica no mesmo
+
+65
+00:03:02,781 --> 00:03:05,841
+contexto que as ferramentas com efeito colateral.
+
+66
+00:03:06,141 --> 00:03:09,220
+Essa é a receita do ataque em que instruções
+
+67
+00:03:09,220 --> 00:03:12,508
+se escondem dentro das páginas que o agente lê.
+
+68
+00:03:12,808 --> 00:03:15,680
+Um mega agente que pesquisa e publica
+
+69
+00:03:15,680 --> 00:03:18,474
+no mesmo contexto é o alvo clássico.
+
+70
+00:03:19,124 --> 00:03:20,301
+Depois, contexto.
+
+71
+00:03:20,601 --> 00:03:23,389
+O fim da tarefa carrega a bagunça do começo.
+
+72
+00:03:23,689 --> 00:03:24,925
+Isso é context rot.
+
+73
+00:03:25,575 --> 00:03:26,521
+E manutenção.
+
+74
+00:03:26,821 --> 00:03:29,601
+Mudar o jeito de revisar exige editar
+
+75
+00:03:29,601 --> 00:03:32,532
+o prompt que também pesquisa e escreve.
+
+76
+00:03:32,832 --> 00:03:34,903
+E cada mudança afeta tudo.
+
+77
+00:03:35,553 --> 00:03:38,373
+Imagine o mesmo padrão numa loja online.
+
+78
+00:03:38,673 --> 00:03:42,015
+Um agente que responde dúvidas de entrega,
+
+79
+00:03:42,015 --> 00:03:44,562
+consulta o pedido e faz estorno.
+
+80
+00:03:44,862 --> 00:03:47,287
+Um simples cadê meu pacote ainda tem
+
+81
+00:03:47,287 --> 00:03:49,509
+a ferramenta de estorno na lista.
+
+82
+00:03:49,809 --> 00:03:53,657
+Um texto na descrição de um produto, ou um usuário criativo,
+
+83
+00:03:53,657 --> 00:03:56,287
+empurra o modelo para o efeito colateral.
+
+84
+00:03:57,487 --> 00:03:58,730
+Uma pergunta para você.
+
+85
+00:03:59,030 --> 00:04:02,211
+O agente de conteúdo pesquisa, escreve e publica.
+
+86
+00:04:02,511 --> 00:04:04,583
+Você pode fazer uma mudança esta semana.
+
+87
+00:04:04,883 --> 00:04:07,052
+Qual corte reduz mais o risco?
+
+88
+00:04:10,102 --> 00:04:12,754
+Tirar a ferramenta de publicar do loop do modelo,
+
+89
+00:04:12,754 --> 00:04:15,297
+e publicar numa etapa de código, com aprovação.
+
+90
+00:04:15,597 --> 00:04:18,447
+Uma ferramenta com efeito colateral disponível durante
+
+91
+00:04:18,447 --> 00:04:20,822
+a pesquisa é o risco que já quebrou na sexta.
+
+92
+00:04:21,122 --> 00:04:23,843
+Isolar o efeito é o menor corte.
+
+93
+00:04:24,143 --> 00:04:27,276
+Pesquisa e redação podem esperar a próxima fatia.
+
+94
+00:04:27,926 --> 00:04:31,555
+Acrescentar um segundo papel só para revisar com rigor,
+
+95
+00:04:31,555 --> 00:04:35,646
+no mesmo contexto e com as mesmas ferramentas, não isola nada.
+
+96
+00:04:35,946 --> 00:04:37,729
+O revisor continua vendo as páginas,
+
+97
+00:04:37,729 --> 00:04:39,117
+e continua podendo publicar.
+
+98
+00:04:39,417 --> 00:04:42,523
+E mandar o agente esquecer as páginas depois
+
+99
+00:04:42,523 --> 00:04:44,641
+do rascunho não tira um token,
+
+100
+00:04:44,641 --> 00:04:45,983
+nem uma ferramenta.
+
+101
+00:04:47,183 --> 00:04:49,208
+São duas refatorações.
+
+102
+00:04:49,508 --> 00:04:50,604
+Extract subagent,
+
+103
+00:04:50,604 --> 00:04:54,345
+quando existem etapas com ferramentas e contexto próprios,
+
+104
+00:04:54,345 --> 00:04:55,893
+como pesquisa e revisão.
+
+105
+00:04:56,193 --> 00:04:59,969
+Cada uma vira um subagente que devolve só o resultado.
+
+106
+00:05:00,269 --> 00:05:01,366
+E introduce router,
+
+107
+00:05:01,366 --> 00:05:04,253
+quando o agente atende tipos diferentes de pedido,
+
+108
+00:05:04,253 --> 00:05:06,851
+cada um precisando de ferramentas diferentes.
+
+109
+00:05:07,151 --> 00:05:10,887
+Muitas vezes, a etapa final, publicar, pagar ou enviar,
+
+110
+00:05:10,887 --> 00:05:12,381
+nem precisa de modelo.
+
+111
+00:05:12,681 --> 00:05:15,143
+Ela vira código, atrás de aprovação.
+
+112
+00:05:15,793 --> 00:05:19,040
+Aqui está o menor corte que já reduz o estrago.
+
+113
+00:05:19,340 --> 00:05:22,656
+A pesquisa lê a web num contexto isolado
+
+114
+00:05:22,656 --> 00:05:24,645
+e devolve fatos citados.
+
+115
+00:05:24,945 --> 00:05:26,293
+Não páginas cruas.
+
+116
+00:05:26,943 --> 00:05:30,786
+A redação recebe o briefing mais esses fatos, sem as páginas.
+
+117
+00:05:31,436 --> 00:05:33,715
+A revisão recebe o rascunho mais o guia da marca,
+
+118
+00:05:33,715 --> 00:05:35,296
+sem o raciocínio de quem escreveu.
+
+119
+00:05:35,946 --> 00:05:39,655
+E publicar é código, com uma pessoa no meio,
+
+120
+00:05:39,655 --> 00:05:41,425
+se o canal é público.
+
+121
+00:05:42,075 --> 00:05:43,473
+Mas não corrija demais.
+
+122
+00:05:43,773 --> 00:05:45,584
+O oposto também é smell.
+
+123
+00:05:45,884 --> 00:05:48,660
+Um pipeline de cinco agentes com cargo.
+
+124
+00:05:48,960 --> 00:05:53,677
+Pesquisador, analista, redator, revisor, editor.
+
+125
+00:05:53,977 --> 00:05:58,360
+Cada um pega o texto do anterior e devolve quase o mesmo texto.
+
+126
+00:05:58,660 --> 00:06:00,159
+Custa cinco vezes mais,
+
+127
+00:06:00,159 --> 00:06:03,290
+sem divisão real de ferramentas nem de contexto.
+
+128
+00:06:03,590 --> 00:06:07,756
+Esse smell tem nome próprio, decorative multi-agent.
+
+129
+00:06:08,056 --> 00:06:10,692
+Divida onde a natureza do trabalho muda,
+
+130
+00:06:10,692 --> 00:06:13,131
+não onde o organograma quer um cargo.
+
+131
+00:06:14,331 --> 00:06:16,137
+Três casos para afiar o olho.
+
+132
+00:06:16,437 --> 00:06:19,113
+Um agente de atendimento responde dúvidas,
+
+133
+00:06:19,113 --> 00:06:21,151
+consulta pedidos e faz estornos,
+
+134
+00:06:21,151 --> 00:06:23,891
+com um prompt e um conjunto de ferramentas.
+
+135
+00:06:24,191 --> 00:06:28,135
+Estornos acima de cem dólares vão para uma pessoa.
+
+136
+00:06:28,435 --> 00:06:29,945
+É mega agent?
+
+137
+00:06:30,245 --> 00:06:30,747
+É.
+
+138
+00:06:31,047 --> 00:06:32,946
+A aprovação cobre os valores altos,
+
+139
+00:06:32,946 --> 00:06:35,225
+mas o caminho de responder dúvida continua
+
+140
+00:06:35,225 --> 00:06:37,069
+com a ferramenta de estorno à mão.
+
+141
+00:06:37,369 --> 00:06:39,658
+Um roteador separaria os caminhos.
+
+142
+00:06:40,308 --> 00:06:42,277
+Um agente de pesquisa lê sessenta
+
+143
+00:06:42,277 --> 00:06:44,128
+páginas e escreve um relatório.
+
+144
+00:06:44,428 --> 00:06:45,947
+Sem efeito colateral nenhum.
+
+145
+00:06:46,247 --> 00:06:50,109
+Mas o relatório às vezes ignora fontes lidas no começo.
+
+146
+00:06:50,409 --> 00:06:53,872
+É uma versão mais branda, misturada com context rot.
+
+147
+00:06:54,172 --> 00:06:58,279
+Divida a leitura em subagentes que devolvem resumos citados.
+
+148
+00:06:58,929 --> 00:07:01,380
+E uma engenheira usando um assistente
+
+149
+00:07:01,380 --> 00:07:03,964
+no terminal para editar um repositório,
+
+150
+00:07:03,964 --> 00:07:06,084
+aprovando cada mudança proposta.
+
+151
+00:07:06,384 --> 00:07:08,970
+Ferramentas de leitura e escrita num agente só,
+
+152
+00:07:08,970 --> 00:07:10,291
+sob supervisão contínua.
+
+153
+00:07:10,591 --> 00:07:11,214
+Tudo bem.
+
+154
+00:07:11,514 --> 00:07:14,059
+O smell machuca quando o mesmo loop lê
+
+155
+00:07:14,059 --> 00:07:16,471
+a web e dispara um efeito colateral,
+
+156
+00:07:16,471 --> 00:07:17,811
+sem ninguém olhando.
+
+157
+00:07:19,011 --> 00:07:21,090
+Então, a ideia para levar.
+
+158
+00:07:21,390 --> 00:07:25,207
+Quando um agente pesquisa, escreve, revisa e age,
+
+159
+00:07:25,207 --> 00:07:27,777
+cada etapa herda todos os riscos.
+
+160
+00:07:28,077 --> 00:07:29,710
+Separe a leitura da ação,
+
+161
+00:07:29,710 --> 00:07:33,042
+dê olhos novos para a revisão e transforme o efeito
+
+162
+00:07:33,042 --> 00:07:35,655
+colateral final em código com aprovação.
+
+163
+00:07:35,955 --> 00:07:38,419
+Esse costuma ser o corte que mais importa.
+
+164
+00:07:39,069 --> 00:07:42,997
+Na próxima aula, a gente faz o corte principal passo a passo:
+
+165
+00:07:42,997 --> 00:07:44,091
+extract subagent.
+
+166
+00:07:44,391 --> 00:07:45,210
+Até lá.

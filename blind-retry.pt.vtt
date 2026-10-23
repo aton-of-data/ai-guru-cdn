@@ -1,0 +1,415 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:03.280
+São duas da manhã.
+
+00:00:03.580 --> 00:00:07.716
+Um assistente financeiro tenta agendar um Pix para um cliente.
+
+00:00:08.016 --> 00:00:09.140
+O banco diz não.
+
+00:00:09.790 --> 00:00:12.947
+O código pega o erro, espera um pouco e tenta de novo.
+
+00:00:13.247 --> 00:00:13.989
+E de novo.
+
+00:00:14.289 --> 00:00:18.413
+Quatro vezes, a mesma resposta: o limite noturno foi excedido.
+
+00:00:19.063 --> 00:00:22.151
+Na quinta tentativa, o limite tinha acabado de virar,
+
+00:00:22.151 --> 00:00:23.608
+e a transferência passou.
+
+00:00:23.908 --> 00:00:27.124
+Mas o cliente já tinha sido avisado da falha.
+
+00:00:27.424 --> 00:00:29.508
+Então pagou de novo, pelo app do banco.
+
+00:00:29.808 --> 00:00:31.091
+Pagou duas vezes.
+
+00:00:31.741 --> 00:00:33.169
+O retry funcionou.
+
+00:00:33.469 --> 00:00:34.938
+Esse é o problema.
+
+00:00:35.238 --> 00:00:35.901
+Nesta aula,
+
+00:00:35.901 --> 00:00:38.490
+você vai aprender a separar o erro que vale
+
+00:00:38.490 --> 00:00:40.658
+tentar de novo do erro que é um não,
+
+00:00:40.658 --> 00:00:43.850
+e por que essa diferença tem que morar no seu código.
+
+00:00:45.050 --> 00:00:46.067
+O formato é este.
+
+00:00:46.367 --> 00:00:47.651
+A chamada sai.
+
+00:00:48.301 --> 00:00:52.437
+Qualquer erro volta, e todo erro é tratado do mesmo jeito.
+
+00:00:53.087 --> 00:00:56.035
+A mesma chamada é repetida, com os mesmos argumentos,
+
+00:00:56.035 --> 00:00:58.093
+sem ninguém perguntar por que falhou.
+
+00:00:58.743 --> 00:01:03.056
+E quando finalmente passa, o efeito pode acontecer duas vezes,
+
+00:01:03.056 --> 00:01:04.308
+ou na hora errada.
+
+00:01:04.958 --> 00:01:07.746
+O limite noturno não é uma oscilação de rede.
+
+00:01:08.046 --> 00:01:10.840
+É uma regra de negócio que quer dizer: agora não.
+
+00:01:11.140 --> 00:01:14.380
+Insistir até o relógio virar transforma
+
+00:01:14.380 --> 00:01:17.537
+esse não num efeito que ninguém pediu.
+
+00:01:18.187 --> 00:01:20.424
+Esse smell se esconde em dois lugares.
+
+00:01:20.724 --> 00:01:24.647
+No código, é um tratamento que pega qualquer exceção e repete.
+
+00:01:25.297 --> 00:01:27.347
+Num agente, é o modelo.
+
+00:01:27.647 --> 00:01:31.322
+Ele lê a palavra erro e chama a mesma ferramenta de novo,
+
+00:01:31.322 --> 00:01:32.933
+com os mesmos argumentos.
+
+00:01:33.233 --> 00:01:38.309
+Nos dois casos, quem decidiu repetir nunca classificou o erro.
+
+00:01:39.509 --> 00:01:41.623
+Embrulhar uma chamada num loop de retry
+
+00:01:41.623 --> 00:01:44.117
+é a receita mais conhecida para rede instável.
+
+00:01:44.417 --> 00:01:45.716
+Parece proteção.
+
+00:01:46.016 --> 00:01:49.626
+E a receita vaza para erros que ela nunca deveria pegar:
+
+00:01:49.626 --> 00:01:52.398
+sem saldo, sem permissão, entrada inválida.
+
+00:01:53.048 --> 00:01:55.906
+O erro volta como texto, sem tipo.
+
+00:01:56.206 --> 00:01:58.123
+O seu código não distingue tente
+
+00:01:58.123 --> 00:02:00.281
+de novo de isso nunca vai funcionar.
+
+00:02:00.931 --> 00:02:02.792
+O agente aprende a insistir.
+
+00:02:03.092 --> 00:02:06.333
+Se a ferramenta só diz erro, ela parece quebrada,
+
+00:02:06.333 --> 00:02:08.053
+e o modelo faz o razoável.
+
+00:02:08.353 --> 00:02:09.395
+Tenta de novo.
+
+00:02:10.045 --> 00:02:12.646
+E ninguém pensou em idempotência.
+
+00:02:12.946 --> 00:02:16.206
+A ferramenta foi escrita como se toda chamada fosse única.
+
+00:02:16.506 --> 00:02:19.747
+Aí um timeout que aconteceu depois de o banco aceitar
+
+00:02:19.747 --> 00:02:22.621
+a transferência vira uma segunda transferência.
+
+00:02:23.821 --> 00:02:26.511
+O pior custo é o efeito duplicado.
+
+00:02:26.811 --> 00:02:29.312
+Dois pagamentos, dois emails, dois pedidos.
+
+00:02:29.612 --> 00:02:32.627
+Num pagamento, o estorno vira horas de suporte,
+
+00:02:32.627 --> 00:02:35.321
+e um cliente que deixa de confiar em você.
+
+00:02:35.971 --> 00:02:38.021
+Depois, o efeito na hora errada.
+
+00:02:38.321 --> 00:02:41.772
+Um retry que se recupera de um limite noturno agenda
+
+00:02:41.772 --> 00:02:45.223
+um pagamento que o usuário já considerava cancelado.
+
+00:02:45.873 --> 00:02:46.654
+Depois, desperdício.
+
+00:02:46.954 --> 00:02:49.683
+Imagine dez mil pedidos recusados por dia,
+
+00:02:49.683 --> 00:02:51.503
+cada um tentado cinco vezes.
+
+00:02:51.803 --> 00:02:55.068
+São quarenta mil chamadas a mais, todas inúteis.
+
+00:02:55.368 --> 00:02:58.900
+E martelar um serviço com problema pode te render um bloqueio,
+
+00:02:58.900 --> 00:03:00.211
+ou piorar a queda dele.
+
+00:03:00.861 --> 00:03:02.839
+E o diagnóstico fica confuso.
+
+00:03:03.139 --> 00:03:06.109
+O trace mostra cinco falhas e um sucesso,
+
+00:03:06.109 --> 00:03:10.094
+e ninguém lê a primeira mensagem, a que dizia o porquê.
+
+00:03:11.294 --> 00:03:12.680
+Uma pergunta para você.
+
+00:03:12.980 --> 00:03:15.147
+Você já corrigiu a parte óbvia.
+
+00:03:15.447 --> 00:03:18.420
+Só repete em timeout e erro do servidor,
+
+00:03:18.420 --> 00:03:20.948
+e manda uma chave de idempotência.
+
+00:03:21.248 --> 00:03:23.848
+E mesmo assim um cliente recebeu dois emails de cobrança.
+
+00:03:24.148 --> 00:03:25.584
+O que você olha primeiro?
+
+00:03:28.634 --> 00:03:31.336
+Se a chave muda a cada tentativa.
+
+00:03:31.636 --> 00:03:35.312
+A idempotência só vale se a chave for a mesma
+
+00:03:35.312 --> 00:03:38.662
+em todas as tentativas da mesma operação.
+
+00:03:38.962 --> 00:03:40.995
+Se cada retry gera uma chave nova,
+
+00:03:40.995 --> 00:03:44.044
+o serviço de email fez exatamente o que você pediu.
+
+00:03:44.344 --> 00:03:45.784
+Mandou dois emails.
+
+00:03:46.434 --> 00:03:48.865
+Trocar de provedor de email não ajuda,
+
+00:03:48.865 --> 00:03:51.168
+nem aumentar o limite de tentativas.
+
+00:03:51.468 --> 00:03:53.258
+O duplicado já passou.
+
+00:03:53.558 --> 00:03:57.696
+A correção é uma chave que pertence à operação, não à tentativa.
+
+00:03:58.896 --> 00:04:01.612
+O tratamento é uma refatoração chamada
+
+00:04:01.612 --> 00:04:03.685
+classify errors before retry.
+
+00:04:03.985 --> 00:04:07.573
+Ela tem três partes, e pular qualquer uma deixa um buraco.
+
+00:04:07.873 --> 00:04:09.393
+A primeira é classificar.
+
+00:04:10.043 --> 00:04:10.603
+Timeout,
+
+00:04:10.603 --> 00:04:14.732
+servidor fora do ar ou limite de requisições é transitório.
+
+00:04:15.032 --> 00:04:17.975
+Repita, com espera crescente, um limite baixo,
+
+00:04:17.975 --> 00:04:21.047
+e se o servidor diz quanto esperar, espere isso.
+
+00:04:21.697 --> 00:04:23.786
+Entrada inválida é permanente.
+
+00:04:24.086 --> 00:04:25.442
+O pedido está errado,
+
+00:04:25.442 --> 00:04:28.411
+e vai estar errado na oitava tentativa também.
+
+00:04:28.711 --> 00:04:31.728
+Uma armadilha clássica é repetir um pedido
+
+00:04:31.728 --> 00:04:34.457
+inválido porque a API às vezes oscila.
+
+00:04:34.757 --> 00:04:38.339
+Oscilação de rede aparece como timeout e erro de servidor.
+
+00:04:38.639 --> 00:04:41.561
+Pedido inválido quer dizer corrija o pedido.
+
+00:04:42.211 --> 00:04:45.480
+Sem saldo, limite ou sem permissão é permanente,
+
+00:04:45.480 --> 00:04:46.910
+pelo menos por agora.
+
+00:04:47.210 --> 00:04:48.130
+Não repita.
+
+00:04:48.430 --> 00:04:51.496
+Avise o usuário, ou reagende de propósito.
+
+00:04:52.146 --> 00:04:54.664
+E timeout numa escrita é o caso difícil.
+
+00:04:54.964 --> 00:04:56.430
+Você não sabe se aconteceu.
+
+00:04:56.730 --> 00:05:00.482
+Repita, mas só com a mesma chave de idempotência,
+
+00:05:00.482 --> 00:05:03.774
+para o serviço poder dizer: essa eu já fiz.
+
+00:05:04.424 --> 00:05:08.786
+Num agente, a classificação também precisa chegar ao modelo.
+
+00:05:09.086 --> 00:05:11.770
+A ferramenta devolve um erro que ele consegue usar.
+
+00:05:12.070 --> 00:05:15.119
+Um código, se dá para repetir, e o que está faltando.
+
+00:05:15.419 --> 00:05:18.815
+Um erro seco empurra o modelo de volta para a mesma chamada.
+
+00:05:19.465 --> 00:05:22.077
+E coloque um detector de repetição no código.
+
+00:05:22.377 --> 00:05:25.126
+A mesma ferramenta, com os mesmos argumentos,
+
+00:05:25.126 --> 00:05:27.326
+três vezes seguidas, encerra o loop.
+
+00:05:27.626 --> 00:05:30.886
+Isso pega o caso em que o modelo ignora a mensagem.
+
+00:05:32.086 --> 00:05:34.068
+Quando um retry simples está ok?
+
+00:05:34.368 --> 00:05:36.521
+Numa leitura sem efeito colateral,
+
+00:05:36.521 --> 00:05:40.256
+repetir erro transitório com limite e espera é boa prática.
+
+00:05:40.556 --> 00:05:43.045
+Uma busca que deu timeout pode rodar de novo.
+
+00:05:43.695 --> 00:05:47.449
+E o SDK do provedor do modelo que repete duas vezes em limite
+
+00:05:47.449 --> 00:05:50.588
+de requisições e erro de servidor não é esse smell.
+
+00:05:50.888 --> 00:05:51.885
+Ele é seletivo.
+
+00:05:52.185 --> 00:05:53.798
+Só confira o que ele repete.
+
+00:05:54.098 --> 00:05:58.021
+Um SDK que cuida da rede não desculpa um tratamento genérico
+
+00:05:58.021 --> 00:06:00.767
+que você colocou em volta de um pagamento.
+
+00:06:01.417 --> 00:06:04.881
+Mas repare: o smell não precisa de efeito duplicado.
+
+00:06:05.181 --> 00:06:08.605
+Um job de leitura que repete acesso negado e arquivo
+
+00:06:08.605 --> 00:06:11.569
+inválido oito vezes não tem efeito colateral.
+
+00:06:11.869 --> 00:06:13.550
+Continua cego.
+
+00:06:13.850 --> 00:06:16.243
+Só queima cota em vez de dinheiro.
+
+00:06:17.443 --> 00:06:19.428
+Então, a ideia para levar.
+
+00:06:19.728 --> 00:06:23.382
+Um retry não é uma rede de proteção que você joga sobre tudo.
+
+00:06:23.682 --> 00:06:26.549
+É uma decisão que você toma sobre um tipo de erro,
+
+00:06:26.549 --> 00:06:28.727
+o tipo que o tempo resolve de verdade.
+
+00:06:29.027 --> 00:06:32.287
+O resto precisa de uma resposta, não de mais uma tentativa.
+
+00:06:32.587 --> 00:06:35.414
+E tudo que muda o mundo carrega uma chave
+
+00:06:35.414 --> 00:06:38.242
+que deixa a segunda tentativa inofensiva.
+
+00:06:38.892 --> 00:06:42.355
+Na próxima aula, a gente faz essa refatoração passo a passo,
+
+00:06:42.355 --> 00:06:46.049
+num fluxo de pagamento de verdade: classify errors before retry.
+
+00:06:46.349 --> 00:06:47.178
+Até lá.

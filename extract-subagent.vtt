@@ -1,0 +1,442 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:05.332
+A fintech's content agent is writing about instant payments.
+
+00:00:05.632 --> 00:00:11.144
+It reads thirty pages, writes the post, reviews its own text against the brand
+
+00:00:11.144 --> 00:00:12.628
+guide, and publishes.
+
+00:00:13.278 --> 00:00:17.076
+By the end of the task, its context mixes three things.
+
+00:00:17.726 --> 00:00:19.817
+Excerpts from competitors' blogs.
+
+00:00:20.467 --> 00:00:23.527
+Then the writer's own reasoning, word for word.
+
+00:00:23.827 --> 00:00:26.996
+I used this argument because legal asked.
+
+00:00:27.646 --> 00:00:28.847
+And the publish tool.
+
+00:00:29.497 --> 00:00:34.305
+So the reviewer inherits the writer's argument, and lets through what it should have
+
+00:00:34.305 --> 00:00:34.763
+blocked.
+
+00:00:35.063 --> 00:00:39.400
+And a page with a hidden instruction sits one step away from publishing.
+
+00:00:39.700 --> 00:00:42.654
+You met the mega agent in the last lesson.
+
+00:00:42.954 --> 00:00:46.729
+Today you'll take it apart, one subagent at a time.
+
+00:00:47.929 --> 00:00:51.416
+Give a large, well bounded subtask its own agent.
+
+00:00:51.716 --> 00:00:55.800
+With a clean context, its own prompt, and only the tools it needs.
+
+00:00:56.100 --> 00:01:01.111
+The main agent hands over an instruction, and gets back only the result, in an
+
+00:01:01.111 --> 00:01:02.011
+agreed format.
+
+00:01:03.211 --> 00:01:05.737
+Before, one context for everything.
+
+00:01:06.037 --> 00:01:11.666
+The pages it read, the review of its own text, and the publish tool, all in the same
+
+00:01:11.666 --> 00:01:12.068
+place.
+
+00:01:12.718 --> 00:01:15.401
+After, the brief reaches the main agent.
+
+00:01:15.701 --> 00:01:18.167
+It plans, writes, and decides.
+
+00:01:18.467 --> 00:01:20.110
+It doesn't read web pages.
+
+00:01:20.760 --> 00:01:26.751
+The research subagent reads everything, in its own context, and returns a short list
+
+00:01:26.751 --> 00:01:28.820
+of facts, each with a source.
+
+00:01:29.470 --> 00:01:33.840
+The review subagent gets only the draft and the brand guide.
+
+00:01:34.140 --> 00:01:35.775
+Without the writer's reasoning.
+
+00:01:36.425 --> 00:01:38.928
+And publishing stopped being a model tool.
+
+00:01:39.228 --> 00:01:41.361
+It became a step after approval.
+
+00:01:42.561 --> 00:01:48.261
+The brief: eight hundred words about instant payments, for solo micro businesses, in
+
+00:01:48.261 --> 00:01:51.246
+the brand's tone, and never promise returns.
+
+00:01:51.546 --> 00:01:57.476
+The main agent calls research, with the topic and a hint to prefer official sources.
+
+00:01:57.776 --> 00:02:02.729
+The subagent spends twelve steps, reads the thirty pages, and returns this.
+
+00:02:03.379 --> 00:02:05.284
+Facts, each with its source.
+
+00:02:05.584 --> 00:02:10.930
+Like: a micro business can receive these payments in a linked personal account, with
+
+00:02:10.930 --> 00:02:13.348
+the central bank's page as the source.
+
+00:02:13.998 --> 00:02:15.198
+And open questions.
+
+00:02:15.498 --> 00:02:17.327
+What's the current monthly cap?
+
+00:02:17.627 --> 00:02:20.146
+Nobody found it for sure, so it says so.
+
+00:02:20.796 --> 00:02:24.796
+The main agent writes from that, with no web pages in sight.
+
+00:02:25.096 --> 00:02:30.929
+The review subagent receives the draft and the guide, and returns one problem.
+
+00:02:31.229 --> 00:02:34.951
+It says paragraph four promises returns to the reader.
+
+00:02:35.251 --> 00:02:39.603
+Publishing only happens after the marketing person approves.
+
+00:02:39.903 --> 00:02:43.554
+The web content never sat next to the side effect tool.
+
+00:02:44.754 --> 00:02:47.913
+A context is the model's working memory.
+
+00:02:48.213 --> 00:02:53.574
+When it holds thirty pages, the writer's reasoning and the review rules all at once,
+
+00:02:53.574 --> 00:02:55.744
+everything competes for attention.
+
+00:02:56.044 --> 00:02:58.275
+Splitting restores three properties.
+
+00:02:58.925 --> 00:02:59.551
+Focus.
+
+00:02:59.851 --> 00:03:03.646
+Each subagent has a prompt with one role, and few tools.
+
+00:03:04.296 --> 00:03:05.220
+Cleanliness.
+
+00:03:05.520 --> 00:03:10.179
+The raw work, pages, logs and files, dies inside the subagent.
+
+00:03:10.479 --> 00:03:14.127
+The main agent gets one page of results, instead of a hundred.
+
+00:03:14.777 --> 00:03:17.152
+And independence.
+
+00:03:17.452 --> 00:03:22.701
+The reviewer doesn't inherit the writer's reasoning, so it judges the text as it is.
+
+00:03:23.351 --> 00:03:26.679
+And the return format is the contract between the two.
+
+00:03:26.979 --> 00:03:31.605
+Without it, the main agent gets free text, and has to guess what came back.
+
+00:03:31.905 --> 00:03:34.446
+Facts with sources can be reviewed.
+
+00:03:34.746 --> 00:03:37.481
+A paragraph called research summary can't.
+
+00:03:37.781 --> 00:03:42.348
+And each subagent takes its own budget, charged against the task's total.
+
+00:03:43.548 --> 00:03:44.570
+Here's one for you.
+
+00:03:44.870 --> 00:03:48.454
+The research subagent's contract was a free paragraph.
+
+00:03:48.754 --> 00:03:52.408
+And the main agent started filling in facts with no source.
+
+00:03:52.708 --> 00:03:53.889
+What's the next step?
+
+00:03:56.939 --> 00:04:01.895
+Change the contract to a schema, with facts, sources and open questions.
+
+00:04:02.195 --> 00:04:04.470
+And reject a return that doesn't fill it.
+
+00:04:04.770 --> 00:04:07.691
+Without fields, the main agent fills the gaps.
+
+00:04:08.341 --> 00:04:13.353
+A bigger research budget only makes a richer paragraph, which is still free text.
+
+00:04:13.653 --> 00:04:18.405
+And sending the thirty pages to the main agent, so it can check, undoes the whole
+
+00:04:18.405 --> 00:04:18.757
+point.
+
+00:04:19.057 --> 00:04:21.403
+It sits next to raw web pages again.
+
+00:04:22.603 --> 00:04:24.229
+Step zero, measure.
+
+00:04:24.529 --> 00:04:30.210
+Run the current agent's eval, and record quality, cost per task, tokens per turn at
+
+00:04:30.210 --> 00:04:33.016
+the end of the task, and known incidents.
+
+00:04:33.316 --> 00:04:36.073
+A bad publish, a review that missed.
+
+00:04:36.723 --> 00:04:37.951
+Find the boundary.
+
+00:04:38.251 --> 00:04:43.233
+Look in the trace for a stretch with many turns, lots of reading, and a result that
+
+00:04:43.233 --> 00:04:44.433
+fits in a few lines.
+
+00:04:44.733 --> 00:04:46.027
+That's the candidate.
+
+00:04:46.677 --> 00:04:49.719
+Define the output contract as a schema.
+
+00:04:50.019 --> 00:04:54.952
+What the subagent returns, in what format, with sources or evidence.
+
+00:04:55.602 --> 00:05:00.245
+Write the subagent's prompt with a single role, and the minimal list of tools.
+
+00:05:00.545 --> 00:05:04.373
+It never gets the publish tool, and none of its sibling's tools.
+
+00:05:04.673 --> 00:05:06.235
+And give it its own budget.
+
+00:05:06.885 --> 00:05:12.012
+In the main agent, replace the old tools with one tool that calls the subagent.
+
+00:05:12.662 --> 00:05:17.858
+Record the subagent as a child span on the trace, so you can see what it read,
+
+00:05:17.858 --> 00:05:20.656
+without bringing it into the main context.
+
+00:05:21.306 --> 00:05:22.380
+And measure again.
+
+00:05:22.680 --> 00:05:27.901
+Quality equal or better, fewer tokens per turn in the main agent.
+
+00:05:28.201 --> 00:05:32.258
+Total cost may rise a little, with one more orchestration call.
+
+00:05:32.558 --> 00:05:36.966
+Check that the gain in quality and isolation is worth it.
+
+00:05:38.166 --> 00:05:39.613
+Now the risks.
+
+00:05:39.913 --> 00:05:40.975
+Missing context.
+
+00:05:41.275 --> 00:05:44.196
+The brief said: don't cite competitor X.
+
+00:05:44.496 --> 00:05:50.166
+The research subagent never got that constraint, and returned a fact from X's blog.
+
+00:05:50.466 --> 00:05:52.056
+The main agent used it.
+
+00:05:52.356 --> 00:05:53.557
+Whose failure is it?
+
+00:05:53.857 --> 00:05:55.015
+The main agent's.
+
+00:05:55.315 --> 00:05:56.799
+There's no shared memory.
+
+00:05:57.099 --> 00:06:00.748
+Everything the subagent needs goes into the instruction.
+
+00:06:01.398 --> 00:06:02.825
+A result too thin.
+
+00:06:03.125 --> 00:06:07.431
+A three line summary may lose the detail the main agent needed.
+
+00:06:07.731 --> 00:06:10.921
+Adjust the schema, based on the cases that failed.
+
+00:06:11.571 --> 00:06:12.846
+Agent multiplication.
+
+00:06:13.146 --> 00:06:18.472
+Four subagents for research, writing the title, writing the body, and picking an
+
+00:06:18.472 --> 00:06:20.669
+emoji, is decorative multi-agent.
+
+00:06:20.969 --> 00:06:22.839
+Each extraction needs a reason.
+
+00:06:23.139 --> 00:06:29.072
+Context that mustn't mix, tools that mustn't coexist, or independent judgment.
+
+00:06:29.372 --> 00:06:31.668
+And formatting a date doesn't qualify.
+
+00:06:31.968 --> 00:06:33.263
+That's one line of code.
+
+00:06:33.913 --> 00:06:35.005
+And recursion.
+
+00:06:35.305 --> 00:06:40.895
+If the research subagent can open another researcher, each with fifteen fresh steps
+
+00:06:40.895 --> 00:06:43.319
+and no depth cap, the tree explodes.
+
+00:06:43.619 --> 00:06:46.324
+Cap the depth, and pass the same budget down.
+
+00:06:46.974 --> 00:06:47.992
+And one more trap.
+
+00:06:48.292 --> 00:06:52.388
+The publish tool stays on the main agent's list, for urgent cases.
+
+00:06:52.688 --> 00:06:56.489
+The research subagent still doesn't have it, so it feels safer.
+
+00:06:56.789 --> 00:06:58.369
+It is safer than before.
+
+00:06:58.669 --> 00:07:03.247
+But the main agent can still publish a raw draft, with no approval.
+
+00:07:03.547 --> 00:07:09.075
+And a prompt saying don't publish without review is the very thing we're trying to
+
+00:07:09.075 --> 00:07:09.952
+leave behind.
+
+00:07:10.252 --> 00:07:13.436
+An available tool will be used, sooner or later.
+
+00:07:14.636 --> 00:07:15.974
+Let's practice.
+
+00:07:16.274 --> 00:07:21.663
+An incident agent reads logs, metrics and the runbook, then decides whether to
+
+00:07:21.663 --> 00:07:22.907
+restart a service.
+
+00:07:23.207 --> 00:07:26.534
+What would you extract, and what should it return?
+
+00:07:29.584 --> 00:07:31.608
+Extract the investigation.
+
+00:07:31.908 --> 00:07:37.808
+A diagnosis subagent reads the logs and metrics, which are large and untrusted, with
+
+00:07:37.808 --> 00:07:38.932
+read only tools.
+
+00:07:39.232 --> 00:07:41.580
+And it returns a structured report.
+
+00:07:42.230 --> 00:07:43.447
+The likely cause.
+
+00:07:43.747 --> 00:07:46.991
+The evidence, each with a source and an excerpt.
+
+00:07:47.291 --> 00:07:49.917
+The confidence, low, medium or high.
+
+00:07:50.217 --> 00:07:51.808
+And a suggested action.
+
+00:07:52.108 --> 00:07:55.429
+Restart, roll back, escalate, or nothing.
+
+00:07:56.079 --> 00:07:59.734
+The main agent decides, based on that report and the runbook.
+
+00:08:00.034 --> 00:08:04.813
+And the restart itself stays outside both agents, behind the on-call engineer's
+
+00:08:04.813 --> 00:08:07.052
+approval, when confidence isn't high.
+
+00:08:07.352 --> 00:08:10.122
+Raw logs never sit next to the restart tool.
+
+00:08:11.322 --> 00:08:13.239
+So here's the idea to take with you.
+
+00:08:13.539 --> 00:08:18.690
+Extract a subagent where the work is heavy, untrusted, or needs fresh eyes.
+
+00:08:18.990 --> 00:08:23.537
+Give it one role, few tools, its own budget, and everything it needs in the
+
+00:08:23.537 --> 00:08:24.265
+instruction.
+
+00:08:24.565 --> 00:08:27.520
+And make it return a contract, not a paragraph.
+
+00:08:28.170 --> 00:08:34.038
+In the next lesson, we'll look at the full pattern behind this refactoring: subagent
+
+00:08:34.038 --> 00:08:34.807
+delegation.
+
+00:08:35.107 --> 00:08:35.985
+See you there.

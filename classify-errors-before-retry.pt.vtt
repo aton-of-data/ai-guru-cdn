@@ -1,0 +1,427 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.107
+O assistente agenda um Pix.
+
+00:00:04.407 --> 00:00:07.834
+O banco demora um pouco demais, e a chamada dá timeout.
+
+00:00:08.134 --> 00:00:10.403
+Então o código faz o que sempre faz.
+
+00:00:10.703 --> 00:00:11.746
+Tenta de novo.
+
+00:00:12.046 --> 00:00:13.220
+Cinco vezes.
+
+00:00:13.870 --> 00:00:16.602
+Mas o banco já tinha registrado a primeira.
+
+00:00:16.902 --> 00:00:19.826
+A resposta só se perdeu na volta.
+
+00:00:20.126 --> 00:00:22.606
+Saem cinco transferências, para um pedido só.
+
+00:00:23.256 --> 00:00:26.774
+Na aula anterior, você viu esse smell: o retry cego.
+
+00:00:27.074 --> 00:00:29.460
+Agora a gente corrige, passo a passo,
+
+00:00:29.460 --> 00:00:31.975
+com um número antes e um número depois.
+
+00:00:32.275 --> 00:00:35.510
+Você sai sabendo quais erros merecem uma segunda tentativa,
+
+00:00:35.510 --> 00:00:38.142
+e como deixar essa segunda tentativa inofensiva.
+
+00:00:39.342 --> 00:00:42.195
+A ideia cabe numa frase.
+
+00:00:42.495 --> 00:00:45.007
+Antes de repetir, classifique o erro.
+
+00:00:45.657 --> 00:00:48.402
+Um erro transitório pode sumir sozinho.
+
+00:00:48.702 --> 00:00:51.009
+Rede instável, limite de requisições,
+
+00:00:51.009 --> 00:00:53.379
+um serviço fora do ar por um instante.
+
+00:00:53.679 --> 00:00:57.179
+Esses ganham retry, com espera crescente e um limite.
+
+00:00:57.829 --> 00:00:59.449
+Um erro permanente não some.
+
+00:00:59.749 --> 00:01:03.699
+Entrada inválida, sem permissão, saldo insuficiente,
+
+00:01:03.699 --> 00:01:05.295
+uma regra de negócio.
+
+00:01:05.595 --> 00:01:07.467
+Esses voltam para quem chamou,
+
+00:01:07.467 --> 00:01:09.713
+com uma explicação que dá para usar.
+
+00:01:10.363 --> 00:01:12.967
+E toda chamada que muda o mundo carrega
+
+00:01:12.967 --> 00:01:14.703
+uma chave de idempotência.
+
+00:01:15.003 --> 00:01:17.307
+É essa peça que deixa o retry seguro.
+
+00:01:18.507 --> 00:01:20.557
+Antes, havia uma seta só.
+
+00:01:20.857 --> 00:01:23.136
+Qualquer erro voltava direto para a chamada.
+
+00:01:23.436 --> 00:01:26.327
+Depois, o tipo do erro escolhe o caminho.
+
+00:01:26.977 --> 00:01:28.689
+A chamada sai com uma chave.
+
+00:01:28.989 --> 00:01:31.964
+O serviço usa essa chave para reconhecer uma repetição.
+
+00:01:32.614 --> 00:01:36.418
+O erro é classificado pelo código ou pelo status.
+
+00:01:36.718 --> 00:01:39.993
+Nunca procurando a palavra timeout no texto da mensagem.
+
+00:01:40.293 --> 00:01:41.545
+Mensagem muda.
+
+00:01:41.845 --> 00:01:42.896
+Código não.
+
+00:01:43.546 --> 00:01:45.743
+Só o erro transitório volta para o começo,
+
+00:01:45.743 --> 00:01:47.470
+com espera crescente e um limite.
+
+00:01:48.120 --> 00:01:50.574
+O erro permanente vira uma resposta clara.
+
+00:01:50.874 --> 00:01:52.983
+Para o usuário, ou para o modelo,
+
+00:01:52.983 --> 00:01:55.667
+que assim muda de rumo em vez de insistir.
+
+00:01:56.317 --> 00:01:59.840
+E o sucesso acontece uma vez só, mesmo quando houve retry.
+
+00:02:01.040 --> 00:02:03.089
+Vamos passar pelo caso perigoso,
+
+00:02:03.089 --> 00:02:05.651
+o timeout que na verdade foi um sucesso.
+
+00:02:06.301 --> 00:02:08.805
+Um usuário pede para agendar duzentos
+
+00:02:08.805 --> 00:02:10.835
+e cinquenta reais para amanhã.
+
+00:02:11.485 --> 00:02:15.721
+No momento do pedido, o sistema cria um identificador.
+
+00:02:16.021 --> 00:02:18.063
+Não dentro do loop de retry.
+
+00:02:18.363 --> 00:02:19.105
+No clique.
+
+00:02:19.755 --> 00:02:21.692
+O banco processa a transferência.
+
+00:02:21.992 --> 00:02:24.202
+Aí a rede derruba a resposta.
+
+00:02:24.852 --> 00:02:26.652
+O seu código vê um timeout.
+
+00:02:26.952 --> 00:02:29.439
+Isso é transitório, então ele repete.
+
+00:02:29.739 --> 00:02:30.804
+Com a mesma chave.
+
+00:02:31.454 --> 00:02:35.398
+O banco reconhece a chave e, em vez de agendar de novo,
+
+00:02:35.398 --> 00:02:37.477
+devolve o primeiro resultado.
+
+00:02:38.127 --> 00:02:41.050
+O trace mostra duas tentativas, e um efeito.
+
+00:02:41.350 --> 00:02:43.301
+É esse o número que você quer ver.
+
+00:02:43.951 --> 00:02:46.467
+Tratar o timeout como transitório estava certo.
+
+00:02:46.767 --> 00:02:49.158
+O que impediu o duplicado foi uma chave
+
+00:02:49.158 --> 00:02:51.243
+nascida com a intenção do usuário,
+
+00:02:51.243 --> 00:02:52.469
+não com a tentativa.
+
+00:02:52.769 --> 00:02:57.827
+APIs de pagamento sérias aceitam essa chave exatamente por isso.
+
+00:02:59.027 --> 00:03:00.493
+Uma pergunta para você.
+
+00:03:00.793 --> 00:03:04.232
+Uma API de email pode devolver cinco erros.
+
+00:03:04.532 --> 00:03:06.105
+Requisições demais.
+
+00:03:06.405 --> 00:03:08.240
+Destinatário inválido.
+
+00:03:08.540 --> 00:03:10.180
+Serviço indisponível.
+
+00:03:10.480 --> 00:03:12.330
+Chave de API inválida.
+
+00:03:12.630 --> 00:03:15.753
+E chave duplicada, mensagem já enviada.
+
+00:03:16.053 --> 00:03:17.988
+O que você faz com cada um?
+
+00:03:21.038 --> 00:03:23.391
+Requisições demais é transitório.
+
+00:03:23.691 --> 00:03:26.852
+Espere o tempo que o serviço pedir e tente de novo,
+
+00:03:26.852 --> 00:03:28.153
+dentro do seu limite.
+
+00:03:28.803 --> 00:03:31.136
+Destinatário inválido é permanente.
+
+00:03:31.436 --> 00:03:33.261
+Avise o usuário, ou o modelo,
+
+00:03:33.261 --> 00:03:35.589
+que o endereço precisa ser corrigido.
+
+00:03:36.239 --> 00:03:38.870
+Serviço indisponível é transitório.
+
+00:03:39.170 --> 00:03:42.264
+Repita, com espera crescente.
+
+00:03:42.564 --> 00:03:45.793
+Se continuar falhando depois do limite, pare e use o plano B.
+
+00:03:46.443 --> 00:03:48.891
+Chave de API inválida é permanente,
+
+00:03:48.891 --> 00:03:50.918
+e é problema de configuração.
+
+00:03:51.218 --> 00:03:54.155
+Nenhuma chamada vai funcionar, então não repita.
+
+00:03:54.455 --> 00:03:55.623
+Avise o time.
+
+00:03:56.273 --> 00:03:59.693
+E chave duplicada é um sucesso disfarçado.
+
+00:03:59.993 --> 00:04:02.216
+O email já saiu.
+
+00:04:02.516 --> 00:04:05.448
+Trate como feito, e não mande de novo.
+
+00:04:06.648 --> 00:04:09.960
+Como em toda refatoração aqui, comece medindo.
+
+00:04:10.610 --> 00:04:15.129
+Puxe dos logs os erros mais comuns de cada dependência,
+
+00:04:15.129 --> 00:04:19.976
+quantos retries cada um gerou, e qualquer efeito duplicado.
+
+00:04:20.276 --> 00:04:24.129
+Duas transferências para o mesmo pedido é o número que importa.
+
+00:04:24.779 --> 00:04:27.238
+Classifique os códigos de erro de cada serviço
+
+00:04:27.238 --> 00:04:28.894
+como transitório ou permanente.
+
+00:04:29.194 --> 00:04:31.355
+Na dúvida, trate como permanente.
+
+00:04:31.655 --> 00:04:35.104
+Um não errado sai mais barato que um sim errado.
+
+00:04:35.754 --> 00:04:37.687
+Coloque uma chave de idempotência
+
+00:04:37.687 --> 00:04:39.855
+em toda chamada com efeito colateral,
+
+00:04:39.855 --> 00:04:42.140
+gerada uma vez por intenção do usuário.
+
+00:04:42.790 --> 00:04:46.708
+Depois, repita só os erros transitórios, com espera crescente,
+
+00:04:46.708 --> 00:04:49.805
+um limite, e um pouco de aleatoriedade na espera.
+
+00:04:50.105 --> 00:04:52.428
+Essa aleatoriedade se chama jitter,
+
+00:04:52.428 --> 00:04:56.011
+e ela evita que mil clientes repitam no mesmo segundo.
+
+00:04:56.661 --> 00:04:59.766
+Escreva mensagens úteis para os erros permanentes,
+
+00:04:59.766 --> 00:05:01.690
+para o usuário e para o modelo.
+
+00:05:01.990 --> 00:05:04.052
+Saldo insuficiente na conta é algo
+
+00:05:04.052 --> 00:05:06.053
+que uma pessoa consegue resolver.
+
+00:05:06.353 --> 00:05:07.893
+Erro, não.
+
+00:05:08.543 --> 00:05:11.737
+No loop do agente, coloque um detector de repetição.
+
+00:05:12.037 --> 00:05:14.271
+A mesma ferramenta, com os mesmos argumentos,
+
+00:05:14.271 --> 00:05:16.903
+depois de um erro permanente, encerra aquele caminho.
+
+00:05:17.553 --> 00:05:18.703
+E meça de novo.
+
+00:05:19.003 --> 00:05:20.831
+Retries por tipo de erro,
+
+00:05:20.831 --> 00:05:23.684
+tempo de resposta e efeitos duplicados.
+
+00:05:23.984 --> 00:05:25.868
+Esse último deve ser zero.
+
+00:05:27.068 --> 00:05:31.418
+O primeiro risco é o bug mais comum dessa refatoração.
+
+00:05:31.718 --> 00:05:34.774
+A chave é gerada dentro do loop de retry.
+
+00:05:35.074 --> 00:05:39.367
+Cada tentativa ganha uma chave nova, o serviço vê pedidos novos,
+
+00:05:39.367 --> 00:05:40.843
+e a idempotência some.
+
+00:05:41.143 --> 00:05:45.392
+A chave nasce com o clique, o chamado, a conversa,
+
+00:05:45.392 --> 00:05:47.261
+nunca com a tentativa.
+
+00:05:47.911 --> 00:05:49.753
+O segundo é retry empilhado.
+
+00:05:50.053 --> 00:05:53.347
+O SDK do provedor repete duas vezes.
+
+00:05:53.647 --> 00:05:55.969
+A sua função repete três.
+
+00:05:56.269 --> 00:05:58.095
+O agente chama a ferramenta de novo.
+
+00:05:58.395 --> 00:06:01.945
+São nove tentativas, e ninguém combinou esse número.
+
+00:06:02.245 --> 00:06:06.609
+Desligue o retry do SDK nas chamadas que você mesmo classifica.
+
+00:06:06.909 --> 00:06:08.670
+Um lugar só decide.
+
+00:06:09.320 --> 00:06:12.056
+E alguns serviços nem aceitam chave.
+
+00:06:12.356 --> 00:06:14.972
+Aí confira o estado antes de repetir.
+
+00:06:15.272 --> 00:06:18.130
+Já existe uma transferência para esse pedido?
+
+00:06:18.430 --> 00:06:21.191
+Se não dá para conferir, não repita um efeito colateral.
+
+00:06:21.491 --> 00:06:23.449
+Passe para uma pessoa.
+
+00:06:24.649 --> 00:06:26.634
+Então, a ideia para levar.
+
+00:06:26.934 --> 00:06:30.306
+Uma boa política de retry é, quase toda, saber dizer não.
+
+00:06:30.606 --> 00:06:33.118
+Não para erros que o tempo não resolve,
+
+00:06:33.118 --> 00:06:35.630
+não para chave nova em intenção antiga,
+
+00:06:35.630 --> 00:06:38.206
+e não para uma terceira camada de retry.
+
+00:06:38.506 --> 00:06:41.956
+O que sobra é uma segunda tentativa que nunca faz estrago.
+
+00:06:42.606 --> 00:06:43.855
+Na próxima aula,
+
+00:06:43.855 --> 00:06:48.852
+a gente vê tudo desta trilha funcionando junto num sistema real:
+
+00:06:48.852 --> 00:06:51.195
+extração de notas e contratos.
+
+00:06:51.495 --> 00:06:52.324
+Até lá.

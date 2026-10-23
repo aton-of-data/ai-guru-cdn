@@ -1,0 +1,451 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:03.816
+A school's math tutor runs on WhatsApp.
+
+00:00:04.116 --> 00:00:09.083
+In lesson one, it agreed with a student: hints only, never the finished answer.
+
+00:00:09.383 --> 00:00:14.128
+In lesson six, she asked for a review sheet with an answer key, and the tutor
+
+00:00:14.128 --> 00:00:16.839
+allowed it, as an exception, for that sheet.
+
+00:00:17.489 --> 00:00:21.242
+In lesson twelve, she asks for help with a new problem.
+
+00:00:21.542 --> 00:00:25.989
+The history holds both rules, several pages of wrong working, three schedule
+
+00:00:25.989 --> 00:00:28.095
+changes, and a note from her mother.
+
+00:00:28.395 --> 00:00:31.097
+And the model returns the finished answer.
+
+00:00:31.397 --> 00:00:37.729
+Or, the next day, it refuses even the review sheet, because the rule is hints only.
+
+00:00:38.379 --> 00:00:43.391
+With illustrative numbers, by lesson twelve, every call already sends about nine
+
+00:00:43.391 --> 00:00:45.897
+thousand five hundred tokens of history.
+
+00:00:46.197 --> 00:00:48.970
+By lesson forty, past seventeen thousand.
+
+00:00:49.270 --> 00:00:53.169
+And the lesson one rule competes with everything that came after.
+
+00:00:53.469 --> 00:00:55.910
+You met this smell in the last lesson.
+
+00:00:56.210 --> 00:00:58.225
+Now you'll fix it, safely.
+
+00:00:59.425 --> 00:01:01.720
+Replace old turns with a summary.
+
+00:01:02.020 --> 00:01:07.213
+Keep the facts that must last in explicit state, outside the raw history.
+
+00:01:07.513 --> 00:01:12.257
+And send the model the state, the summary, and only the recent turns.
+
+00:01:13.457 --> 00:01:16.837
+Before, the entire history goes into every call.
+
+00:01:17.137 --> 00:01:20.492
+Message, everything, model, answer.
+
+00:01:21.142 --> 00:01:26.256
+After, the new message arrives, and only the latest turns stay in raw form.
+
+00:01:26.906 --> 00:01:32.730
+Durable facts, like preferences, decisions and ids, plus a summary of the rest, live
+
+00:01:32.730 --> 00:01:34.117
+in a separate block.
+
+00:01:34.767 --> 00:01:38.525
+The model receives that block, plus the recent turns.
+
+00:01:38.825 --> 00:01:41.274
+And the answer joins the recent turns.
+
+00:01:41.924 --> 00:01:47.189
+When the recent turns pass a limit, a compaction step updates the summary and the
+
+00:01:47.189 --> 00:01:49.204
+facts, and drops the old turns.
+
+00:01:50.404 --> 00:01:54.910
+Here's what the model sees after the lesson twelve compaction.
+
+00:01:55.210 --> 00:01:56.205
+The state block.
+
+00:01:56.505 --> 00:01:57.787
+The student's name.
+
+00:01:58.087 --> 00:02:03.430
+Her level per topic, intermediate in equations, beginner in geometry.
+
+00:02:03.730 --> 00:02:05.977
+Step by step hints as the format.
+
+00:02:06.627 --> 00:02:08.656
+And the rule, on a single line.
+
+00:02:08.956 --> 00:02:09.948
+Hints only.
+
+00:02:10.248 --> 00:02:12.791
+With the exception beside it, and its scope.
+
+00:02:13.091 --> 00:02:15.009
+The lesson six review sheet.
+
+00:02:15.659 --> 00:02:17.984
+Then a summary, in a few lines.
+
+00:02:18.284 --> 00:02:23.698
+Lessons one to eleven: quadratic equations, stuck on completing the square.
+
+00:02:23.998 --> 00:02:26.874
+Lesson six, the review sheet exception.
+
+00:02:27.174 --> 00:02:29.636
+Lesson eleven, started geometry.
+
+00:02:29.936 --> 00:02:32.542
+And the eight most recent turns stay whole.
+
+00:02:32.842 --> 00:02:36.835
+The mother's note, and the wrong working from lesson three, don't go in.
+
+00:02:38.035 --> 00:02:40.337
+Raw history mixes three things.
+
+00:02:40.637 --> 00:02:45.910
+Facts that still hold, context that explains the moment, and noise that no longer
+
+00:02:45.910 --> 00:02:46.431
+matters.
+
+00:02:46.731 --> 00:02:49.603
+The model gets all three with equal weight.
+
+00:02:49.903 --> 00:02:52.831
+Separating them gives each a different weight.
+
+00:02:53.131 --> 00:02:56.300
+Facts sit in a short block that's always present.
+
+00:02:56.600 --> 00:02:59.528
+The summary tells the story in a few lines.
+
+00:02:59.828 --> 00:03:01.242
+And the noise goes away.
+
+00:03:01.892 --> 00:03:05.070
+Explicit state solves the rule that changes.
+
+00:03:05.370 --> 00:03:10.067
+Instead of the model finding two contradictory rules at different points in the
+
+00:03:10.067 --> 00:03:13.397
+history, there's one line, with the exception beside it.
+
+00:03:13.697 --> 00:03:18.587
+Compaction updates that line, and you can read and test what it wrote.
+
+00:03:19.237 --> 00:03:20.416
+And cost stays flat.
+
+00:03:20.716 --> 00:03:26.013
+The recent turns have a bounded size, the facts grow slowly, and the summary has a
+
+00:03:26.013 --> 00:03:26.594
+word cap.
+
+00:03:27.794 --> 00:03:28.917
+Here's one for you.
+
+00:03:29.217 --> 00:03:32.263
+Say you only add a summary, with no facts block.
+
+00:03:32.563 --> 00:03:36.494
+Why does the tutor still get the hints rule wrong, so often?
+
+00:03:39.544 --> 00:03:42.009
+Because a summary is a narrative.
+
+00:03:42.309 --> 00:03:47.279
+One paragraph mixes the current rule with the exception, and the two compete again.
+
+00:03:47.579 --> 00:03:50.388
+The model has no single field to consult.
+
+00:03:50.688 --> 00:03:56.432
+A solution mode field, with the exception's scope next to it, makes it explicit
+
+00:03:56.432 --> 00:03:57.595
+what's in force.
+
+00:03:58.795 --> 00:04:00.800
+Step zero, measure.
+
+00:04:01.100 --> 00:04:06.342
+Build an eval from real long sessions, anonymized, with questions that depend on
+
+00:04:06.342 --> 00:04:07.718
+something said early.
+
+00:04:08.018 --> 00:04:13.116
+The hints rule, the account id, the delivery zip code.
+
+00:04:13.416 --> 00:04:18.642
+Record accuracy, cost per turn, and time to the first word, at the end of the
+
+00:04:18.642 --> 00:04:19.253
+sessions.
+
+00:04:19.903 --> 00:04:21.957
+List your domain's durable facts.
+
+00:04:22.257 --> 00:04:28.003
+Ids, preferences, agreed rules, decisions, and exceptions with their scope.
+
+00:04:28.303 --> 00:04:29.645
+They become a schema.
+
+00:04:30.295 --> 00:04:33.255
+Write the compaction prompt to ask for two outputs.
+
+00:04:33.555 --> 00:04:38.118
+The updated facts, structured, and a short summary of what happened.
+
+00:04:38.418 --> 00:04:43.301
+And ask for the source, the turn or the lesson, of each change to a fact.
+
+00:04:43.951 --> 00:04:46.706
+Pick the trigger, a token or turn count.
+
+00:04:47.006 --> 00:04:49.330
+And always keep the latest turns whole.
+
+00:04:49.630 --> 00:04:52.110
+Eight to twelve is a common starting point.
+
+00:04:52.410 --> 00:04:53.985
+Tune it against the eval.
+
+00:04:54.635 --> 00:04:59.124
+Run compaction off the critical path when you can, between turns or in the
+
+00:04:59.124 --> 00:04:59.791
+background.
+
+00:05:00.091 --> 00:05:05.420
+The student shouldn't wait for the lesson eleven summary to get the lesson twelve
+
+00:05:05.420 --> 00:05:05.749
+hint.
+
+00:05:06.399 --> 00:05:11.217
+Keep the full history outside the context, for auditing, and for rebuilding the
+
+00:05:11.217 --> 00:05:12.741
+summary if it goes wrong.
+
+00:05:13.391 --> 00:05:17.898
+Record every compaction on the trace, with the facts before and after.
+
+00:05:18.198 --> 00:05:23.172
+If the solution mode changed without the student asking, you see it right away.
+
+00:05:23.822 --> 00:05:24.928
+And measure again.
+
+00:05:25.228 --> 00:05:29.779
+Accuracy on questions that depend on early turns should hold or rise.
+
+00:05:30.079 --> 00:05:33.258
+Cost per turn at the end of sessions should drop.
+
+00:05:34.458 --> 00:05:36.047
+Now the risks.
+
+00:05:36.347 --> 00:05:38.624
+A summary that loses the right fact.
+
+00:05:38.924 --> 00:05:44.243
+You catch it with eval cases that ask about old facts, and by comparing the facts
+
+00:05:44.243 --> 00:05:46.213
+before and after on the trace.
+
+00:05:46.863 --> 00:05:48.890
+A summary that makes things up.
+
+00:05:49.190 --> 00:05:53.056
+The compaction model may join things that were never said together.
+
+00:05:53.356 --> 00:05:56.612
+The student asked for answer keys on every sheet.
+
+00:05:56.912 --> 00:06:01.684
+Ask for facts with a reference to their source turn, and reject any fact with no
+
+00:06:01.684 --> 00:06:02.101
+source.
+
+00:06:02.751 --> 00:06:04.252
+Errors that compound.
+
+00:06:04.552 --> 00:06:06.803
+Each summary builds on the previous one.
+
+00:06:07.103 --> 00:06:11.547
+A small drift in lesson eight becomes a false rule in lesson twenty.
+
+00:06:11.847 --> 00:06:16.551
+Keep the raw history, and rebuild from it now and then, not only from the last
+
+00:06:16.551 --> 00:06:17.034
+summary.
+
+00:06:17.684 --> 00:06:20.284
+And a prompt cache that keeps resetting.
+
+00:06:20.584 --> 00:06:26.412
+If you compact every turn, the start of the context changes every time, and the
+
+00:06:26.412 --> 00:06:28.182
+cache almost never hits.
+
+00:06:28.482 --> 00:06:33.679
+Compact in blocks, when the recent turns pass a cap, so the prefix stays stable
+
+00:06:33.679 --> 00:06:34.994
+between compactions.
+
+00:06:35.644 --> 00:06:36.988
+And the common mistake.
+
+00:06:37.288 --> 00:06:40.001
+Compacting only when the window fills.
+
+00:06:40.301 --> 00:06:45.654
+If you wait for the API to reject the context, the session is already expensive, and
+
+00:06:45.654 --> 00:06:48.203
+the model is already lost in the middle.
+
+00:06:48.503 --> 00:06:53.440
+The trigger is a limit you choose, below the window, at the point where the eval
+
+00:06:53.440 --> 00:06:55.600
+still gets the old questions right.
+
+00:06:55.900 --> 00:06:58.192
+Compacting too early hurts too.
+
+00:06:58.492 --> 00:07:01.203
+You drop detail from the current conversation.
+
+00:07:01.503 --> 00:07:04.225
+That's why the latest turns stay whole.
+
+00:07:05.425 --> 00:07:08.328
+One more case, where money is involved.
+
+00:07:08.628 --> 00:07:11.767
+A bank's WhatsApp bot stores a payment key in state.
+
+00:07:12.067 --> 00:07:15.454
+An old turn had the wrong key, and it was corrected later.
+
+00:07:15.754 --> 00:07:19.217
+After compaction, the state still shows the old key.
+
+00:07:19.517 --> 00:07:20.406
+What failed?
+
+00:07:20.706 --> 00:07:25.716
+Compaction treated the correction as one more sentence in the summary, not as an
+
+00:07:25.716 --> 00:07:27.219
+update to the key field.
+
+00:07:27.519 --> 00:07:29.840
+A durable fact has to be a field.
+
+00:07:30.140 --> 00:07:35.412
+And the correction has to overwrite the old value, with the correction turn as its
+
+00:07:35.412 --> 00:07:35.862
+source.
+
+00:07:36.162 --> 00:07:40.361
+Otherwise the next payment goes to the old destination.
+
+00:07:41.561 --> 00:07:43.594
+And when is this the wrong tool?
+
+00:07:43.894 --> 00:07:48.404
+A three turn support session, where the customer is still describing the problem.
+
+00:07:48.704 --> 00:07:50.489
+There's no past to compact.
+
+00:07:50.789 --> 00:07:54.775
+Summarizing now throws away detail the next answer needs.
+
+00:07:55.425 --> 00:08:01.311
+And an assistant that pastes thirty-seven policies into its system prompt on every
+
+00:08:01.311 --> 00:08:01.670
+call.
+
+00:08:01.970 --> 00:08:03.539
+That isn't session history.
+
+00:08:03.839 --> 00:08:05.230
+It's pasted knowledge.
+
+00:08:05.530 --> 00:08:08.687
+Take it out of the prompt, and retrieve the current passage.
+
+00:08:09.887 --> 00:08:12.143
+So here's the idea to take with you.
+
+00:08:12.443 --> 00:08:14.574
+Split the history by what it's for.
+
+00:08:14.874 --> 00:08:18.122
+Facts that must last become fields, with sources.
+
+00:08:18.422 --> 00:08:20.446
+The past becomes a short story.
+
+00:08:20.746 --> 00:08:22.172
+The present stays whole.
+
+00:08:22.472 --> 00:08:27.716
+Measure with questions about the beginning, keep the raw history for audits, and
+
+00:08:27.716 --> 00:08:28.896
+compact in blocks.
+
+00:08:29.546 --> 00:08:34.437
+In the next lesson, we'll look at the full pattern this refactoring leads to,
+
+00:08:34.437 --> 00:08:39.138
+including agents that compact their own work mid-task: context compaction.
+
+00:08:39.438 --> 00:08:40.277
+See you there.

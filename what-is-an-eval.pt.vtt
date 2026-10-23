@@ -1,0 +1,511 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:05.324
+O time de back office tem um extrator de notas que funciona bem.
+
+00:00:05.624 --> 00:00:09.954
+Um dia, alguém repara que o prompt diz: extraia o valor total.
+
+00:00:10.254 --> 00:00:15.455
+E muda para: extraia o valor total, com duas casas decimais.
+
+00:00:16.105 --> 00:00:17.777
+Parece inofensivo.
+
+00:00:18.077 --> 00:00:20.072
+O deploy sai numa sexta-feira.
+
+00:00:20.722 --> 00:00:22.726
+Na segunda, o financeiro reclama.
+
+00:00:23.026 --> 00:00:27.066
+Notas com desconto estão entrando pelo valor bruto.
+
+00:00:27.366 --> 00:00:29.400
+Uma mudança de uma frase alterou
+
+00:00:29.400 --> 00:00:31.434
+o jeito de o modelo ler o campo.
+
+00:00:31.734 --> 00:00:34.156
+E ninguém tinha como saber antes,
+
+00:00:34.156 --> 00:00:38.046
+porque o único teste era abrir três arquivos e olhar.
+
+00:00:38.696 --> 00:00:41.301
+Com código comum, você teria um teste unitário.
+
+00:00:41.601 --> 00:00:46.331
+Com um modelo, a mesma entrada pode gerar respostas diferentes,
+
+00:00:46.331 --> 00:00:48.359
+e certo nem sempre é igual.
+
+00:00:48.659 --> 00:00:51.530
+O teste feito para esse mundo se chama eval.
+
+00:00:51.830 --> 00:00:55.688
+Nesta primeira aula da trilha de evals e confiabilidade,
+
+00:00:55.688 --> 00:00:59.270
+você vai aprender do que ele é feito, como dar nota,
+
+00:00:59.270 --> 00:01:01.818
+e como ler os números sem se enganar.
+
+00:01:03.018 --> 00:01:05.528
+Um eval é um teste para a saída do modelo.
+
+00:01:05.828 --> 00:01:07.223
+Ele tem três partes.
+
+00:01:07.873 --> 00:01:08.927
+Um conjunto de casos.
+
+00:01:09.227 --> 00:01:12.067
+Entradas, cada uma com o resultado esperado.
+
+00:01:12.717 --> 00:01:15.161
+Um jeito de rodar o sistema em todos eles.
+
+00:01:15.811 --> 00:01:19.778
+E uma regra de nota, que transforma cada saída num placar.
+
+00:01:20.978 --> 00:01:23.888
+Os casos vêm de dados reais, anonimizados,
+
+00:01:23.888 --> 00:01:26.174
+com a resposta esperada rotulada.
+
+00:01:26.824 --> 00:01:29.346
+O sistema inteiro roda, com o mesmo prompt,
+
+00:01:29.346 --> 00:01:31.281
+modelo e ferramentas da produção.
+
+00:01:31.931 --> 00:01:36.019
+Cada caso gera uma saída, guardada junto com a versão do prompt.
+
+00:01:36.669 --> 00:01:40.000
+A nota compara a saída com o resultado esperado.
+
+00:01:40.650 --> 00:01:42.274
+Cada caso recebe um placar.
+
+00:01:42.574 --> 00:01:45.990
+Passou ou falhou, ou um valor de zero a um.
+
+00:01:46.640 --> 00:01:48.935
+E o relatório mostra a taxa geral,
+
+00:01:48.935 --> 00:01:52.849
+a taxa por categoria e a diferença para a versão anterior.
+
+00:01:53.499 --> 00:01:57.396
+Os três arquivos de sexta falharam no passo um e no passo seis.
+
+00:01:57.696 --> 00:02:00.263
+Três exemplos no olho não são um conjunto.
+
+00:02:00.563 --> 00:02:02.628
+E olhar não é regra de nota.
+
+00:02:02.928 --> 00:02:07.210
+Na segunda, o time descobriu um tipo de nota, com desconto,
+
+00:02:07.210 --> 00:02:09.314
+que não estava entre os três.
+
+00:02:10.514 --> 00:02:12.347
+São três jeitos de dar nota.
+
+00:02:12.647 --> 00:02:14.038
+Comparação exata.
+
+00:02:14.338 --> 00:02:16.507
+O código compara campo a campo,
+
+00:02:16.507 --> 00:02:19.167
+ou confere se a saída cabe num schema.
+
+00:02:19.467 --> 00:02:23.240
+Use quando existe resposta certa, como numa classificação,
+
+00:02:23.240 --> 00:02:25.841
+numa extração ou numa consulta ao banco.
+
+00:02:26.141 --> 00:02:27.591
+No extrator de notas,
+
+00:02:27.591 --> 00:02:31.249
+o total é comparado exatamente com o número rotulado.
+
+00:02:31.899 --> 00:02:33.196
+Uma regra no código.
+
+00:02:33.496 --> 00:02:36.805
+Funções conferem propriedades.
+
+00:02:37.105 --> 00:02:40.925
+Tem citação, fica abaixo de cem palavras,
+
+00:02:40.925 --> 00:02:43.068
+nunca cita concorrente.
+
+00:02:43.368 --> 00:02:47.676
+Use quando o texto varia, mas existem critérios objetivos.
+
+00:02:48.326 --> 00:02:50.250
+E um modelo como juiz.
+
+00:02:50.550 --> 00:02:54.109
+Outro modelo dá nota à saída, com uma rubrica escrita.
+
+00:02:54.409 --> 00:02:56.635
+Use para qualidade aberta.
+
+00:02:56.935 --> 00:02:58.785
+Tom, utilidade.
+
+00:02:59.435 --> 00:03:02.747
+A regra é começar pelo mais simples que resolve.
+
+00:03:03.047 --> 00:03:06.054
+Comparação exata é barata, rápida e nunca erra.
+
+00:03:06.354 --> 00:03:09.598
+Um juiz custa dinheiro, e também precisa ser avaliado.
+
+00:03:09.898 --> 00:03:14.124
+Ele herda a variação do modelo, e pode concordar com o erro.
+
+00:03:14.774 --> 00:03:16.554
+Aqui está um caso em que isso importa.
+
+00:03:16.854 --> 00:03:20.904
+Um eval de tom de e-mails usava só um modelo como juiz.
+
+00:03:21.204 --> 00:03:24.031
+E o juiz aprovava e-mails que prometiam
+
+00:03:24.031 --> 00:03:26.568
+um desconto que a loja não oferece.
+
+00:03:26.868 --> 00:03:28.418
+Um juiz maior não resolveria.
+
+00:03:28.718 --> 00:03:31.283
+Ele ainda pode achar a promessa útil.
+
+00:03:31.583 --> 00:03:33.291
+Coloque regras no código primeiro.
+
+00:03:33.591 --> 00:03:37.479
+Não inventar preço, não citar concorrente.
+
+00:03:37.779 --> 00:03:40.478
+Depois use o juiz no que sobra.
+
+00:03:41.678 --> 00:03:43.101
+Uma pergunta para você.
+
+00:03:43.401 --> 00:03:46.480
+O extrator acerta quarenta e oito de cinquenta casos.
+
+00:03:46.780 --> 00:03:49.085
+Os dois erros são notas com desconto,
+
+00:03:49.085 --> 00:03:51.452
+as únicas duas desse tipo no conjunto.
+
+00:03:51.752 --> 00:03:54.436
+O time comemora 96%.
+
+00:03:54.736 --> 00:03:56.288
+O que esse número esconde?
+
+00:03:59.338 --> 00:04:01.556
+Ele esconde a taxa por categoria.
+
+00:04:01.856 --> 00:04:04.766
+No tipo de nota que o financeiro mais teme,
+
+00:04:04.766 --> 00:04:06.255
+a taxa é zero de dois.
+
+00:04:06.555 --> 00:04:09.642
+O número geral diluiu justamente o caso
+
+00:04:09.642 --> 00:04:12.016
+que quebra o sistema contábil.
+
+00:04:12.666 --> 00:04:14.898
+E chamar de ruído não ajuda.
+
+00:04:15.198 --> 00:04:20.568
+Pode ser ruído no geral, e ainda é 100% de falha nos descontos.
+
+00:04:20.868 --> 00:04:24.057
+Você precisa de mais casos desses, não de um tapinha nas costas.
+
+00:04:24.357 --> 00:04:28.910
+Preencha essa fatia, corrija, e só então olhe o número geral.
+
+00:04:30.110 --> 00:04:31.882
+Existem três tamanhos de eval.
+
+00:04:32.182 --> 00:04:33.253
+O caso unitário.
+
+00:04:33.553 --> 00:04:36.513
+Um bug visto em produção vira um caso.
+
+00:04:36.813 --> 00:04:39.474
+É o equivalente a um teste de regressão.
+
+00:04:40.124 --> 00:04:41.710
+O dataset de eval.
+
+00:04:42.010 --> 00:04:44.341
+De cinquenta a algumas centenas de casos,
+
+00:04:44.341 --> 00:04:46.502
+cobrindo as categorias do seu produto.
+
+00:04:46.802 --> 00:04:48.552
+Ele roda a cada mudança.
+
+00:04:49.202 --> 00:04:51.060
+E o benchmark público.
+
+00:04:51.360 --> 00:04:54.727
+Conjuntos conhecidos que medem modelos em geral.
+
+00:04:55.027 --> 00:04:57.243
+Eles ajudam a escolher um modelo candidato.
+
+00:04:57.543 --> 00:04:59.869
+Não dizem se o seu sistema funciona.
+
+00:05:00.169 --> 00:05:02.975
+Se o produto quer trocar de modelo porque
+
+00:05:02.975 --> 00:05:05.644
+um benchmark público subiu dois pontos,
+
+00:05:05.644 --> 00:05:09.271
+e o seu eval interno caiu um ponto, o seu eval vence.
+
+00:05:09.571 --> 00:05:10.951
+Você não entrega um benchmark.
+
+00:05:11.251 --> 00:05:12.807
+Você entrega o seu classificador.
+
+00:05:13.457 --> 00:05:15.171
+E aqui está a armadilha de quem começa.
+
+00:05:15.471 --> 00:05:17.707
+Tratar o dataset como uma lista morta.
+
+00:05:18.007 --> 00:05:20.393
+Os melhores casos nascem em produção.
+
+00:05:20.693 --> 00:05:22.683
+A nota que o financeiro devolveu.
+
+00:05:22.983 --> 00:05:25.880
+O ticket que o classificador mandou para o time errado.
+
+00:05:26.180 --> 00:05:29.071
+Cada incidente vira mais uma linha no arquivo.
+
+00:05:29.371 --> 00:05:32.786
+Seis meses depois, esse arquivo vale mais que o prompt.
+
+00:05:33.086 --> 00:05:35.655
+Um prompt você reescreve numa tarde.
+
+00:05:35.955 --> 00:05:38.421
+Um bom dataset leva meses para juntar.
+
+00:05:39.621 --> 00:05:43.128
+Como a saída varia, uma rodada só pode enganar.
+
+00:05:43.428 --> 00:05:44.873
+Para casos importantes,
+
+00:05:44.873 --> 00:05:48.076
+rode de três a cinco vezes e olhe a taxa de acerto,
+
+00:05:48.076 --> 00:05:49.961
+não o resultado de uma rodada.
+
+00:05:50.611 --> 00:05:55.953
+Uma queda de 92 para 90% em cinquenta casos é um caso só.
+
+00:05:56.253 --> 00:05:57.399
+Pode ser ruído.
+
+00:05:58.049 --> 00:06:01.834
+E cinquenta casos típicos não cobrem uma categoria rara.
+
+00:06:02.134 --> 00:06:05.339
+Se as notas com desconto são 5% do volume,
+
+00:06:05.339 --> 00:06:08.773
+e você pegou vinte arquivos do topo da pasta,
+
+00:06:08.773 --> 00:06:10.910
+esse tipo pode nunca entrar.
+
+00:06:11.210 --> 00:06:12.090
+Estratifique.
+
+00:06:12.390 --> 00:06:16.151
+Inclua um pouco de cada categoria que o negócio teme,
+
+00:06:16.151 --> 00:06:18.280
+não só o que aparece primeiro.
+
+00:06:19.480 --> 00:06:22.810
+Na página tem um eval que roda em poucos segundos.
+
+00:06:23.110 --> 00:06:26.616
+Cinco mensagens de clientes, cada uma rotulada como cobrança,
+
+00:06:26.616 --> 00:06:27.535
+pedido ou outro.
+
+00:06:28.185 --> 00:06:30.046
+O modelo classifica cada uma,
+
+00:06:30.046 --> 00:06:33.575
+e o código conta quantas batem exatamente com o rótulo.
+
+00:06:34.225 --> 00:06:36.016
+Agora mude o prompt para:
+
+00:06:36.016 --> 00:06:39.669
+responda com a categoria e uma justificativa curta.
+
+00:06:39.969 --> 00:06:42.281
+Rode de novo, e os cinco falham,
+
+00:06:42.281 --> 00:06:45.676
+mesmo com a categoria certa no começo da frase.
+
+00:06:46.326 --> 00:06:48.097
+Isso não é o modelo piorando.
+
+00:06:48.397 --> 00:06:50.979
+A sua nota está presa ao formato antigo.
+
+00:06:51.279 --> 00:06:54.388
+O eval e o prompt são o mesmo contrato.
+
+00:06:54.688 --> 00:06:59.336
+Se a saída ganha um motivo, a nota lê o campo de categoria,
+
+00:06:59.336 --> 00:07:00.281
+não a frase.
+
+00:07:00.581 --> 00:07:01.590
+É exatamente isso.
+
+00:07:01.890 --> 00:07:05.441
+Um eval transforma acho que melhorou num número,
+
+00:07:05.441 --> 00:07:08.623
+e mostra na hora o que uma mudança quebrou.
+
+00:07:09.823 --> 00:07:11.066
+Então, o que muda?
+
+00:07:11.366 --> 00:07:12.846
+Nenhuma mudança de prompt,
+
+00:07:12.846 --> 00:07:15.920
+de modelo ou de ferramenta sai sem rodar o eval antes.
+
+00:07:16.570 --> 00:07:20.835
+Testar cinco perguntas na mão antes de um deploy não é eval.
+
+00:07:21.135 --> 00:07:23.746
+Isso é um smell chamado vibe check eval.
+
+00:07:24.396 --> 00:07:28.102
+E o eval precisa rodar sozinho, no seu pipeline,
+
+00:07:28.102 --> 00:07:29.724
+ou com um comando só.
+
+00:07:30.024 --> 00:07:32.845
+Esse padrão se chama eval harness.
+
+00:07:33.495 --> 00:07:35.778
+Um último caso.
+
+00:07:36.078 --> 00:07:39.632
+O seu pipeline roda oitenta casos a cada pull request.
+
+00:07:39.932 --> 00:07:43.562
+Alguém ainda testou mais quatro perguntas num chat na sexta,
+
+00:07:43.562 --> 00:07:44.228
+e publicou.
+
+00:07:44.528 --> 00:07:45.899
+O pipeline passou.
+
+00:07:46.199 --> 00:07:48.582
+O financeiro reclamou mesmo assim.
+
+00:07:48.882 --> 00:07:49.954
+Onde vazou?
+
+00:07:50.254 --> 00:07:51.683
+Naquelas quatro perguntas.
+
+00:07:51.983 --> 00:07:54.143
+Se eram diferentes dos oitenta,
+
+00:07:54.143 --> 00:07:56.860
+deviam ter virado casos antes do merge.
+
+00:07:57.160 --> 00:08:01.070
+Se não eram, o chat só trouxe falsa confiança.
+
+00:08:02.270 --> 00:08:04.255
+Então, a ideia para levar.
+
+00:08:04.555 --> 00:08:06.744
+Um eval é como você para de adivinhar.
+
+00:08:07.044 --> 00:08:09.181
+Casos reais com a resposta certa,
+
+00:08:09.181 --> 00:08:11.448
+o sistema de verdade rodando neles,
+
+00:08:11.448 --> 00:08:14.493
+e uma nota que não depende do humor de ninguém.
+
+00:08:14.793 --> 00:08:16.350
+Leia por categoria,
+
+00:08:16.350 --> 00:08:20.448
+rode a cada mudança e alimente com cada incidente.
+
+00:08:21.098 --> 00:08:22.239
+Na próxima aula,
+
+00:08:22.239 --> 00:08:26.016
+vamos ver o que acontece quando um time não tem eval:
+
+00:08:26.016 --> 00:08:27.299
+o untested prompt.
+
+00:08:27.599 --> 00:08:28.429
+Até lá.

@@ -1,0 +1,394 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:06.059
+An invoice pipeline asked the model to do six things in one call.
+
+00:00:06.359 --> 00:00:11.901
+Extract the line items, add them up, apply the discount, compute the sales tax on
+
+00:00:11.901 --> 00:00:16.143
+each line, convert the date, and validate the issuer's tax ID.
+
+00:00:16.793 --> 00:00:19.390
+On most invoices, the total matched.
+
+00:00:19.690 --> 00:00:24.752
+But in one batch, three invoices in a hundred reached the accounting system with the
+
+00:00:24.752 --> 00:00:27.041
+tax wrong in the second decimal place.
+
+00:00:27.691 --> 00:00:28.920
+And there was no pattern.
+
+00:00:29.220 --> 00:00:31.343
+Sometimes it was rounding.
+
+00:00:31.993 --> 00:00:35.132
+Sometimes a line counted twice in the sum.
+
+00:00:35.782 --> 00:00:41.404
+And sometimes a digit of the tax ID that the model decided to fix, all on its own.
+
+00:00:42.054 --> 00:00:47.539
+Arithmetic, sales tax and check digits aren't a matter of interpretation.
+
+00:00:47.839 --> 00:00:49.024
+They're rules.
+
+00:00:49.324 --> 00:00:52.721
+The model generates the next token by probability.
+
+00:00:53.021 --> 00:00:54.664
+A sum function doesn't.
+
+00:00:54.964 --> 00:01:00.179
+In this lesson, you'll move that work out of the model, safely, and discover a bonus
+
+00:01:00.179 --> 00:01:01.855
+you probably didn't expect.
+
+00:01:03.055 --> 00:01:07.774
+The solution is to take the deterministic operation out of the prompt.
+
+00:01:08.074 --> 00:01:12.102
+The model extracts, or decides, what only it can.
+
+00:01:12.402 --> 00:01:17.284
+A regular function does the math, the formatting, or the validation.
+
+00:01:17.584 --> 00:01:22.324
+And when the model needs the result in the middle of a conversation, that function
+
+00:01:22.324 --> 00:01:23.884
+is offered to it as a tool.
+
+00:01:25.084 --> 00:01:29.240
+Before, understanding and calculating happen in the same call.
+
+00:01:29.540 --> 00:01:34.517
+The invoice goes in, numbers come out, and they go straight into the system.
+
+00:01:35.167 --> 00:01:39.309
+After, the model reads, and code calculates and checks.
+
+00:01:39.609 --> 00:01:45.684
+The invoice arrives, and the model only extracts values, exactly as printed.
+
+00:01:46.334 --> 00:01:51.764
+Regular functions handle the sums, the tax, the dates and the tax ID check.
+
+00:01:52.414 --> 00:01:56.006
+Code compares the calculated total with the printed total.
+
+00:01:56.656 --> 00:02:00.028
+And only a coherent invoice goes into the system.
+
+00:02:00.328 --> 00:02:02.168
+A mismatch goes to review.
+
+00:02:03.368 --> 00:02:04.741
+Here's one invoice.
+
+00:02:05.041 --> 00:02:07.429
+The model returns two items.
+
+00:02:07.729 --> 00:02:12.452
+Two units at one hundred fifty dollars, and one unit at four hundred.
+
+00:02:12.752 --> 00:02:15.051
+Both with an eighteen percent tax rate.
+
+00:02:15.351 --> 00:02:16.776
+No discount.
+
+00:02:17.076 --> 00:02:20.152
+And a printed total of seven hundred dollars.
+
+00:02:20.802 --> 00:02:21.972
+Code does the math.
+
+00:02:22.272 --> 00:02:26.577
+Two times one fifty, plus four hundred, is seven hundred.
+
+00:02:26.877 --> 00:02:28.729
+It matches the printed total.
+
+00:02:29.029 --> 00:02:34.867
+Then it computes the tax with the rounding rule the tax team chose, and validates
+
+00:02:34.867 --> 00:02:35.660
+the tax ID.
+
+00:02:36.310 --> 00:02:37.721
+Now here's the bonus.
+
+00:02:38.021 --> 00:02:41.240
+Say the model had misread one fifty as fifteen.
+
+00:02:41.540 --> 00:02:45.370
+The sum wouldn't reach seven hundred, and the invoice would go to review.
+
+00:02:46.020 --> 00:02:51.148
+Before, the model could quietly adjust the sum to make it close, and the reading
+
+00:02:51.148 --> 00:02:52.623
+error just disappeared.
+
+00:02:52.923 --> 00:02:57.291
+Now the math in code becomes a checker for the extraction.
+
+00:02:57.591 --> 00:03:01.406
+The error that used to slip by silently now raises a flag.
+
+00:03:02.606 --> 00:03:04.026
+Here's one for you.
+
+00:03:04.326 --> 00:03:07.375
+The team created a tool called sum items.
+
+00:03:07.675 --> 00:03:11.153
+It sends the amounts to a small model, and asks for the sum.
+
+00:03:11.453 --> 00:03:13.546
+The math eval improved a little.
+
+00:03:13.846 --> 00:03:15.584
+Is the refactoring done?
+
+00:03:18.634 --> 00:03:19.378
+No.
+
+00:03:19.678 --> 00:03:22.370
+The math left one prompt and entered another.
+
+00:03:22.670 --> 00:03:27.992
+It's still token generation, it still makes mistakes, and now the mistake lives in a
+
+00:03:27.992 --> 00:03:29.702
+tool with an innocent name.
+
+00:03:30.352 --> 00:03:32.467
+A tool, here, is a function.
+
+00:03:32.767 --> 00:03:36.154
+Sum, a rounding function, a tax ID validator.
+
+00:03:36.454 --> 00:03:37.565
+Here's the test.
+
+00:03:37.865 --> 00:03:43.485
+If the operation can't be unit tested without calling a model's API, it hasn't left
+
+00:03:43.485 --> 00:03:44.432
+the model yet.
+
+00:03:44.732 --> 00:03:47.683
+And cheaper and still wrong is still wrong.
+
+00:03:48.883 --> 00:03:50.431
+Now the mechanics.
+
+00:03:51.081 --> 00:03:52.847
+Step zero, measure.
+
+00:03:53.147 --> 00:03:56.453
+Run the extraction eval, and split the errors by type.
+
+00:03:56.753 --> 00:03:59.920
+Reading errors, where a value was misread.
+
+00:04:00.220 --> 00:04:04.379
+And math errors, in the sum, the tax or the format.
+
+00:04:04.679 --> 00:04:09.214
+If you don't split them, you'll think the model improved, when it only got the sum
+
+00:04:09.214 --> 00:04:10.376
+right by coincidence.
+
+00:04:11.026 --> 00:04:14.167
+List the deterministic operations in the prompt.
+
+00:04:14.467 --> 00:04:18.922
+Every verb of calculation, conversion or validation.
+
+00:04:19.222 --> 00:04:22.791
+Add up, compute, convert, validate the check digit.
+
+00:04:23.441 --> 00:04:28.566
+Write a function for each one, with unit tests, including the edge cases.
+
+00:04:28.866 --> 00:04:35.476
+Half a cent, a zero rate, national holidays, a tax ID whose check digit is zero.
+
+00:04:35.776 --> 00:04:40.943
+And the tax rule comes from a conversation with whoever owns tax, not from the
+
+00:04:40.943 --> 00:04:41.870
+model's guess.
+
+00:04:42.520 --> 00:04:47.259
+Rewrite the prompt to ask only for raw data, as it appears in the document.
+
+00:04:47.559 --> 00:04:52.921
+And take the computed fields, like the tax and the total, out of what the model
+
+00:04:52.921 --> 00:04:53.532
+fills in.
+
+00:04:54.182 --> 00:04:57.218
+Wire the functions in, right after extraction.
+
+00:04:57.868 --> 00:05:03.340
+Or, if the model needs the result during a conversation, expose them as tools.
+
+00:05:03.640 --> 00:05:08.541
+A delivery assistant that needs the next business day mid-conversation calls a
+
+00:05:08.541 --> 00:05:10.614
+function that adds business days.
+
+00:05:10.914 --> 00:05:12.649
+The model doesn't add days.
+
+00:05:12.949 --> 00:05:13.934
+It asks.
+
+00:05:14.584 --> 00:05:16.579
+Use mismatches as an alarm.
+
+00:05:16.879 --> 00:05:21.030
+When the code's math disagrees with the document, send it to review.
+
+00:05:21.680 --> 00:05:22.830
+And measure again.
+
+00:05:23.130 --> 00:05:25.415
+Math errors should drop to zero.
+
+00:05:25.715 --> 00:05:29.465
+Reading errors are still there, but now the cross-check catches them.
+
+00:05:30.665 --> 00:05:31.676
+A few risks.
+
+00:05:31.976 --> 00:05:34.443
+Interpretation hiding inside the math.
+
+00:05:34.743 --> 00:05:37.429
+Total may or may not include shipping.
+
+00:05:37.729 --> 00:05:42.355
+Settle that rule with someone who knows the business, before you code it.
+
+00:05:42.655 --> 00:05:45.878
+Otherwise you swap the model's error for yours.
+
+00:05:46.178 --> 00:05:49.264
+Deterministic, and on every single invoice.
+
+00:05:49.914 --> 00:05:51.280
+Raw formats vary.
+
+00:05:51.580 --> 00:05:55.173
+Asking for a date as written pushes the parsing into code.
+
+00:05:55.473 --> 00:05:59.005
+Test the parser on real formats from the invoice folder.
+
+00:05:59.655 --> 00:06:01.883
+A tool the model ignores.
+
+00:06:02.183 --> 00:06:07.091
+If the function is a tool, the model may skip it and calculate on its own.
+
+00:06:07.391 --> 00:06:11.945
+Say in the description when to use it, and check the trace for the tool call.
+
+00:06:12.595 --> 00:06:14.328
+And more reviews, at first.
+
+00:06:14.628 --> 00:06:17.994
+The cross-check will catch errors that used to pass silently.
+
+00:06:18.294 --> 00:06:19.250
+That's the goal.
+
+00:06:19.550 --> 00:06:23.617
+But warn the operations team before they think something broke.
+
+00:06:24.267 --> 00:06:28.576
+And if operations does complain, don't switch the alarm off.
+
+00:06:28.876 --> 00:06:31.570
+The old normal volume was invisible error.
+
+00:06:31.870 --> 00:06:33.738
+Classify the reviews.
+
+00:06:34.038 --> 00:06:38.268
+Separate real mismatches from a business rule you coded badly.
+
+00:06:38.568 --> 00:06:39.876
+And fix the right one.
+
+00:06:40.526 --> 00:06:43.123
+There's one tempting shortcut to resist.
+
+00:06:43.423 --> 00:06:48.208
+The code's sum and the printed total differ by two percent, and someone suggests
+
+00:06:48.208 --> 00:06:52.873
+letting the model adjust the total, because it understands implicit discounts.
+
+00:06:53.173 --> 00:06:54.762
+That's the smell coming back.
+
+00:06:55.062 --> 00:06:59.692
+A real discount becomes an extracted field, not a silent adjustment.
+
+00:07:00.892 --> 00:07:02.888
+So what stays with the model?
+
+00:07:03.188 --> 00:07:06.552
+Anything with no closed rule a function could apply.
+
+00:07:06.852 --> 00:07:12.415
+Deciding whether a contract paragraph is a penalty clause or a confidentiality
+
+00:07:12.415 --> 00:07:14.198
+clause is classification.
+
+00:07:14.498 --> 00:07:17.696
+No function computes the meaning of a paragraph.
+
+00:07:17.996 --> 00:07:22.946
+Validating a check digit, or turning a date into a calendar date, is code.
+
+00:07:24.146 --> 00:07:26.131
+So here's the idea to take with you.
+
+00:07:26.431 --> 00:07:28.714
+Split reading from calculating.
+
+00:07:29.014 --> 00:07:33.771
+The model copies what's on the page, functions do every new number, and the
+
+00:07:33.771 --> 00:07:37.830
+comparison between the two becomes your best alarm for misreads.
+
+00:07:38.130 --> 00:07:42.850
+A refactoring that removes errors, and also finds the ones you couldn't see.
+
+00:07:43.500 --> 00:07:47.226
+So far, the errors came from the model reading wrong.
+
+00:07:47.526 --> 00:07:52.817
+In the next lesson, we'll look at what happens when the call itself fails, and the
+
+00:07:52.817 --> 00:07:55.075
+code just tries again: blind retry.
+
+00:07:55.375 --> 00:07:56.205
+See you there.

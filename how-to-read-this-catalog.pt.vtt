@@ -1,0 +1,454 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:03.900
+Imagine sua primeira semana num time novo.
+
+00:00:04.200 --> 00:00:07.839
+Você herdou um assistente que atende clientes no WhatsApp,
+
+00:00:07.839 --> 00:00:10.663
+consulta pedidos e às vezes chama uma pessoa.
+
+00:00:11.313 --> 00:00:12.484
+Ele funciona.
+
+00:00:12.784 --> 00:00:16.781
+Mas toda mudança no prompt dá medo, a conta do provedor subiu,
+
+00:00:16.781 --> 00:00:20.714
+e ninguém sabe explicar por que o bot disse um absurdo ontem.
+
+00:00:21.364 --> 00:00:22.645
+Você abre o código.
+
+00:00:22.945 --> 00:00:24.977
+A primeira coisa que aparece é um prompt
+
+00:00:24.977 --> 00:00:26.755
+de sistema com quarenta parágrafos.
+
+00:00:27.405 --> 00:00:31.391
+Depois, um loop que chama o modelo até ele decidir que terminou,
+
+00:00:31.391 --> 00:00:32.636
+sem contador nenhum.
+
+00:00:33.286 --> 00:00:34.255
+E nenhum teste.
+
+00:00:34.555 --> 00:00:36.247
+Você sente que tem algo errado.
+
+00:00:36.547 --> 00:00:38.217
+O difícil é dizer o quê,
+
+00:00:38.217 --> 00:00:42.322
+decidir o que vem primeiro e consertar sem quebrar o resto.
+
+00:00:42.972 --> 00:00:46.510
+Você não precisa de mais um tutorial de como chamar uma API.
+
+00:00:46.810 --> 00:00:48.796
+Precisa de palavras para o que está errado
+
+00:00:48.796 --> 00:00:50.593
+e de um caminho seguro para consertar.
+
+00:00:50.893 --> 00:00:52.919
+É para isso que serve este catálogo,
+
+00:00:52.919 --> 00:00:55.169
+e nesta aula você vai aprender a usá-lo.
+
+00:00:56.369 --> 00:00:59.103
+O catálogo organiza a engenharia de sistemas
+
+00:00:59.103 --> 00:01:01.712
+com modelos de linguagem em cinco pilares.
+
+00:01:02.012 --> 00:01:04.703
+Cada um responde uma pergunta diferente.
+
+00:01:05.353 --> 00:01:06.718
+Fundamentos respondem:
+
+00:01:06.718 --> 00:01:10.194
+o que eu preciso saber antes de projetar qualquer coisa?
+
+00:01:10.494 --> 00:01:14.190
+Tokens, custo, como o modelo escolhe palavras.
+
+00:01:14.840 --> 00:01:17.896
+Smells respondem: o que está errado no meu sistema?
+
+00:01:18.196 --> 00:01:20.428
+Aquele prompt gigante tem nome.
+
+00:01:20.728 --> 00:01:22.111
+Chama prompt bloat.
+
+00:01:22.761 --> 00:01:26.267
+Refatorações respondem: como eu conserto sem quebrar?
+
+00:01:26.917 --> 00:01:27.899
+Padrões respondem:
+
+00:01:27.899 --> 00:01:30.627
+qual é o formato certo para esse tipo de problema?
+
+00:01:30.927 --> 00:01:33.451
+E o quinto pilar, os cenários reais,
+
+00:01:33.451 --> 00:01:36.747
+mostra tudo isso dentro de um sistema completo.
+
+00:01:37.947 --> 00:01:40.110
+Os pilares não são caixas separadas.
+
+00:01:40.410 --> 00:01:43.421
+Eles formam um caminho, e você vai percorrê-lo muitas vezes.
+
+00:01:44.071 --> 00:01:45.413
+Começa com um smell.
+
+00:01:45.713 --> 00:01:48.731
+Um smell é um sinal de que algo vai doer depois.
+
+00:01:49.031 --> 00:01:52.523
+O sistema funciona hoje, mas está ficando caro,
+
+00:01:52.523 --> 00:01:53.935
+frágil ou inseguro.
+
+00:01:54.585 --> 00:01:56.593
+O smell aponta para uma refatoração.
+
+00:01:56.893 --> 00:01:59.117
+Uma refatoração muda a estrutura sem
+
+00:01:59.117 --> 00:02:00.909
+mudar o que o usuário recebe.
+
+00:02:01.209 --> 00:02:04.484
+E toda refatoração começa e termina com um eval,
+
+00:02:04.484 --> 00:02:06.940
+um teste para o que o modelo produz.
+
+00:02:07.590 --> 00:02:09.856
+A refatoração leva a um padrão de projeto,
+
+00:02:09.856 --> 00:02:12.824
+o jeito comprovado de resolver aquele tipo de problema.
+
+00:02:13.474 --> 00:02:16.232
+E o padrão aparece nos cenários reais.
+
+00:02:16.532 --> 00:02:20.272
+Cada cenário começa com uma primeira versão ingênua.
+
+00:02:20.572 --> 00:02:24.159
+Essa primeira versão tem os smells do passo um,
+
+00:02:24.159 --> 00:02:25.609
+e o ciclo recomeça.
+
+00:02:26.809 --> 00:02:30.118
+Vamos voltar ao assistente que você herdou e seguir esse
+
+00:02:30.118 --> 00:02:33.013
+caminho com os dois problemas mais visíveis dele.
+
+00:02:33.663 --> 00:02:35.742
+Primeiro, o loop sem contador.
+
+00:02:36.042 --> 00:02:40.051
+Uma única execução custou dezenas de vezes mais que uma normal.
+
+00:02:40.351 --> 00:02:43.199
+Esse smell se chama unbounded loop.
+
+00:02:43.849 --> 00:02:47.450
+A correção é uma refatoração chamada add loop budget:
+
+00:02:47.450 --> 00:02:49.896
+um limite de passos, tokens e tempo.
+
+00:02:50.546 --> 00:02:53.657
+E onde você chega é um padrão chamado stop conditions,
+
+00:02:53.657 --> 00:02:56.710
+em que o agente sabe exatamente quando precisa parar.
+
+00:02:57.360 --> 00:03:00.207
+Segundo, o prompt de quarenta parágrafos,
+
+00:03:00.207 --> 00:03:03.680
+em que cada bug corrigido virou mais um parágrafo.
+
+00:03:03.980 --> 00:03:06.256
+Isso é prompt bloat.
+
+00:03:06.906 --> 00:03:10.674
+A refatoração tira uma tarefa e coloca num prompt menor,
+
+00:03:10.674 --> 00:03:11.212
+só dela.
+
+00:03:11.512 --> 00:03:14.187
+Chama extract subprompt.
+
+00:03:14.837 --> 00:03:18.547
+E o destino é o prompt chaining: poucas etapas curtas,
+
+00:03:18.547 --> 00:03:20.264
+cada uma fácil de testar.
+
+00:03:20.914 --> 00:03:22.024
+Agora repare na ordem.
+
+00:03:22.324 --> 00:03:24.142
+Você não pula do sintoma direto
+
+00:03:24.142 --> 00:03:26.488
+para reescrever tudo com o padrão certo.
+
+00:03:26.788 --> 00:03:30.237
+A refatoração é o caminho pequeno e medido entre
+
+00:03:30.237 --> 00:03:32.823
+o que existe hoje e o formato final.
+
+00:03:33.123 --> 00:03:37.280
+Primeiro mede, depois muda a estrutura, depois mede de novo.
+
+00:03:38.480 --> 00:03:39.953
+Uma pergunta para você.
+
+00:03:40.253 --> 00:03:43.590
+Um colega aplicou extract subprompt no classificador
+
+00:03:43.590 --> 00:03:46.157
+de tickets e diz que ficou muito melhor.
+
+00:03:46.457 --> 00:03:48.360
+Pelo que você acabou de ouvir,
+
+00:03:48.360 --> 00:03:51.025
+o que falta antes de aceitar essa mudança?
+
+00:03:54.075 --> 00:03:59.906
+Falta o eval, rodado antes e depois, com os números lado a lado.
+
+00:04:00.206 --> 00:04:03.773
+Sem o número de antes, melhor é só uma impressão.
+
+00:04:04.073 --> 00:04:07.424
+E uma queda em outra categoria passaria totalmente despercebida.
+
+00:04:08.074 --> 00:04:11.439
+Trocar para um modelo maior também não responde a pergunta.
+
+00:04:11.739 --> 00:04:15.442
+Mistura duas mudanças e deixa tudo mais caro.
+
+00:04:15.742 --> 00:04:19.760
+A garantia de que nada piorou vem da medição.
+
+00:04:20.960 --> 00:04:25.300
+A palavra smell vem da refatoração clássica de código.
+
+00:04:25.600 --> 00:04:28.032
+E tem uma diferença que vale guardar.
+
+00:04:28.332 --> 00:04:29.546
+Um bug quebra hoje.
+
+00:04:29.846 --> 00:04:32.476
+Um smell funciona hoje e cobra depois.
+
+00:04:33.126 --> 00:04:34.623
+Cobra na conta.
+
+00:04:35.273 --> 00:04:37.977
+No tempo que o seu time gasta mantendo.
+
+00:04:38.627 --> 00:04:40.935
+E às vezes num incidente de segurança.
+
+00:04:41.585 --> 00:04:43.985
+Por isso todo smell do catálogo tem
+
+00:04:43.985 --> 00:04:46.247
+uma seção chamada quando ignorar.
+
+00:04:46.547 --> 00:04:48.152
+Um prompt grande num protótipo
+
+00:04:48.152 --> 00:04:49.971
+com dez usuários pode estar ótimo.
+
+00:04:50.271 --> 00:04:53.493
+O mesmo prompt num canal de atendimento com milhares
+
+00:04:53.493 --> 00:04:56.467
+de conversas por dia é dinheiro saindo todo mês.
+
+00:04:57.117 --> 00:04:59.953
+O catálogo dá o diagnóstico.
+
+00:05:00.253 --> 00:05:03.155
+A decisão de quando consertar continua sua.
+
+00:05:03.805 --> 00:05:07.635
+E o erro mais comum de quem está começando é o contrário:
+
+00:05:07.635 --> 00:05:11.533
+ler a lista de smells e tentar consertar todos de uma vez.
+
+00:05:11.833 --> 00:05:13.500
+Comece pelo que mais dói.
+
+00:05:13.800 --> 00:05:17.675
+Normalmente, é o que aparece na conta ou no incidente da semana.
+
+00:05:18.875 --> 00:05:22.982
+Toda página de um pilar tem as mesmas seções na mesma ordem.
+
+00:05:23.282 --> 00:05:26.819
+Aprenda o formato uma vez e você acha tudo sem procurar.
+
+00:05:27.119 --> 00:05:30.754
+E os números dos diagramas batem com os comentários do código.
+
+00:05:31.054 --> 00:05:34.087
+Se o passo três do diagrama é classificar,
+
+00:05:34.087 --> 00:05:37.265
+o código também diz passo três, classificar.
+
+00:05:37.565 --> 00:05:41.453
+Quando se perder no código, volte ao diagrama pelo número.
+
+00:05:42.103 --> 00:05:44.485
+No caminho, você encontra perguntas curtas.
+
+00:05:44.785 --> 00:05:48.504
+Toda opção tem explicação, até as erradas,
+
+00:05:48.504 --> 00:05:52.490
+porque o erro mais útil é o que você entende.
+
+00:05:53.140 --> 00:05:54.915
+E se você chegou por uma busca,
+
+00:05:54.915 --> 00:05:56.919
+ler fora de ordem não tem problema.
+
+00:05:57.219 --> 00:05:59.790
+Toda página termina com um leia a seguir,
+
+00:05:59.790 --> 00:06:02.362
+apontando o próximo passo mais útil dali.
+
+00:06:02.662 --> 00:06:05.202
+Se quiser uma ordem, siga as trilhas.
+
+00:06:05.502 --> 00:06:10.296
+Elas formam um curso só: fundamentos, evals, RAG e contexto,
+
+00:06:10.296 --> 00:06:12.693
+agentes, segurança e produção.
+
+00:06:13.893 --> 00:06:15.690
+Agora escolha um sistema que você conhece
+
+00:06:15.690 --> 00:06:16.917
+e responda quatro perguntas.
+
+00:06:17.217 --> 00:06:21.398
+Escreva as respostas, mesmo que seja não sei.
+
+00:06:22.048 --> 00:06:22.481
+Um.
+
+00:06:22.781 --> 00:06:25.585
+Quantos tokens tem o prompt de sistema hoje?
+
+00:06:25.885 --> 00:06:30.373
+Se a resposta for vários milhares, ou não faço ideia,
+
+00:06:30.373 --> 00:06:31.897
+leia prompt bloat.
+
+00:06:32.547 --> 00:06:33.206
+Dois.
+
+00:06:33.506 --> 00:06:36.020
+Se alguém muda uma linha do prompt,
+
+00:06:36.020 --> 00:06:38.247
+como você sabe que nada piorou?
+
+00:06:38.547 --> 00:06:42.193
+Se a resposta for a gente testa umas perguntas na mão,
+
+00:06:42.193 --> 00:06:43.611
+leia untested prompt.
+
+00:06:44.261 --> 00:06:44.670
+Três.
+
+00:06:44.970 --> 00:06:49.577
+Se o modelo faz algo errado em produção, onde você olha?
+
+00:06:49.877 --> 00:06:52.246
+Se não dá para saber, leia no tracing.
+
+00:06:52.896 --> 00:06:53.352
+Quatro.
+
+00:06:53.652 --> 00:06:58.175
+Qual foi a execução mais cara do mês, e quanto custou?
+
+00:06:58.475 --> 00:07:01.504
+Se ninguém acompanha isso, leia no cost budget.
+
+00:07:02.154 --> 00:07:04.894
+A maioria dos times responde mal pelo menos duas.
+
+00:07:05.194 --> 00:07:08.097
+É normal, e é um bom ponto de partida.
+
+00:07:08.397 --> 00:07:10.518
+Você acabou de montar a sua lista de prioridades,
+
+00:07:10.518 --> 00:07:12.639
+com nomes que o resto do time consegue consultar.
+
+00:07:13.839 --> 00:07:17.085
+Esse é o valor de um vocabulário comum.
+
+00:07:17.385 --> 00:07:20.456
+Dizer que este agente tem tool sprawl diz mais ao time
+
+00:07:20.456 --> 00:07:23.129
+do que dizer que o agente se confunde às vezes.
+
+00:07:23.429 --> 00:07:25.137
+O nome carrega o diagnóstico,
+
+00:07:25.137 --> 00:07:28.320
+a correção testada e o formato que você quer alcançar.
+
+00:07:28.970 --> 00:07:32.002
+Na próxima aula, a gente começa pelo próprio modelo:
+
+00:07:32.002 --> 00:07:35.267
+quatro propriedades que todo engenheiro precisa conhecer
+
+00:07:35.267 --> 00:07:37.949
+e que quase todo padrão daqui tenta controlar.
+
+00:07:38.249 --> 00:07:39.079
+Até lá.

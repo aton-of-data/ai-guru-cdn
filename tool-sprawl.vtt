@@ -1,0 +1,418 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:05.395
+An internal operations agent started with five tools.
+
+00:00:05.695 --> 00:00:08.643
+Every sprint, some team asked for one more.
+
+00:00:08.943 --> 00:00:13.141
+A year later, the list sent with every call looked like this.
+
+00:00:13.791 --> 00:00:15.620
+Get user.
+
+00:00:15.920 --> 00:00:16.840
+Fetch user.
+
+00:00:17.140 --> 00:00:18.420
+Get user profile.
+
+00:00:18.720 --> 00:00:19.893
+Look up customer.
+
+00:00:20.193 --> 00:00:21.270
+Search users.
+
+00:00:21.570 --> 00:00:24.998
+Five tools, all saying, more or less, gets a user.
+
+00:00:25.648 --> 00:00:31.658
+Then get account, and get account version two, described as: gets an account, new.
+
+00:00:31.958 --> 00:00:33.418
+And thirty-three more.
+
+00:00:34.068 --> 00:00:35.868
+The trace shows the effect.
+
+00:00:36.168 --> 00:00:40.815
+A request comes in: which plan does the customer with this tax ID have?
+
+00:00:41.465 --> 00:00:45.641
+The model calls get user, with the tax ID in the id field.
+
+00:00:45.941 --> 00:00:46.414
+Type error.
+
+00:00:47.064 --> 00:00:50.681
+It tries search users, with the tax ID as free text.
+
+00:00:50.981 --> 00:00:52.001
+Nothing useful.
+
+00:00:52.651 --> 00:00:56.401
+And only on the third try, it finds look up customer.
+
+00:00:56.701 --> 00:00:58.792
+Three turns, for one lookup.
+
+00:00:59.092 --> 00:01:04.349
+In this lesson, you'll learn to recognize this smell, what it really costs, and the
+
+00:01:04.349 --> 00:01:06.439
+order of work to shrink the list.
+
+00:01:07.639 --> 00:01:08.711
+Here's the shape.
+
+00:01:09.011 --> 00:01:10.648
+A simple request comes in.
+
+00:01:11.298 --> 00:01:15.775
+The model has to pick among dozens of vaguely described options.
+
+00:01:16.425 --> 00:01:19.866
+It picks the one whose name looks most like the request.
+
+00:01:20.516 --> 00:01:23.891
+The result is an error, or data that doesn't help.
+
+00:01:24.541 --> 00:01:27.420
+And after extra turns, it gets it right.
+
+00:01:27.720 --> 00:01:28.559
+Or gives up.
+
+00:01:29.209 --> 00:01:30.092
+How do you spot it?
+
+00:01:30.392 --> 00:01:34.398
+More than fifteen or twenty tools available in the same call.
+
+00:01:35.048 --> 00:01:41.725
+Similar names, like get something, fetch something, and something version two, with
+
+00:01:41.725 --> 00:01:44.138
+nearly identical descriptions.
+
+00:01:44.788 --> 00:01:49.693
+One line descriptions that say what the tool does, but never when to use it.
+
+00:01:50.343 --> 00:01:54.339
+Traces where the wrong tool gets called first, and corrected later.
+
+00:01:54.639 --> 00:01:59.472
+And tool definitions adding up to thousands of tokens on every call.
+
+00:02:00.122 --> 00:02:03.154
+And nobody can say which tools are still used.
+
+00:02:04.354 --> 00:02:05.863
+Each team adds its own.
+
+00:02:06.163 --> 00:02:11.762
+A new tool is the easiest way to give the agent a new capability, and nobody owns
+
+00:02:11.762 --> 00:02:12.798
+the whole list.
+
+00:02:13.448 --> 00:02:14.930
+Removing feels risky.
+
+00:02:15.230 --> 00:02:20.408
+With no usage data, removing a tool might break a flow someone uses once a month.
+
+00:02:21.058 --> 00:02:24.360
+Internal APIs become tools one by one.
+
+00:02:24.660 --> 00:02:28.906
+Each endpoint turns into a tool, named after the endpoint.
+
+00:02:29.206 --> 00:02:33.779
+The agent inherits the shape of your backend, not the shape of the task.
+
+00:02:34.429 --> 00:02:36.800
+New versions live next to old ones.
+
+00:02:37.100 --> 00:02:41.235
+Version two came in so version one wouldn't break, and both stayed.
+
+00:02:41.885 --> 00:02:48.009
+And connecting a tool server through MCP, the model context protocol, often exposes
+
+00:02:48.009 --> 00:02:49.780
+dozens of tools at once.
+
+00:02:50.080 --> 00:02:55.385
+The team flips the server on, and forgets to filter what the agent actually needs.
+
+00:02:56.035 --> 00:03:00.408
+The trap for people starting out is treating more tools as more capable.
+
+00:03:00.708 --> 00:03:02.610
+The opposite is often true.
+
+00:03:02.910 --> 00:03:08.008
+Few tools, clearly distinct, beat a toolbox the model can't read in full.
+
+00:03:09.208 --> 00:03:10.144
+Now the cost.
+
+00:03:10.444 --> 00:03:11.849
+Accuracy first.
+
+00:03:12.149 --> 00:03:15.582
+Tool choice gets worse when the options are many, and alike.
+
+00:03:15.882 --> 00:03:19.693
+Each mistake costs an extra turn, or a wrong answer.
+
+00:03:20.343 --> 00:03:22.831
+Then money, with illustrative numbers.
+
+00:03:23.131 --> 00:03:28.582
+Say each tool definition is about one hundred fifty tokens, and the agent makes ten
+
+00:03:28.582 --> 00:03:29.962
+thousand calls a day.
+
+00:03:30.262 --> 00:03:35.445
+With forty tools, that's about six thousand tokens per call, and about sixty million
+
+00:03:35.445 --> 00:03:36.248
+tokens a day.
+
+00:03:36.548 --> 00:03:37.958
+Just for the catalog.
+
+00:03:38.608 --> 00:03:41.297
+With eight tools, about twelve million.
+
+00:03:41.597 --> 00:03:46.038
+And each wrong pick still pays an extra turn, with the full history again.
+
+00:03:46.688 --> 00:03:47.787
+And security.
+
+00:03:48.087 --> 00:03:50.465
+More tools means more surface.
+
+00:03:50.765 --> 00:03:54.168
+Picture a marketplace agent with three payment tools.
+
+00:03:54.468 --> 00:03:58.353
+Pay a bank slip, send an instant payment, and wire a transfer.
+
+00:03:58.653 --> 00:04:01.924
+All three described as: pays the customer.
+
+00:04:02.224 --> 00:04:05.066
+A refund request can fire the wrong one.
+
+00:04:05.366 --> 00:04:07.475
+Now the mistake isn't just cost.
+
+00:04:07.775 --> 00:04:09.886
+Money goes down the wrong rail.
+
+00:04:10.186 --> 00:04:13.721
+And a forgotten write tool on the list is an open door.
+
+00:04:14.021 --> 00:04:16.124
+In security, this has a name.
+
+00:04:16.424 --> 00:04:18.453
+They call it excessive agency.
+
+00:04:18.753 --> 00:04:21.714
+The model has more power than the task needs.
+
+00:04:22.914 --> 00:04:24.084
+Here's one for you.
+
+00:04:24.384 --> 00:04:29.484
+You connected an internal product's tool server, and the agent now sees eighty
+
+00:04:29.484 --> 00:04:31.184
+tools, most of them admin.
+
+00:04:31.484 --> 00:04:36.681
+In production, a user asked for an order status, and the model called delete
+
+00:04:36.681 --> 00:04:37.364
+workspace.
+
+00:04:37.664 --> 00:04:39.473
+What does this case show, first?
+
+00:04:42.523 --> 00:04:47.770
+That the list sent to the model is far too wide for the task, with destructive tools
+
+00:04:47.770 --> 00:04:49.769
+in the same set as simple reads.
+
+00:04:50.069 --> 00:04:53.370
+An order status doesn't need delete workspace.
+
+00:04:54.020 --> 00:04:56.279
+It's not that the protocol is bad.
+
+00:04:56.579 --> 00:04:59.591
+It's a way to expose tools, not the cause.
+
+00:04:59.891 --> 00:05:03.638
+And blaming the user with an input filter comes second.
+
+00:05:03.938 --> 00:05:08.995
+The design already handed a destructive tool to a read task.
+
+00:05:09.295 --> 00:05:14.980
+Filter what the server exposes, consolidate, and keep side effects apart from reads.
+
+00:05:16.180 --> 00:05:18.295
+There are three refactorings.
+
+00:05:18.595 --> 00:05:23.641
+Consolidate tools, when there are duplicates, near twins, or tools nobody calls.
+
+00:05:23.941 --> 00:05:25.818
+It's almost always the first step.
+
+00:05:26.468 --> 00:05:32.046
+Introduce a router, when even after consolidating there are many tools, because the
+
+00:05:32.046 --> 00:05:33.927
+agent covers several topics.
+
+00:05:34.227 --> 00:05:36.538
+Each route gets only its own tools.
+
+00:05:36.838 --> 00:05:40.293
+The orders agent doesn't need to see the HR tools.
+
+00:05:40.943 --> 00:05:46.308
+And move instructions into the tool description, when the rules for when to use each
+
+00:05:46.308 --> 00:05:51.035
+tool live in the system prompt, far from where the model actually chooses.
+
+00:05:51.685 --> 00:05:54.102
+In practice, the order is this.
+
+00:05:54.402 --> 00:05:58.010
+Measure usage in the traces from the last ninety days.
+
+00:05:58.310 --> 00:06:01.601
+A tool that never appears is a candidate to go.
+
+00:06:02.251 --> 00:06:05.500
+Group tools that do the same thing with different keys.
+
+00:06:05.800 --> 00:06:08.263
+One tool, several parameters.
+
+00:06:08.913 --> 00:06:11.809
+Rewrite each description for the moment of choice.
+
+00:06:12.109 --> 00:06:16.024
+What it does, when to use it, when not to, and what it returns.
+
+00:06:16.674 --> 00:06:22.104
+And if the list still has more than a dozen, and the topics are distinct, route.
+
+00:06:22.754 --> 00:06:24.872
+Back to the tax ID request.
+
+00:06:25.172 --> 00:06:29.963
+Before, forty visible tools, five of them for users, and three turns.
+
+00:06:30.263 --> 00:06:36.000
+After, eight tools, and one of them is find customer, with a key and a value.
+
+00:06:36.300 --> 00:06:39.613
+The first call uses the tax ID as the key.
+
+00:06:39.913 --> 00:06:41.048
+One turn.
+
+00:06:41.698 --> 00:06:47.154
+And say you consolidated, and you still have twenty-eight tools, because the same
+
+00:06:47.154 --> 00:06:49.579
+agent serves HR, orders and finance.
+
+00:06:49.879 --> 00:06:51.859
+Choice is still poor on orders.
+
+00:06:52.159 --> 00:06:58.035
+Don't add a block to the system prompt saying, if the topic is orders, use only
+
+00:06:58.035 --> 00:06:58.481
+these.
+
+00:06:58.781 --> 00:07:00.898
+The model still sees all twenty-eight.
+
+00:07:01.198 --> 00:07:05.426
+The restriction has to be in the list you send, not in the prose.
+
+00:07:05.726 --> 00:07:07.200
+That's what the router does.
+
+00:07:08.400 --> 00:07:09.892
+When can you ignore it?
+
+00:07:10.192 --> 00:07:15.418
+Twenty tools from different domains, with clear names and descriptions, can work
+
+00:07:15.418 --> 00:07:15.744
+fine.
+
+00:07:16.044 --> 00:07:18.761
+The smell is confusion, not the count.
+
+00:07:19.061 --> 00:07:20.888
+And the other way around, too.
+
+00:07:21.188 --> 00:07:26.251
+Eight tools, where three run the same customer lookup with different keys, is this
+
+00:07:26.251 --> 00:07:26.621
+smell.
+
+00:07:27.271 --> 00:07:33.262
+If your provider lets the model see only an index, and load definitions on demand,
+
+00:07:33.262 --> 00:07:35.089
+the token cost goes away.
+
+00:07:35.389 --> 00:07:38.566
+The confusion between similar tools stays.
+
+00:07:39.216 --> 00:07:44.345
+And in a prototype, starting wide to discover what the agent needs, and pruning
+
+00:07:44.345 --> 00:07:45.319
+later, is fine.
+
+00:07:46.519 --> 00:07:48.493
+So here's the idea to take with you.
+
+00:07:48.793 --> 00:07:52.775
+The model chooses from what you hand it, at the moment of choice.
+
+00:07:53.075 --> 00:07:58.192
+Hand it fewer doors, one per job, each with a sign that says when to walk through
+
+00:07:58.192 --> 00:07:58.381
+it.
+
+00:07:58.681 --> 00:08:03.157
+You get fewer turns, fewer tokens, and fewer ways to do damage.
+
+00:08:03.807 --> 00:08:08.678
+In the next lesson, we'll do the first cut step by step: consolidate tools.
+
+00:08:08.978 --> 00:08:09.759
+See you there.

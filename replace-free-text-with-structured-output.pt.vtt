@@ -1,0 +1,499 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:05.016
+O time de contratos de uma empresa de logística pediu ao modelo:
+
+00:00:05.016 --> 00:00:07.151
+liste os dados principais deste arquivo.
+
+00:00:07.451 --> 00:00:11.060
+E a resposta voltou como um parágrafo simpático.
+
+00:00:11.710 --> 00:00:14.558
+O contrato é com a Transportadora Aurora.
+
+00:00:14.858 --> 00:00:17.799
+Valor total, doze mil e quatrocentos dólares.
+
+00:00:18.099 --> 00:00:22.017
+Começa em janeiro, renovação automática, doze meses.
+
+00:00:22.317 --> 00:00:25.163
+Uma expressão regular tirava o total.
+
+00:00:25.463 --> 00:00:27.049
+E funcionou por semanas.
+
+00:00:27.699 --> 00:00:31.061
+Até que um dia o modelo escreveu o valor por extenso.
+
+00:00:31.361 --> 00:00:34.323
+Doze mil e quatrocentos dólares, escrito com letras.
+
+00:00:34.973 --> 00:00:37.501
+E na data de início, só janeiro.
+
+00:00:38.151 --> 00:00:42.383
+O sistema gravou o total vazio, e a data de início vazia.
+
+00:00:42.683 --> 00:00:46.545
+Ninguém percebeu até o financeiro conciliar o mês seguinte.
+
+00:00:47.195 --> 00:00:50.488
+E o parser também deixava passar coisas que só pareciam certas.
+
+00:00:50.788 --> 00:00:54.478
+Um contrato terminando num ano e começando no seguinte entrou,
+
+00:00:54.478 --> 00:00:56.561
+porque o texto tinha as duas datas,
+
+00:00:56.561 --> 00:00:58.703
+e a expressão regular pegou as duas.
+
+00:00:59.003 --> 00:01:03.032
+Nesta aula, você vai fazer a refatoração que acaba com isso,
+
+00:01:03.032 --> 00:01:05.583
+com segurança, medindo antes e depois.
+
+00:01:06.783 --> 00:01:08.807
+A solução tem três movimentos.
+
+00:01:09.457 --> 00:01:12.236
+Defina um schema para o que esta etapa entrega.
+
+00:01:12.886 --> 00:01:15.295
+Peça ao modelo que responda nesse schema,
+
+00:01:15.295 --> 00:01:17.940
+usando o recurso de saída estruturada da API.
+
+00:01:18.240 --> 00:01:20.192
+Não pedindo no prompt.
+
+00:01:20.842 --> 00:01:24.305
+E valide o resultado no código, antes de seguir.
+
+00:01:25.505 --> 00:01:29.033
+Antes, o formato é uma convenção que ninguém escreveu.
+
+00:01:29.333 --> 00:01:32.970
+O modelo escreve texto, uma expressão regular adivinha,
+
+00:01:32.970 --> 00:01:35.417
+e o que ela achar vai para o sistema.
+
+00:01:35.717 --> 00:01:36.961
+Inclusive nada.
+
+00:01:37.611 --> 00:01:41.487
+Depois, o formato é um contrato, conferido nas duas pontas.
+
+00:01:41.787 --> 00:01:45.419
+A mesma chamada de extração, agora com um schema junto.
+
+00:01:46.069 --> 00:01:49.300
+A API devolve um objeto que segue o schema.
+
+00:01:49.600 --> 00:01:52.129
+Tipos certos, campos obrigatórios presentes.
+
+00:01:52.779 --> 00:01:55.831
+O código confere as regras que um schema não expressa,
+
+00:01:55.831 --> 00:01:57.866
+como datas que fazem sentido juntas.
+
+00:01:58.516 --> 00:02:01.529
+E só dado válido chega ao destino.
+
+00:02:01.829 --> 00:02:04.915
+As falhas vão para revisão, com o motivo junto.
+
+00:02:05.565 --> 00:02:08.394
+Aqui está o mesmo contrato, agora como objeto.
+
+00:02:08.694 --> 00:02:12.553
+O CNPJ, só com dígitos, porque o schema pediu isso.
+
+00:02:12.853 --> 00:02:15.180
+O total como inteiro, em centavos.
+
+00:02:15.480 --> 00:02:17.546
+Datas num formato fixo.
+
+00:02:17.846 --> 00:02:20.305
+Renovação automática, verdadeiro ou falso.
+
+00:02:20.955 --> 00:02:22.636
+Nada de doze mil por extenso.
+
+00:02:22.936 --> 00:02:26.970
+E se o arquivo não tem data de fim, esse campo volta vazio,
+
+00:02:26.970 --> 00:02:28.268
+de forma explícita.
+
+00:02:28.568 --> 00:02:31.058
+Não como uma frase tipo prazo indeterminado
+
+00:02:31.058 --> 00:02:33.085
+que o parser antigo nunca esperava.
+
+00:02:34.285 --> 00:02:37.939
+Com texto livre, o formato é uma promessa implícita.
+
+00:02:38.239 --> 00:02:40.286
+O modelo costuma escrever de um jeito,
+
+00:02:40.286 --> 00:02:41.903
+e o seu código conta com isso.
+
+00:02:42.203 --> 00:02:46.054
+Com saída estruturada, o formato vira parte da chamada.
+
+00:02:46.354 --> 00:02:50.062
+A API restringe o que o modelo pode gerar, token a token,
+
+00:02:50.062 --> 00:02:52.990
+então a resposta sempre fecha em dado válido,
+
+00:02:52.990 --> 00:02:54.746
+com os campos obrigatórios.
+
+00:02:55.396 --> 00:02:58.013
+O schema também melhora a extração.
+
+00:02:58.313 --> 00:02:59.258
+Nomes de campo,
+
+00:02:59.258 --> 00:03:02.471
+tipos e descrições claros funcionam como instrução.
+
+00:03:02.771 --> 00:03:07.614
+Total em centavos, inteiro, diz muito mais que o valor total.
+
+00:03:07.914 --> 00:03:11.044
+O modelo não precisa decidir se escreve dólares,
+
+00:03:11.044 --> 00:03:13.196
+centavos ou o número por extenso.
+
+00:03:13.846 --> 00:03:15.350
+E o erro muda de lugar.
+
+00:03:15.650 --> 00:03:18.831
+Em vez de um campo vazio que aparece semanas depois,
+
+00:03:18.831 --> 00:03:21.584
+a falha aparece na hora, na etapa que falhou.
+
+00:03:21.884 --> 00:03:24.556
+Quem revisa recebe o objeto e o motivo.
+
+00:03:24.856 --> 00:03:27.258
+Não um parágrafo para reler.
+
+00:03:28.458 --> 00:03:29.860
+Uma pergunta para você.
+
+00:03:30.160 --> 00:03:33.676
+O seu schema tem um campo de multa obrigatório, inteiro.
+
+00:03:33.976 --> 00:03:37.707
+Mas metade dos contratos da pasta nem tem cláusula de multa.
+
+00:03:38.007 --> 00:03:42.020
+O eval mostra a multa preenchida nesses casos mesmo assim,
+
+00:03:42.020 --> 00:03:45.827
+quase sempre zero, ou um número copiado de outro campo.
+
+00:03:46.127 --> 00:03:47.244
+O que você faz?
+
+00:03:50.294 --> 00:03:52.798
+Torne o campo opcional e valide
+
+00:03:52.798 --> 00:03:55.545
+no código o que voltar preenchido.
+
+00:03:55.845 --> 00:03:59.042
+Um campo obrigatório num documento que às vezes
+
+00:03:59.042 --> 00:04:01.967
+não tem o dado empurra o modelo a inventar.
+
+00:04:02.617 --> 00:04:05.375
+Mandar o prompt usar zero quando não há multa
+
+00:04:05.375 --> 00:04:07.459
+faz o zero significar duas coisas.
+
+00:04:07.759 --> 00:04:10.619
+Multa zero e multa ausente.
+
+00:04:10.919 --> 00:04:13.169
+A próxima etapa não consegue diferenciar.
+
+00:04:13.469 --> 00:04:16.272
+E tirar o campo joga fora a metade dos contratos
+
+00:04:16.272 --> 00:04:18.081
+em que o jurídico precisa dele.
+
+00:04:18.381 --> 00:04:22.576
+Ausência se modela com opcional, não apagando o campo.
+
+00:04:23.776 --> 00:04:27.055
+Agora o passo a passo, numa ordem que mantém você seguro.
+
+00:04:27.705 --> 00:04:29.601
+O passo zero é medir.
+
+00:04:29.901 --> 00:04:32.280
+Monte um eval com documentos reais,
+
+00:04:32.280 --> 00:04:34.659
+com o valor esperado de cada campo.
+
+00:04:34.959 --> 00:04:37.678
+Rode a versão atual e anote o acerto
+
+00:04:37.678 --> 00:04:40.245
+por campo e a taxa de campo vazio.
+
+00:04:40.545 --> 00:04:44.001
+Um campo que já volta vazio 20% das vezes,
+
+00:04:44.001 --> 00:04:48.691
+porque a expressão regular falhou, é o primeiro a ganhar.
+
+00:04:49.341 --> 00:04:51.849
+Depois, liste o que a próxima etapa usa de verdade.
+
+00:04:52.149 --> 00:04:57.095
+Se o sistema só guarda o CNPJ, o total, as datas e a renovação,
+
+00:04:57.095 --> 00:04:59.058
+esses são os seus campos.
+
+00:04:59.358 --> 00:05:03.207
+Resumos, adjetivos e principais obrigações saem.
+
+00:05:03.857 --> 00:05:06.101
+Escreva o schema com tipos fortes.
+
+00:05:06.401 --> 00:05:10.072
+Inteiro para centavos, data de verdade, lista fechada.
+
+00:05:10.372 --> 00:05:12.632
+E uma descrição curta em cada campo.
+
+00:05:12.932 --> 00:05:15.190
+Essa descrição é o prompt do campo.
+
+00:05:15.840 --> 00:05:18.036
+E decida com honestidade o que é opcional.
+
+00:05:18.336 --> 00:05:20.545
+Não deixe o modelo inventar data
+
+00:05:20.545 --> 00:05:22.753
+de fim para um contrato sem fim.
+
+00:05:23.403 --> 00:05:25.956
+Aí troque a chamada pela versão estruturada
+
+00:05:25.956 --> 00:05:27.439
+e apague o parser antigo.
+
+00:05:27.739 --> 00:05:29.280
+Enquanto os dois existirem,
+
+00:05:29.280 --> 00:05:32.419
+alguém vai só ajustar a expressão regular mais uma vez.
+
+00:05:33.069 --> 00:05:35.555
+Coloque validação de negócio no código.
+
+00:05:35.855 --> 00:05:38.092
+Itens que somam o total.
+
+00:05:38.392 --> 00:05:40.305
+Data de fim depois da de início.
+
+00:05:40.605 --> 00:05:42.061
+Dígito verificador do CNPJ.
+
+00:05:42.711 --> 00:05:46.023
+Mande as falhas para revisão, com o objeto e o motivo,
+
+00:05:46.023 --> 00:05:48.109
+em vez de gravar dado pela metade.
+
+00:05:48.759 --> 00:05:49.909
+E meça de novo.
+
+00:05:50.209 --> 00:05:53.248
+O acerto por campo deve se manter ou subir.
+
+00:05:53.548 --> 00:05:56.824
+Campo vazio por erro de parse deve cair a zero.
+
+00:05:57.124 --> 00:05:59.303
+Erro de leitura continua existindo,
+
+00:05:59.303 --> 00:06:01.855
+como o modelo ler doze mil e quatrocentos
+
+00:06:01.855 --> 00:06:03.661
+como mil duzentos e quarenta.
+
+00:06:03.961 --> 00:06:07.090
+Mas agora ele aparece na validação, não semanas depois.
+
+00:06:08.290 --> 00:06:09.689
+Alguns riscos para ficar de olho.
+
+00:06:09.989 --> 00:06:12.112
+Um schema que obriga a inventar.
+
+00:06:12.412 --> 00:06:14.130
+Acabamos de ver com a multa.
+
+00:06:14.780 --> 00:06:16.393
+Um schema grande demais.
+
+00:06:16.693 --> 00:06:19.786
+Dezenas de campos aninhados, e a qualidade cai.
+
+00:06:20.086 --> 00:06:24.221
+O modelo espalha a atenção e começa a preencher no chute,
+
+00:06:24.221 --> 00:06:26.470
+normalmente nos campos do meio.
+
+00:06:26.770 --> 00:06:31.073
+Se o documento tem duas partes, como a capa e os anexos,
+
+00:06:31.073 --> 00:06:35.990
+divida em duas chamadas, cada uma com o que a próxima etapa usa.
+
+00:06:36.640 --> 00:06:38.233
+Confiar só no schema.
+
+00:06:38.533 --> 00:06:40.780
+Dado válido ainda pode estar errado.
+
+00:06:41.080 --> 00:06:44.699
+Um total de um centavo é um inteiro perfeitamente válido,
+
+00:06:44.699 --> 00:06:46.096
+e um contrato absurdo.
+
+00:06:46.396 --> 00:06:49.570
+Some os itens no código e mande para revisão
+
+00:06:49.570 --> 00:06:51.733
+quando os números não baterem.
+
+00:06:52.383 --> 00:06:56.391
+E algumas regras o modo estruturado do provedor não aceita,
+
+00:06:56.391 --> 00:06:57.750
+como certos padrões.
+
+00:06:58.050 --> 00:06:58.792
+Tudo bem.
+
+00:06:59.092 --> 00:07:02.432
+Peça um texto simples e valide os catorze dígitos no código,
+
+00:07:02.432 --> 00:07:03.712
+logo depois da chamada.
+
+00:07:04.362 --> 00:07:06.192
+E o erro mais comum.
+
+00:07:06.492 --> 00:07:09.952
+Trocar a expressão regular pela saída estruturada
+
+00:07:09.952 --> 00:07:12.212
+e deixar o total com tipo texto.
+
+00:07:12.512 --> 00:07:14.840
+O modelo continua livre para devolver
+
+00:07:14.840 --> 00:07:16.664
+o valor com símbolo de moeda,
+
+00:07:16.664 --> 00:07:18.866
+como número simples ou por extenso.
+
+00:07:19.166 --> 00:07:22.461
+Você só mudou o parser para um campo com nome bonito.
+
+00:07:22.761 --> 00:07:24.959
+É o tipo forte que fecha a porta.
+
+00:07:26.159 --> 00:07:28.996
+Essa refatoração serve além de arquivos.
+
+00:07:29.296 --> 00:07:32.205
+Imagine dois agentes dividindo um bloco de texto,
+
+00:07:32.205 --> 00:07:34.343
+uma espécie de rascunho do processo.
+
+00:07:34.643 --> 00:07:37.300
+Um escreve: cliente ok, pode seguir.
+
+00:07:37.600 --> 00:07:40.961
+O outro entende isso como aprovação de crédito.
+
+00:07:41.611 --> 00:07:42.546
+A mesma cura.
+
+00:07:42.846 --> 00:07:46.707
+O rascunho vira um objeto, com um campo como status de crédito,
+
+00:07:46.707 --> 00:07:48.669
+de uma lista fechada de valores,
+
+00:07:48.669 --> 00:07:51.059
+validado antes de o próximo agente ler.
+
+00:07:51.359 --> 00:07:53.568
+A prosa do meio vira contrato,
+
+00:07:53.568 --> 00:07:56.660
+e o segundo agente para de interpretar ok.
+
+00:07:57.860 --> 00:07:59.845
+Então, a ideia para levar.
+
+00:08:00.145 --> 00:08:04.361
+O parser que adivinha não é um bug para consertar mais uma vez.
+
+00:08:04.661 --> 00:08:06.419
+É um contrato que ninguém escreveu.
+
+00:08:06.719 --> 00:08:10.737
+Meça, escreva o contrato como um schema com tipos fortes,
+
+00:08:10.737 --> 00:08:14.966
+valide o que o schema não expressa e apague o parser de vez.
+
+00:08:15.616 --> 00:08:19.668
+Na próxima aula, a gente olha a mesma extração por outro ângulo:
+
+00:08:19.668 --> 00:08:23.530
+o modelo fazendo conta e regra que o código acertaria sempre.
+
+00:08:23.830 --> 00:08:26.629
+LLM doing deterministic work.
+
+00:08:26.929 --> 00:08:27.759
+Até lá.

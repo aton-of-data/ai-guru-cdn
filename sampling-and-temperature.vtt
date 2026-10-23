@@ -1,0 +1,388 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.477
+Same month, same company, two complaints.
+
+00:00:04.777 --> 00:00:09.295
+The marketing team asked the model for ten campaign headlines, and got ten headlines
+
+00:00:09.295 --> 00:00:10.748
+that were almost identical.
+
+00:00:11.398 --> 00:00:16.128
+Meanwhile, the data team was extracting the company tax ID from invoices.
+
+00:00:16.428 --> 00:00:20.623
+And on every run, the field came back in a different format.
+
+00:00:21.273 --> 00:00:25.151
+Both teams asked the engineer for the same thing: tweak the temperature.
+
+00:00:25.451 --> 00:00:27.173
+One wanted more variation.
+
+00:00:27.473 --> 00:00:29.298
+The other wanted less.
+
+00:00:29.948 --> 00:00:34.434
+To know whether temperature is even the right knob, you need to understand where
+
+00:00:34.434 --> 00:00:35.612
+variation comes from.
+
+00:00:35.912 --> 00:00:37.144
+That's this lesson.
+
+00:00:37.444 --> 00:00:42.486
+And you'll see why, for one of these two teams, the answer is a different tool
+
+00:00:42.486 --> 00:00:43.197
+altogether.
+
+00:00:44.397 --> 00:00:49.164
+At every step, the model computes a probability for every possible next token.
+
+00:00:49.464 --> 00:00:53.733
+Sampling is the rule that picks one token from those probabilities.
+
+00:00:54.383 --> 00:00:55.692
+Picture a weighted die.
+
+00:00:55.992 --> 00:00:58.586
+The most likely word has the biggest face.
+
+00:00:58.886 --> 00:01:02.565
+But the other faces are still there, and sometimes they come up.
+
+00:01:03.765 --> 00:01:05.017
+Let's follow one step.
+
+00:01:05.317 --> 00:01:08.322
+The model looks at everything already in the sequence.
+
+00:01:08.972 --> 00:01:10.803
+It produces a distribution.
+
+00:01:11.103 --> 00:01:17.606
+Say, Electronics at eighty percent, Audio at fifteen, and dozens of other words
+
+00:01:17.606 --> 00:01:19.005
+sharing the rest.
+
+00:01:19.655 --> 00:01:23.939
+Then the sampling settings reshape that distribution, before the draw.
+
+00:01:24.589 --> 00:01:27.388
+One token is drawn from the adjusted distribution.
+
+00:01:28.038 --> 00:01:31.238
+And the chosen token joins the sequence.
+
+00:01:31.538 --> 00:01:33.645
+Every later choice depends on it.
+
+00:01:34.295 --> 00:01:36.857
+That last step matters more than it looks.
+
+00:01:37.157 --> 00:01:42.415
+Since each token depends on the ones before it, a different early choice changes
+
+00:01:42.415 --> 00:01:43.729
+everything after it.
+
+00:01:44.029 --> 00:01:48.672
+Two answers can drift far apart, even when each step varies only a little.
+
+00:01:49.322 --> 00:01:51.087
+That's what the data team saw.
+
+00:01:51.387 --> 00:01:56.874
+The tax ID came back with dots and a slash, then digits only, then with a period at
+
+00:01:56.874 --> 00:01:57.403
+the end.
+
+00:01:57.703 --> 00:02:02.175
+Three paths, a few tokens apart, and all three plausible.
+
+00:02:03.375 --> 00:02:05.391
+There are three classic knobs.
+
+00:02:05.691 --> 00:02:08.769
+Temperature sharpens or flattens the distribution.
+
+00:02:09.069 --> 00:02:13.188
+Low temperature raises the peak, so the leading token leads even more.
+
+00:02:13.488 --> 00:02:18.463
+High temperature flattens the chart, and second and third place get a real chance.
+
+00:02:19.113 --> 00:02:20.844
+Top p doesn't stretch the chart.
+
+00:02:21.144 --> 00:02:25.755
+It cuts the tail, and draws only among the most likely tokens that add up to a given
+
+00:02:25.755 --> 00:02:26.414
+probability.
+
+00:02:27.064 --> 00:02:31.147
+And top k keeps only a fixed number of the most likely tokens.
+
+00:02:31.797 --> 00:02:33.121
+One piece of advice.
+
+00:02:33.421 --> 00:02:37.921
+Tuning more than one at once makes the effect impossible to read.
+
+00:02:38.221 --> 00:02:41.062
+If you use these knobs at all, pick one.
+
+00:02:41.362 --> 00:02:44.358
+Temperature alone is enough for an experiment.
+
+00:02:45.008 --> 00:02:46.770
+Back to the category example.
+
+00:02:47.070 --> 00:02:51.419
+Near zero temperature, Electronics comes out almost every time.
+
+00:02:51.719 --> 00:02:55.336
+At high temperature, Audio shows up, and even Computing.
+
+00:02:55.636 --> 00:02:58.301
+But notice what none of those draws does.
+
+00:02:58.601 --> 00:03:04.236
+None of them turns a punctuated tax ID into fourteen clean digits.
+
+00:03:04.536 --> 00:03:07.479
+Format doesn't live on that knob.
+
+00:03:08.679 --> 00:03:11.761
+Low temperature reduces variation.
+
+00:03:12.061 --> 00:03:15.116
+It doesn't turn the model into a deterministic function.
+
+00:03:15.766 --> 00:03:20.602
+Details of how the provider runs the model can still change the output.
+
+00:03:21.252 --> 00:03:25.498
+A tiny change in the prompt changes everything after it.
+
+00:03:26.148 --> 00:03:30.133
+And some providers offer a seed setting, to try to repeat a draw.
+
+00:03:30.433 --> 00:03:34.252
+Even when it exists, the docs usually call it best effort.
+
+00:03:34.552 --> 00:03:38.620
+So don't build a test that depends on two identical calls.
+
+00:03:39.820 --> 00:03:41.293
+Here's one for you.
+
+00:03:41.593 --> 00:03:47.643
+The tax ID extractor returns dots and a slash on one run, and digits only on the
+
+00:03:47.643 --> 00:03:48.022
+next.
+
+00:03:48.322 --> 00:03:50.868
+The data team wants temperature zero.
+
+00:03:51.168 --> 00:03:53.331
+What actually fixes the format?
+
+00:03:56.381 --> 00:04:01.776
+A schema that asks for a string of fourteen digits, and validation in code before
+
+00:04:01.776 --> 00:04:03.108
+you store the value.
+
+00:04:03.408 --> 00:04:08.979
+At temperature zero, all three spellings are still plausible, so nothing in the draw
+
+00:04:08.979 --> 00:04:10.504
+forces fourteen digits.
+
+00:04:11.154 --> 00:04:16.062
+And writing always use the same format, please, in capitals, helps a little and
+
+00:04:16.062 --> 00:04:17.242
+guarantees nothing.
+
+00:04:17.542 --> 00:04:19.538
+The model can still be wrong.
+
+00:04:19.838 --> 00:04:23.868
+Your code is what refuses to let the wrong value in.
+
+00:04:24.168 --> 00:04:27.116
+That's the job of structured output, not temperature.
+
+00:04:28.316 --> 00:04:29.729
+Here's something telling.
+
+00:04:30.029 --> 00:04:34.752
+The newest models from several providers are removing these knobs.
+
+00:04:35.052 --> 00:04:40.438
+On current Anthropic models, like Claude Opus and Sonnet five point five, the API
+
+00:04:40.438 --> 00:04:43.563
+rejects any temperature other than the default.
+
+00:04:43.863 --> 00:04:48.343
+Older models, like Haiku four point five, still accept it.
+
+00:04:48.993 --> 00:04:54.074
+Control moved elsewhere: the output format, the reasoning effort, and the prompt
+
+00:04:54.074 --> 00:04:54.518
+itself.
+
+00:04:54.818 --> 00:04:56.561
+And that tells you something useful.
+
+00:04:56.861 --> 00:05:01.088
+Tuning sampling was never the right way to guarantee format or correctness.
+
+00:05:01.388 --> 00:05:03.608
+Providers are just making that explicit.
+
+00:05:04.258 --> 00:05:10.187
+So if you migrate the extractor to one of those models, and the data team panics,
+
+00:05:10.187 --> 00:05:11.577
+the answer is calm.
+
+00:05:11.877 --> 00:05:13.831
+Nothing changes in the contract.
+
+00:05:14.131 --> 00:05:19.356
+The schema, the validation and the eval were always the control.
+
+00:05:20.556 --> 00:05:22.085
+Now the marketing side.
+
+00:05:22.385 --> 00:05:27.781
+On the page there's an experiment, with a model that still accepts temperature.
+
+00:05:28.081 --> 00:05:33.228
+You generate five headlines at low temperature, and five at high temperature.
+
+00:05:33.878 --> 00:05:36.407
+Compare the variety between the two blocks.
+
+00:05:36.707 --> 00:05:38.451
+Then try a different route.
+
+00:05:39.101 --> 00:05:44.526
+Ask, in a single call, for ten headlines that differ from each other, in different
+
+00:05:44.526 --> 00:05:46.577
+tones, for different audiences.
+
+00:05:46.877 --> 00:05:52.374
+Variety you ask for in the prompt usually beats variety you draw at random.
+
+00:05:53.024 --> 00:05:54.639
+And here's the trap on that side.
+
+00:05:54.939 --> 00:05:58.740
+High temperature spreads the headlines, and it also spreads the quality.
+
+00:05:59.040 --> 00:06:01.979
+One is sharp, the next is an empty slogan.
+
+00:06:02.279 --> 00:06:05.863
+Push it to the extreme, and you trade similar for useless.
+
+00:06:06.163 --> 00:06:11.768
+Ten options in one call let you pick with your own criterion, instead of hoping the
+
+00:06:11.768 --> 00:06:13.456
+draw hits the right tone.
+
+00:06:14.656 --> 00:06:15.899
+So what changes?
+
+00:06:16.199 --> 00:06:22.145
+For extraction, classification, and any output your code reads, use structured
+
+00:06:22.145 --> 00:06:23.898
+output plus validation.
+
+00:06:24.198 --> 00:06:25.869
+Don't lean on temperature.
+
+00:06:26.519 --> 00:06:32.457
+For creativity, ask for variety explicitly, and generate several options in one
+
+00:06:32.457 --> 00:06:32.833
+call.
+
+00:06:33.483 --> 00:06:37.237
+For important decisions, think about where variation hurts.
+
+00:06:37.537 --> 00:06:42.717
+A credit opinion at high temperature means two similar customers can get different
+
+00:06:42.717 --> 00:06:44.801
+answers, with no business reason.
+
+00:06:45.101 --> 00:06:47.959
+There, you want less variation, not more.
+
+00:06:48.259 --> 00:06:54.481
+And running the same task several times and comparing is a pattern of its own,
+
+00:06:54.481 --> 00:06:55.598
+called voting.
+
+00:06:56.248 --> 00:06:58.241
+And variation is always there.
+
+00:06:58.541 --> 00:07:03.815
+If you run the same test case three times and get three passes, then two, then
+
+00:07:03.815 --> 00:07:05.235
+three, that's normal.
+
+00:07:05.535 --> 00:07:08.721
+The number that matters is the rate over many runs.
+
+00:07:09.021 --> 00:07:14.827
+That's why every system with a model needs evals, and not a test that runs once.
+
+00:07:16.027 --> 00:07:18.128
+So, back to the two teams.
+
+00:07:18.428 --> 00:07:20.659
+Marketing didn't need a hotter die.
+
+00:07:20.959 --> 00:07:22.712
+It needed to ask for variety.
+
+00:07:23.012 --> 00:07:25.419
+And the data team didn't need a colder one.
+
+00:07:25.719 --> 00:07:28.083
+It needed a schema and a check in code.
+
+00:07:28.383 --> 00:07:30.709
+Temperature changes how wide the draw is.
+
+00:07:31.009 --> 00:07:33.100
+It never guarantees what comes out.
+
+00:07:33.750 --> 00:07:38.684
+In the next lesson, we'll look at the prompt itself, and treat it like what it
+
+00:07:38.684 --> 00:07:42.542
+really is: an interface, with a contract, versions and tests.
+
+00:07:42.842 --> 00:07:43.671
+See you there.

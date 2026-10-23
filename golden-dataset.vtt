@@ -1,0 +1,493 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:05.654
+Marcos built the ticket classifier's first eval in one afternoon.
+
+00:00:05.954 --> 00:00:11.609
+He asked the model itself to generate a hundred sample tickets, each with the right
+
+00:00:11.609 --> 00:00:12.018
+queue.
+
+00:00:12.668 --> 00:00:15.216
+The eval scored ninety-six percent.
+
+00:00:15.516 --> 00:00:20.411
+And in production, the support team complained about misrouted tickets every single
+
+00:00:20.411 --> 00:00:20.647
+day.
+
+00:00:21.297 --> 00:00:23.835
+When he looked at real tickets, he understood.
+
+00:00:24.135 --> 00:00:26.969
+Real customers write with typos everywhere.
+
+00:00:27.269 --> 00:00:28.738
+They mix two topics.
+
+00:00:29.038 --> 00:00:32.077
+They paste screenshots, and reply to old emails.
+
+00:00:32.377 --> 00:00:36.764
+The hundred generated tickets were clean, short, and always about one thing.
+
+00:00:37.064 --> 00:00:40.311
+The eval measured a world that didn't exist.
+
+00:00:40.961 --> 00:00:42.646
+And there was a subtler problem.
+
+00:00:42.946 --> 00:00:46.626
+The same model that wrote the tickets also classified them.
+
+00:00:46.926 --> 00:00:51.389
+It wrote them the way it understood them, so it got almost all of them right.
+
+00:00:51.689 --> 00:00:53.395
+The eval was a mirror.
+
+00:00:54.045 --> 00:00:54.853
+Worse still.
+
+00:00:55.153 --> 00:01:00.397
+When a real ticket landed in the wrong queue, someone fixed the prompt, but the case
+
+00:01:00.397 --> 00:01:02.145
+never made it into the eval.
+
+00:01:02.445 --> 00:01:06.767
+Three months later, the same error came back with another prompt change.
+
+00:01:07.067 --> 00:01:12.356
+In this lesson, you'll learn where the cases for a trustworthy eval come from, and
+
+00:01:12.356 --> 00:01:14.872
+how to keep them trustworthy over time.
+
+00:01:16.072 --> 00:01:19.957
+The answer is to treat the dataset as a product asset.
+
+00:01:20.257 --> 00:01:23.753
+With an owner, versions, and rules for what gets in.
+
+00:01:24.403 --> 00:01:25.543
+Real origin.
+
+00:01:25.843 --> 00:01:28.912
+Cases come from production, anonymized.
+
+00:01:29.212 --> 00:01:33.872
+Synthetic cases only come in to cover known gaps, and they stay labeled as
+
+00:01:33.872 --> 00:01:34.502
+synthetic.
+
+00:01:35.152 --> 00:01:36.582
+Reviewed labels.
+
+00:01:36.882 --> 00:01:40.623
+The expected answer comes from someone who knows the domain.
+
+00:01:40.923 --> 00:01:43.240
+And hard cases get a second reviewer.
+
+00:01:43.890 --> 00:01:45.579
+Coverage per category.
+
+00:01:45.879 --> 00:01:51.185
+Every category has cases, including the rare ones, and hard cases on purpose.
+
+00:01:51.835 --> 00:01:53.132
+Growth by bug.
+
+00:01:53.432 --> 00:01:57.326
+Every production error becomes a case, before it's fixed.
+
+00:01:57.976 --> 00:01:59.281
+And separation.
+
+00:01:59.581 --> 00:02:02.111
+Part of the dataset is for development.
+
+00:02:02.411 --> 00:02:07.067
+Another part is held out, only for the final decision, so you don't overfit.
+
+00:02:07.717 --> 00:02:11.352
+Of the five, growth by bug pays off the most over time.
+
+00:02:11.652 --> 00:02:16.647
+A dataset that only gets cases on the day it was created ages along with the
+
+00:02:16.647 --> 00:02:17.173
+product.
+
+00:02:17.473 --> 00:02:21.901
+One that receives every production error becomes the team's memory.
+
+00:02:22.201 --> 00:02:25.710
+Everything that broke once stays watched forever.
+
+00:02:26.360 --> 00:02:27.814
+And the order matters.
+
+00:02:28.114 --> 00:02:32.184
+Record the case, run the eval, and watch the case fail.
+
+00:02:32.484 --> 00:02:33.708
+Only then fix it.
+
+00:02:34.008 --> 00:02:38.601
+If the case doesn't fail before the fix, it doesn't reproduce the bug.
+
+00:02:38.901 --> 00:02:40.772
+And the test protects nothing.
+
+00:02:41.972 --> 00:02:43.215
+Here's the flow.
+
+00:02:43.515 --> 00:02:45.708
+New cases come from two places.
+
+00:02:46.008 --> 00:02:49.247
+Samples of production traffic, and reported bugs.
+
+00:02:49.897 --> 00:02:53.753
+Personal data is removed or masked, before anything else.
+
+00:02:54.403 --> 00:02:57.201
+A domain expert labels the expected answer.
+
+00:02:57.501 --> 00:02:59.947
+Ambiguous cases get a second review.
+
+00:03:00.597 --> 00:03:05.792
+The dataset is versioned like code, with a history of who added what, and why.
+
+00:03:06.442 --> 00:03:08.769
+One split is for iterating on the prompt.
+
+00:03:09.069 --> 00:03:12.242
+The other is used only for the deploy decision.
+
+00:03:12.892 --> 00:03:16.366
+And the eval harness runs the system against all of it.
+
+00:03:17.566 --> 00:03:20.517
+Let's follow a bug all the way into the dataset.
+
+00:03:20.817 --> 00:03:23.003
+On a Monday, support flags a ticket.
+
+00:03:23.303 --> 00:03:28.319
+I paid the bill, but order forty-five twenty-one still shows pending, and I want to
+
+00:03:28.319 --> 00:03:29.286
+change the size.
+
+00:03:29.586 --> 00:03:31.121
+It went to the orders queue.
+
+00:03:31.421 --> 00:03:33.598
+Billing only saw it two days later.
+
+00:03:34.248 --> 00:03:39.397
+The engineer on call finds the ticket's trace, and sends it to the dataset with one
+
+00:03:39.397 --> 00:03:39.770
+click.
+
+00:03:40.070 --> 00:03:42.880
+It lands in the labeling queue, already masked.
+
+00:03:43.530 --> 00:03:45.332
+The labeler applies the guide.
+
+00:03:45.632 --> 00:03:49.340
+Two topics, and the payment blocks the order, so it's billing.
+
+00:03:49.640 --> 00:03:52.884
+Since it's a hard case, a second person confirms.
+
+00:03:53.534 --> 00:03:57.799
+The case goes in, marked as coming from a bug, with the reason.
+
+00:03:58.099 --> 00:04:01.751
+The eval runs on the current prompt, and the new case fails.
+
+00:04:02.051 --> 00:04:04.135
+Expected billing, got orders.
+
+00:04:04.435 --> 00:04:05.041
+Good.
+
+00:04:05.341 --> 00:04:07.514
+Now it reproduces the bug.
+
+00:04:08.164 --> 00:04:13.107
+Then the prompt gets the blocking topic rule, with an example that is not this
+
+00:04:13.107 --> 00:04:13.551
+ticket.
+
+00:04:14.201 --> 00:04:15.996
+The eval runs again.
+
+00:04:16.296 --> 00:04:20.623
+The case passes, and you check that nothing that used to pass now fails.
+
+00:04:20.923 --> 00:04:22.974
+Only then is the bug closed.
+
+00:04:23.274 --> 00:04:28.460
+And six months from now, when someone rewrites the prompt for something else, that
+
+00:04:28.460 --> 00:04:32.192
+case is still there, and it speaks up if the error returns.
+
+00:04:32.842 --> 00:04:36.310
+And that labeling guide is what makes two labelers agree.
+
+00:04:36.610 --> 00:04:39.992
+It's a short document that answers the questions that will come up.
+
+00:04:40.292 --> 00:04:41.528
+Two topics?
+
+00:04:41.828 --> 00:04:44.776
+Use the queue of the one that blocks the customer.
+
+00:04:45.076 --> 00:04:46.320
+Only a screenshot?
+
+00:04:46.620 --> 00:04:48.034
+Label by its content.
+
+00:04:48.334 --> 00:04:49.073
+Unsure?
+
+00:04:49.373 --> 00:04:52.189
+List both, and send it to a second review.
+
+00:04:52.489 --> 00:04:56.872
+Every new tie found in review becomes a rule in the guide.
+
+00:04:57.172 --> 00:05:01.711
+And the guide is versioned with the dataset, because labels and rules travel
+
+00:05:01.711 --> 00:05:02.248
+together.
+
+00:05:03.448 --> 00:05:04.783
+Here's one for you.
+
+00:05:05.083 --> 00:05:07.861
+The legal queue is two percent of tickets.
+
+00:05:08.161 --> 00:05:12.937
+Your random sample of two hundred cases brought four of them, and the eval shows
+
+00:05:12.937 --> 00:05:15.027
+seventy-five percent on that queue.
+
+00:05:15.327 --> 00:05:16.490
+What do you conclude?
+
+00:05:19.540 --> 00:05:22.909
+That with four cases, the number says almost nothing.
+
+00:05:23.209 --> 00:05:25.641
+One error is worth twenty-five points.
+
+00:05:25.941 --> 00:05:29.229
+A single odd ticket explains the seventy-five percent.
+
+00:05:29.529 --> 00:05:31.488
+Pull more cases from that queue.
+
+00:05:32.138 --> 00:05:36.255
+And don't ignore it because two percent barely moves the average.
+
+00:05:36.555 --> 00:05:40.117
+Weighing little in the average doesn't mean costing little.
+
+00:05:40.417 --> 00:05:43.584
+A legal ticket in the wrong queue can become a lawsuit.
+
+00:05:43.884 --> 00:05:47.430
+Rare, expensive categories deserve their own coverage.
+
+00:05:48.630 --> 00:05:50.900
+That's why the sample is stratified.
+
+00:05:51.200 --> 00:05:56.411
+You deliberately pull more cases from rare categories, until each one has a few
+
+00:05:56.411 --> 00:05:56.807
+dozen.
+
+00:05:57.107 --> 00:06:02.138
+In a category with twenty cases, each error moves the score by five points.
+
+00:06:02.438 --> 00:06:04.606
+In one with four, by twenty-five.
+
+00:06:05.256 --> 00:06:09.277
+The side effect is that the plain average no longer reflects production.
+
+00:06:09.577 --> 00:06:11.895
+So report each category on its own.
+
+00:06:12.195 --> 00:06:16.419
+And compute the overall score weighted by each category's real frequency.
+
+00:06:17.069 --> 00:06:21.448
+And before celebrating a two point gain, look at which cases changed.
+
+00:06:21.748 --> 00:06:24.978
+In a hundred cases, two points are two tickets.
+
+00:06:26.178 --> 00:06:28.407
+So is synthetic data forbidden?
+
+00:06:28.707 --> 00:06:29.451
+No.
+
+00:06:29.751 --> 00:06:34.233
+Say your team wants to double the eval this week, and someone suggests asking the
+
+00:06:34.233 --> 00:06:38.218
+production model to generate three hundred new tickets, already labeled.
+
+00:06:38.518 --> 00:06:41.005
+Volume doesn't make up for origin.
+
+00:06:41.305 --> 00:06:45.618
+Cases generated by the model you're evaluating tend to be easy for it.
+
+00:06:45.918 --> 00:06:48.193
+The eval ends up measuring itself.
+
+00:06:48.843 --> 00:06:50.972
+But a total ban goes too far.
+
+00:06:51.272 --> 00:06:55.518
+Without synthetic cases, a rare category may have none at all.
+
+00:06:55.818 --> 00:06:57.900
+Use them to fill known gaps.
+
+00:06:58.200 --> 00:07:04.029
+Take hard real cases and generate variations, with typos, two topics, another
+
+00:07:04.029 --> 00:07:04.711
+language.
+
+00:07:05.011 --> 00:07:08.155
+Mark them as synthetic, and review the labels.
+
+00:07:09.355 --> 00:07:10.508
+Now the traps.
+
+00:07:10.808 --> 00:07:12.587
+The prompt's author labels alone.
+
+00:07:12.887 --> 00:07:16.006
+They tend to label the way the prompt already answers.
+
+00:07:16.306 --> 00:07:18.658
+Bring in someone from support or billing.
+
+00:07:19.308 --> 00:07:21.752
+Deleting the case that always fails.
+
+00:07:22.052 --> 00:07:25.291
+If a case fails on every version, review the label.
+
+00:07:25.591 --> 00:07:30.457
+If the label is right, that case is exactly what the dataset needs.
+
+00:07:31.107 --> 00:07:32.565
+Peeking at the holdout.
+
+00:07:32.865 --> 00:07:37.988
+Checking it on every iteration, and keeping the version that did best on it, turns
+
+00:07:37.988 --> 00:07:39.550
+it into development data.
+
+00:07:40.200 --> 00:07:43.634
+And copying eval cases into the prompt as examples.
+
+00:07:43.934 --> 00:07:48.780
+The eval passes from memory, and the score rises without production improving.
+
+00:07:49.980 --> 00:07:52.142
+In production, make it easy.
+
+00:07:52.442 --> 00:07:56.790
+A button or a command that sends a trace straight to the labeling queue.
+
+00:07:57.440 --> 00:08:02.663
+A dashboard with the dataset's size per category, and the date of each category's
+
+00:08:02.663 --> 00:08:03.437
+latest case.
+
+00:08:04.087 --> 00:08:09.179
+An alert when a new category shows up in production with no cases in the dataset.
+
+00:08:09.829 --> 00:08:13.104
+And a labeling queue with an owner and a deadline.
+
+00:08:13.404 --> 00:08:16.867
+A queue with no owner becomes a graveyard of traces.
+
+00:08:17.517 --> 00:08:20.253
+And remember the dataset holds real data.
+
+00:08:20.553 --> 00:08:23.983
+Masking only ID numbers and emails isn't enough.
+
+00:08:24.283 --> 00:08:29.466
+Tickets carry names, addresses, phone numbers, card numbers, and sometimes health
+
+00:08:29.466 --> 00:08:29.786
+data.
+
+00:08:30.086 --> 00:08:35.697
+Run a fuller detection pass, review a sample by hand on every batch, and restrict
+
+00:08:35.697 --> 00:08:36.944
+who can access it.
+
+00:08:38.144 --> 00:08:40.129
+So here's the idea to take with you.
+
+00:08:40.429 --> 00:08:43.742
+An eval is only as honest as its cases.
+
+00:08:44.042 --> 00:08:48.002
+Take them from production, and label them with people who know the domain.
+
+00:08:48.302 --> 00:08:53.428
+Cover the rare categories on purpose, keep a slice you never peek at, and turn every
+
+00:08:53.428 --> 00:08:55.502
+bug into a case before you fix it.
+
+00:08:55.802 --> 00:08:57.917
+That file becomes your team's memory.
+
+00:08:58.567 --> 00:09:04.193
+In the next lesson, we put these evals to work on a smell almost every team has, and
+
+00:09:04.193 --> 00:09:09.015
+almost nobody notices until month-end: text passed between two machines.
+
+00:09:09.315 --> 00:09:10.520
+Free-text handoff.
+
+00:09:10.820 --> 00:09:11.649
+See you there.

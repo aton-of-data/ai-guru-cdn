@@ -1,0 +1,424 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:03.426
+Rafael wrote a small function.
+
+00:00:03.726 --> 00:00:08.656
+It sends a product description to the model and asks for the product's category.
+
+00:00:09.306 --> 00:00:12.719
+In testing, it returned Electronics ten times in a row.
+
+00:00:13.019 --> 00:00:13.526
+Perfect.
+
+00:00:14.176 --> 00:00:19.672
+In production, on the very same product, it returned Electronic, singular.
+
+00:00:19.972 --> 00:00:23.840
+Then electronics, lowercase, with a period at the end.
+
+00:00:24.140 --> 00:00:26.954
+And once, Electronics and Computers.
+
+00:00:27.604 --> 00:00:32.842
+The code that matched the answer against the marketplace's category list broke.
+
+00:00:33.142 --> 00:00:36.429
+And some new products never made it to a storefront.
+
+00:00:37.079 --> 00:00:39.044
+Nothing was wrong with the model.
+
+00:00:39.344 --> 00:00:44.337
+Rafael treated a model call like an ordinary function, one that always returns the
+
+00:00:44.337 --> 00:00:46.224
+same output for the same input.
+
+00:00:46.524 --> 00:00:47.306
+It isn't one.
+
+00:00:47.606 --> 00:00:52.908
+In this lesson, you'll learn the four properties that explain what happened, and
+
+00:00:52.908 --> 00:00:56.884
+that almost every pattern in this catalog exists to control.
+
+00:00:58.084 --> 00:01:03.017
+For an engineer, here's the most useful way to think about a large language model.
+
+00:01:03.317 --> 00:01:06.076
+It's a probabilistic function from text to text.
+
+00:01:06.726 --> 00:01:10.215
+It takes a sequence of tokens, which are small chunks of text.
+
+00:01:10.515 --> 00:01:14.728
+And it returns the most likely continuation, one token at a time.
+
+00:01:15.378 --> 00:01:18.333
+Two words in that sentence matter a lot.
+
+00:01:18.633 --> 00:01:21.750
+Probabilistic, because there's a dice roll inside.
+
+00:01:22.050 --> 00:01:26.589
+And continuation, because the model isn't looking anything up.
+
+00:01:26.889 --> 00:01:28.257
+It's completing text.
+
+00:01:29.457 --> 00:01:31.141
+Let's walk through one call.
+
+00:01:31.441 --> 00:01:35.625
+Everything the model knows about your task is in the input.
+
+00:01:35.925 --> 00:01:41.388
+The system prompt, the conversation, any documents, and the tools you offer.
+
+00:01:42.038 --> 00:01:45.997
+The model computes a probability for every possible next token.
+
+00:01:46.647 --> 00:01:50.976
+Then one token is picked from those probabilities, with some randomness.
+
+00:01:51.626 --> 00:01:55.786
+That token is appended to the text, and the cycle runs again.
+
+00:01:56.436 --> 00:02:00.735
+It stops when the model emits an end token, or when it hits the output limit you
+
+00:02:00.735 --> 00:02:00.950
+set.
+
+00:02:01.600 --> 00:02:04.921
+Four properties fall out of that design.
+
+00:02:05.221 --> 00:02:08.149
+And each one changes how you write the code around the model.
+
+00:02:09.349 --> 00:02:11.365
+First, it's not deterministic.
+
+00:02:11.665 --> 00:02:16.315
+The same input can produce different outputs, because step three is a dice roll.
+
+00:02:16.615 --> 00:02:20.988
+A small difference in an early token changes everything after it.
+
+00:02:21.288 --> 00:02:22.844
+That's what hit Rafael.
+
+00:02:23.144 --> 00:02:27.530
+Electronics and Electronic are one token apart.
+
+00:02:28.180 --> 00:02:32.992
+So your code has to accept variation, or remove it at the boundary.
+
+00:02:33.292 --> 00:02:35.396
+That's why structured output exists.
+
+00:02:36.046 --> 00:02:38.042
+Second, it has no memory.
+
+00:02:38.342 --> 00:02:40.257
+Every call starts from scratch.
+
+00:02:40.557 --> 00:02:45.530
+If the model seems to remember the conversation, it's because your code sent the
+
+00:02:45.530 --> 00:02:46.773
+whole history again.
+
+00:02:47.423 --> 00:02:49.285
+Think about the third message of a chat.
+
+00:02:49.585 --> 00:02:53.318
+The customer asks: and shipping for the cheapest one to Boston?
+
+00:02:53.618 --> 00:02:59.075
+If your code sends only that last message, the model has no idea what the cheapest
+
+00:02:59.075 --> 00:02:59.741
+one means.
+
+00:03:00.041 --> 00:03:01.547
+Memory is your job.
+
+00:03:01.847 --> 00:03:05.280
+And every stored turn gets paid for again, on every call.
+
+00:03:05.930 --> 00:03:08.825
+Third, it doesn't know what isn't in the input.
+
+00:03:09.125 --> 00:03:11.039
+The model learned a lot in training.
+
+00:03:11.339 --> 00:03:16.362
+But it doesn't know your database, your return policy, or what changed yesterday.
+
+00:03:16.662 --> 00:03:20.941
+Either you put that information in the input, or it writes something plausible.
+
+00:03:21.591 --> 00:03:23.272
+And plausible isn't true.
+
+00:03:23.572 --> 00:03:28.334
+In twenty twenty-three, lawyers in New York filed a brief citing court decisions
+
+00:03:28.334 --> 00:03:30.359
+that a chatbot had simply made up.
+
+00:03:30.659 --> 00:03:32.065
+The judge sanctioned them.
+
+00:03:32.365 --> 00:03:37.064
+The model had no case law in its input, so it completed the text with cases that
+
+00:03:37.064 --> 00:03:37.769
+looked real.
+
+00:03:38.069 --> 00:03:41.417
+That's the problem retrieval, or RAG, solves.
+
+00:03:42.067 --> 00:03:44.304
+Fourth, it guarantees nothing.
+
+00:03:44.604 --> 00:03:46.417
+The model has no contract.
+
+00:03:46.717 --> 00:03:51.801
+It can ignore an instruction, get the math wrong, or invent a field.
+
+00:03:52.101 --> 00:03:54.590
+Every real guarantee comes from the code around it.
+
+00:03:55.240 --> 00:03:59.839
+In twenty twenty-four, an airline's chatbot told a grieving customer about a refund
+
+00:03:59.839 --> 00:04:01.667
+rule that wasn't the real policy.
+
+00:04:01.967 --> 00:04:04.904
+A Canadian tribunal ordered the airline to pay.
+
+00:04:05.204 --> 00:04:09.758
+It rejected the idea that the chatbot was responsible for its own words.
+
+00:04:10.058 --> 00:04:14.241
+To the customer, what the bot says is what the company said.
+
+00:04:15.441 --> 00:04:16.915
+Here's one for you.
+
+00:04:17.215 --> 00:04:20.813
+Your chatbot answers the customer's first question well.
+
+00:04:21.113 --> 00:04:26.297
+On the second one, and how much is shipping for it, it replies: which product do you
+
+00:04:26.297 --> 00:04:26.605
+mean?
+
+00:04:26.905 --> 00:04:28.871
+What's the most likely cause?
+
+00:04:31.921 --> 00:04:36.585
+Your code is sending only the current message, without the previous turns.
+
+00:04:36.885 --> 00:04:41.844
+The model keeps nothing between calls, so the word it has nothing to point to.
+
+00:04:42.494 --> 00:04:44.185
+It's not a full context window.
+
+00:04:44.485 --> 00:04:47.011
+Two short messages don't come close.
+
+00:04:47.311 --> 00:04:49.049
+And it's not temperature either.
+
+00:04:49.349 --> 00:04:54.120
+Randomness changes how the model phrases things, it doesn't erase a conversation.
+
+00:04:55.320 --> 00:04:59.521
+In practice, a call has four parts you control.
+
+00:04:59.821 --> 00:05:00.532
+The model.
+
+00:05:00.832 --> 00:05:05.144
+The common mistake is using the biggest one for everything, and overpaying.
+
+00:05:05.794 --> 00:05:08.954
+The system prompt, with the fixed instructions.
+
+00:05:09.254 --> 00:05:13.446
+The mistake there is turning it into a dumping ground for rules.
+
+00:05:14.096 --> 00:05:14.923
+The messages.
+
+00:05:15.223 --> 00:05:18.554
+Here, people send too much history, or too little.
+
+00:05:19.204 --> 00:05:20.381
+And the output limit.
+
+00:05:20.681 --> 00:05:24.742
+Set it too short, and the reply gets cut in the middle of a sentence.
+
+00:05:25.392 --> 00:05:31.547
+The response also tells you why generation stopped, in a field called stop reason.
+
+00:05:31.847 --> 00:05:33.953
+End turn means the model finished.
+
+00:05:34.253 --> 00:05:37.330
+Max tokens means your limit cut it off.
+
+00:05:37.630 --> 00:05:43.059
+A summary that stops mid-sentence, with a format that never closes, is almost always
+
+00:05:43.059 --> 00:05:44.094
+the second case.
+
+00:05:44.394 --> 00:05:47.740
+So check that field before you try to parse anything.
+
+00:05:48.940 --> 00:05:51.871
+On the page there's a five minute experiment.
+
+00:05:52.171 --> 00:05:56.935
+You ask the same question five times with an open prompt, and five times with a
+
+00:05:56.935 --> 00:05:58.503
+closed list of categories.
+
+00:05:59.153 --> 00:06:00.553
+Look at three things.
+
+00:06:00.853 --> 00:06:02.747
+Whether the five answers are identical.
+
+00:06:03.047 --> 00:06:07.660
+Whether the form changes, like capitals, plural, or a trailing period.
+
+00:06:07.960 --> 00:06:11.043
+And whether even the closed list produces an invalid answer.
+
+00:06:11.693 --> 00:06:15.779
+Even if every answer passes today, the last line is the point.
+
+00:06:16.079 --> 00:06:18.871
+The check against your list lives in code.
+
+00:06:19.171 --> 00:06:23.697
+And that's what protects the rest of the system when the model goes off script.
+
+00:06:24.897 --> 00:06:26.406
+So here's the rule of thumb.
+
+00:06:26.706 --> 00:06:29.325
+Let the model do what only it does well.
+
+00:06:29.625 --> 00:06:34.363
+Understanding text, writing, deciding in ambiguous cases.
+
+00:06:35.013 --> 00:06:37.363
+And let code do everything else.
+
+00:06:37.663 --> 00:06:42.720
+Math, comparing dates, looking up a table, business rules.
+
+00:06:43.370 --> 00:06:45.165
+Picture a shipping calculator.
+
+00:06:45.465 --> 00:06:50.301
+The model reads the customer's message and pulls out the weight and the zip code.
+
+00:06:50.601 --> 00:06:55.695
+Then a ten line function looks up the carrier's table and does the math.
+
+00:06:55.995 --> 00:06:59.724
+Exact, cheap, and it never has a bad day.
+
+00:07:00.374 --> 00:07:02.308
+The common mistake is the opposite.
+
+00:07:02.608 --> 00:07:07.245
+Pasting the rate table into the prompt, and asking the model to do the math.
+
+00:07:07.545 --> 00:07:11.510
+It works most of the time, and fails now and then, silently.
+
+00:07:11.810 --> 00:07:17.247
+When the model does that kind of work, you have a smell called LLM doing
+
+00:07:17.247 --> 00:07:18.682
+deterministic work.
+
+00:07:19.882 --> 00:07:24.261
+Now think about Rafael again, and about anything that writes to a real system.
+
+00:07:24.561 --> 00:07:28.758
+Say the model reads an invoice and your code writes the total straight into the
+
+00:07:28.758 --> 00:07:29.715
+accounting system.
+
+00:07:30.015 --> 00:07:33.237
+Where should the guarantee that the amount makes sense live?
+
+00:07:33.887 --> 00:07:35.239
+Not in the prompt.
+
+00:07:35.539 --> 00:07:40.799
+Writing never get the total wrong, even in capitals, raises the hit rate, but it
+
+00:07:40.799 --> 00:07:42.509
+never becomes a guarantee.
+
+00:07:42.809 --> 00:07:44.888
+And not in a bigger model either.
+
+00:07:45.188 --> 00:07:48.734
+It makes fewer mistakes, and still offers no promise.
+
+00:07:49.384 --> 00:07:50.608
+It lives in code.
+
+00:07:50.908 --> 00:07:55.990
+The total must be a positive number, and it must match the sum of the items minus
+
+00:07:55.990 --> 00:07:56.806
+the discount.
+
+00:07:57.106 --> 00:08:01.878
+If it doesn't, the invoice goes to a review queue, instead of landing wrong in your
+
+00:08:01.878 --> 00:08:02.223
+books.
+
+00:08:03.423 --> 00:08:06.141
+So here's the thing to take with you.
+
+00:08:06.441 --> 00:08:09.255
+A model call is not a function with a contract.
+
+00:08:09.555 --> 00:08:15.353
+It varies, it forgets, it only knows what you hand it, and it promises nothing.
+
+00:08:15.653 --> 00:08:19.830
+Your code is what turns almost always into always handled.
+
+00:08:20.480 --> 00:08:25.742
+In the next lesson, we'll look at the unit everything is measured in, the token, and
+
+00:08:25.742 --> 00:08:29.626
+at the context window, the space where all of this has to fit.
+
+00:08:29.926 --> 00:08:30.756
+See you there.

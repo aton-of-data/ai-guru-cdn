@@ -1,0 +1,418 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:06.349
+A building materials distributor in Brazil receives a few thousand supplier
+
+00:00:06.349 --> 00:00:07.489
+documents a month.
+
+00:00:07.789 --> 00:00:12.890
+Printed electronic invoices, service invoices from city governments, each with a
+
+00:00:12.890 --> 00:00:17.291
+different layout, and supply contracts with price adjustment clauses.
+
+00:00:17.941 --> 00:00:22.270
+Three people in finance type all of this into the management system.
+
+00:00:22.570 --> 00:00:27.697
+During month-end close, the queue falls behind, and payments go out with late fees.
+
+00:00:28.347 --> 00:00:33.662
+The goal is to read each document and fill in the system with no manual typing.
+
+00:00:33.962 --> 00:00:35.545
+Under one clear rule.
+
+00:00:35.845 --> 00:00:38.852
+When in doubt, the document goes to human review.
+
+00:00:39.152 --> 00:00:41.602
+It never enters with wrong data.
+
+00:00:42.252 --> 00:00:44.976
+This is the first real system of this trail.
+
+00:00:45.276 --> 00:00:49.260
+And almost every smell and refactoring from the trail shows up in it.
+
+00:00:49.560 --> 00:00:54.532
+You'll see the first version break four times, and how the final one turns silent
+
+00:00:54.532 --> 00:00:56.067
+errors into visible ones.
+
+00:00:57.267 --> 00:01:02.562
+The first version took a week to build, and it got all ten demo documents right.
+
+00:01:03.212 --> 00:01:07.889
+The file arrives by email or through a portal, and a library pulls out the text.
+
+00:01:08.539 --> 00:01:13.428
+One prompt asks for the issuer, the line items, the taxes and the totals.
+
+00:01:13.728 --> 00:01:15.896
+And to check that the sum matches.
+
+00:01:16.546 --> 00:01:20.319
+Regular expressions pull the values out of the answer text.
+
+00:01:20.969 --> 00:01:23.093
+And the data goes into the system.
+
+00:01:24.293 --> 00:01:25.005
+Week two.
+
+00:01:25.305 --> 00:01:29.838
+The model started writing invoice total amount, instead of total.
+
+00:01:30.138 --> 00:01:35.297
+The regular expression didn't find the field, and one hundred forty documents went
+
+00:01:35.297 --> 00:01:36.366
+in with no total.
+
+00:01:36.666 --> 00:01:38.766
+Nobody noticed for four days.
+
+00:01:39.416 --> 00:01:40.195
+Week four.
+
+00:01:40.495 --> 00:01:45.118
+An invoice with thirty-eight line items went in with a total off by twelve cents.
+
+00:01:45.418 --> 00:01:48.822
+The model had added the items, and rounded differently.
+
+00:01:49.122 --> 00:01:52.525
+The error only surfaced during bank reconciliation.
+
+00:01:53.175 --> 00:01:53.931
+Week five.
+
+00:01:54.231 --> 00:01:58.846
+Someone asked the prompt to keep two decimal places, and tested it on three
+
+00:01:58.846 --> 00:01:59.400
+invoices.
+
+00:01:59.700 --> 00:02:02.380
+Accuracy on the discount field dropped.
+
+00:02:02.680 --> 00:02:07.575
+But only on discounted invoices, and none of them were among the three.
+
+00:02:08.225 --> 00:02:08.956
+Week seven.
+
+00:02:09.256 --> 00:02:14.944
+A tax ID with an invalid check digit was accepted, because the model validated it
+
+00:02:14.944 --> 00:02:16.419
+and said it was fine.
+
+00:02:16.719 --> 00:02:18.614
+The supplier didn't exist.
+
+00:02:19.264 --> 00:02:21.948
+Now notice what the four incidents share.
+
+00:02:22.248 --> 00:02:23.827
+None of them raised an error.
+
+00:02:24.127 --> 00:02:29.591
+The system moved on with empty or wrong data, and another team found it, days later.
+
+00:02:29.891 --> 00:02:34.182
+In document extraction, a silent failure is the worst kind.
+
+00:02:34.482 --> 00:02:37.646
+Its cost grows every day nobody notices.
+
+00:02:38.846 --> 00:02:41.065
+You already know these smells by name.
+
+00:02:41.365 --> 00:02:42.551
+Free text handoff.
+
+00:02:42.851 --> 00:02:46.380
+A prose answer, read by a regular expression.
+
+00:02:46.680 --> 00:02:47.901
+That's week two.
+
+00:02:48.551 --> 00:02:51.268
+LLM doing deterministic work.
+
+00:02:51.568 --> 00:02:55.295
+Sums, rounding and tax ID validation, done by the model.
+
+00:02:55.595 --> 00:02:57.301
+That's weeks four and seven.
+
+00:02:57.951 --> 00:02:59.846
+And the untested prompt.
+
+00:03:00.146 --> 00:03:02.485
+A change tested on three examples.
+
+00:03:02.785 --> 00:03:03.541
+Week five.
+
+00:03:04.741 --> 00:03:06.100
+Here's one for you.
+
+00:03:06.400 --> 00:03:09.691
+A colleague proposes keeping the sum check in the prompt.
+
+00:03:09.991 --> 00:03:14.619
+The model would read the line items, and answer ok, or mismatch.
+
+00:03:14.919 --> 00:03:17.256
+Why doesn't the final architecture do that?
+
+00:03:20.306 --> 00:03:22.641
+Because adding is deterministic work.
+
+00:03:22.941 --> 00:03:25.663
+Code gets it right every time, for free.
+
+00:03:25.963 --> 00:03:30.810
+The model produces text that looks like a check, with no guarantee that it checked
+
+00:03:30.810 --> 00:03:31.342
+anything.
+
+00:03:31.642 --> 00:03:33.982
+Reading the line items stays with the model.
+
+00:03:34.282 --> 00:03:35.983
+The arithmetic leaves it.
+
+00:03:36.283 --> 00:03:39.820
+And comparing the two is what catches a misread.
+
+00:03:41.020 --> 00:03:42.931
+Here's what the team did, in order.
+
+00:03:43.231 --> 00:03:44.736
+First of all, the eval.
+
+00:03:45.036 --> 00:03:50.214
+One hundred eighty real documents, anonymized, with the right value for each field,
+
+00:03:50.214 --> 00:03:52.522
+split by document type and by issuer.
+
+00:03:52.822 --> 00:03:56.437
+Version one was measured against them before anything changed.
+
+00:03:57.087 --> 00:03:58.770
+Then, structured output.
+
+00:03:59.070 --> 00:04:04.309
+Extraction now returns an object in a schema, with amounts in cents and typed dates.
+
+00:04:04.609 --> 00:04:06.668
+The regular expression was deleted.
+
+00:04:07.318 --> 00:04:09.500
+Then, the math moved into code.
+
+00:04:09.800 --> 00:04:12.133
+The model only reads printed values.
+
+00:04:12.433 --> 00:04:16.995
+Sums, taxes and tax ID validation became tested functions.
+
+00:04:17.295 --> 00:04:22.192
+And a mismatch between the calculated total and the printed one became an alarm.
+
+00:04:23.392 --> 00:04:24.940
+Here's where it landed.
+
+00:04:25.240 --> 00:04:30.378
+The whole document goes to the model, which reads both the text and the image.
+
+00:04:31.028 --> 00:04:33.106
+A short step classifies the type.
+
+00:04:33.406 --> 00:04:37.047
+A printed invoice, a service invoice, or a contract.
+
+00:04:37.697 --> 00:04:40.227
+Each type has its own prompt and its own schema.
+
+00:04:40.527 --> 00:04:44.112
+Long contracts are read in parts, and the results combined.
+
+00:04:44.762 --> 00:04:50.710
+Code adds up the items, checks the taxes, and validates the tax ID and the dates.
+
+00:04:51.360 --> 00:04:56.026
+If everything matches, the data goes into the system, with a reference to the
+
+00:04:56.026 --> 00:04:57.966
+document and the prompt version.
+
+00:04:58.616 --> 00:05:03.170
+If something doesn't match, the error goes back to the model once, with the exact
+
+00:05:03.170 --> 00:05:04.239
+validation message.
+
+00:05:04.889 --> 00:05:09.164
+If the repair fails, the document goes to a person, with the problem field
+
+00:05:09.164 --> 00:05:09.858
+highlighted.
+
+00:05:10.508 --> 00:05:15.585
+And every human correction becomes a new case in the dataset.
+
+00:05:15.885 --> 00:05:21.042
+The eval grows on its own, through use, with no separate labeling project.
+
+00:05:21.692 --> 00:05:24.596
+And one decision in there deserves attention.
+
+00:05:24.896 --> 00:05:29.436
+Say the validator reports the item sum differs from the printed total.
+
+00:05:29.736 --> 00:05:33.549
+The repair rereads the page, and returns the same values.
+
+00:05:33.849 --> 00:05:34.716
+What now?
+
+00:05:35.366 --> 00:05:38.859
+Don't accept it because the model confirmed the reading twice.
+
+00:05:39.159 --> 00:05:44.125
+Two identical readings don't prove they're right, and the invoice itself may truly
+
+00:05:44.125 --> 00:05:45.095
+be inconsistent.
+
+00:05:45.395 --> 00:05:48.115
+And don't retry until the sum matches.
+
+00:05:48.415 --> 00:05:53.182
+That teaches the model to change some number so the math closes, and it swaps a
+
+00:05:53.182 --> 00:05:55.294
+visible error for an invisible one.
+
+00:05:55.594 --> 00:05:58.850
+Send it to a person, with the field highlighted.
+
+00:05:59.150 --> 00:06:01.856
+And store the correction in the dataset.
+
+00:06:02.506 --> 00:06:04.562
+And one more choice that saves a lot.
+
+00:06:04.862 --> 00:06:10.722
+Most Brazilian invoices also exist as a signed, structured file, authorized by the
+
+00:06:10.722 --> 00:06:11.723
+tax authority.
+
+00:06:12.023 --> 00:06:16.993
+When the distributor can get that file, it parses it in code and skips the model
+
+00:06:16.993 --> 00:06:17.677
+completely.
+
+00:06:17.977 --> 00:06:19.609
+There's nothing to interpret.
+
+00:06:19.909 --> 00:06:23.891
+Sending it to the model would only add cost and a chance of error.
+
+00:06:24.191 --> 00:06:29.487
+The model stays for service invoices, contracts, and documents with no structured
+
+00:06:29.487 --> 00:06:29.814
+file.
+
+00:06:31.014 --> 00:06:36.749
+So which number answers whether the system meets the rule, when in doubt, review?
+
+00:06:37.049 --> 00:06:39.035
+Not the average accuracy.
+
+00:06:39.335 --> 00:06:42.925
+The average hides where the error is, just like week five.
+
+00:06:43.225 --> 00:06:46.166
+And not the share of documents that skipped review.
+
+00:06:46.466 --> 00:06:48.969
+That measures automation, not safety.
+
+00:06:49.269 --> 00:06:53.831
+It rises when the system improves, and also when it starts letting errors in.
+
+00:06:54.481 --> 00:07:00.541
+The number is how many documents entered without review, with a critical field
+
+00:07:00.541 --> 00:07:01.007
+wrong.
+
+00:07:01.307 --> 00:07:04.932
+That's the error the rule forbids, and it has to stay at zero.
+
+00:07:05.232 --> 00:07:10.368
+The review rate is what you optimize after, without ever letting that first number
+
+00:07:10.368 --> 00:07:10.681
+rise.
+
+00:07:11.331 --> 00:07:16.050
+And when a vendor offers a cheaper model, you already know what to do.
+
+00:07:16.350 --> 00:07:21.459
+Run the one hundred eighty documents on both versions, with accuracy per field and
+
+00:07:21.459 --> 00:07:22.019
+per type.
+
+00:07:22.319 --> 00:07:25.574
+Then the saving is either worth it, or it isn't.
+
+00:07:26.774 --> 00:07:28.674
+So here's what this system teaches.
+
+00:07:28.974 --> 00:07:34.283
+Extraction and arithmetic are different jobs, and the mismatch between them is your
+
+00:07:34.283 --> 00:07:35.562
+best error detector.
+
+00:07:35.862 --> 00:07:37.858
+A loud error beats a silent one.
+
+00:07:38.158 --> 00:07:41.034
+The eval comes first, and pays for itself.
+
+00:07:41.334 --> 00:07:44.274
+Human review is part of the architecture.
+
+00:07:44.574 --> 00:07:47.334
+And every human correction is a test case.
+
+00:07:47.634 --> 00:07:49.582
+The goal was never zero review.
+
+00:07:49.882 --> 00:07:51.671
+It was zero wrong data.
+
+00:07:52.321 --> 00:07:57.127
+In the next lesson, the last of this trail, we'll let the model write database
+
+00:07:57.127 --> 00:08:01.071
+queries, and see how to keep that safe: natural language to SQL.
+
+00:08:01.371 --> 00:08:02.201
+See you there.

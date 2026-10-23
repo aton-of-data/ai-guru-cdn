@@ -1,0 +1,481 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.127
+Você conheceu essa história nas duas últimas aulas.
+
+00:00:04.427 --> 00:00:07.271
+Uma linha mudou no extrator de notas.
+
+00:00:07.571 --> 00:00:09.320
+Três notas de teste pareceram ok.
+
+00:00:09.620 --> 00:00:13.173
+E em produção, as notas com desconto pioraram.
+
+00:00:13.823 --> 00:00:16.454
+Hoje a gente faz a refatoração que evita isso.
+
+00:00:16.754 --> 00:00:18.391
+E ela tem um primeiro passo estranho.
+
+00:00:18.691 --> 00:00:21.544
+Antes de mudar qualquer coisa, você não muda nada.
+
+00:00:22.194 --> 00:00:25.007
+Essa refatoração trata três smells.
+
+00:00:25.307 --> 00:00:28.816
+O untested prompt, em que mudanças saem sem conjunto de testes.
+
+00:00:29.466 --> 00:00:30.991
+O vibe check eval,
+
+00:00:30.991 --> 00:00:35.480
+em que alguém faz umas perguntas e olha as respostas.
+
+00:00:36.130 --> 00:00:37.660
+E o model pinned prompt.
+
+00:00:37.960 --> 00:00:40.463
+Um classificador que ninguém tem coragem
+
+00:00:40.463 --> 00:00:43.027
+de levar para outro modelo há oito meses,
+
+00:00:43.027 --> 00:00:45.467
+porque o prompt foi ajustado para esse.
+
+00:00:45.767 --> 00:00:46.473
+Nesta aula,
+
+00:00:46.473 --> 00:00:50.325
+você vai montar a rede de segurança que faz os três sumirem.
+
+00:00:51.525 --> 00:00:54.204
+A solução cabe numa frase.
+
+00:00:54.504 --> 00:00:56.094
+Antes de qualquer ajuste,
+
+00:00:56.094 --> 00:00:59.718
+monte um conjunto de casos reais com respostas esperadas,
+
+00:00:59.718 --> 00:01:01.879
+rode a versão atual neles e guarde
+
+00:01:01.879 --> 00:01:03.850
+o resultado como linha de base.
+
+00:01:04.150 --> 00:01:08.280
+A partir daí, toda mudança é comparada com essa linha de base.
+
+00:01:08.930 --> 00:01:11.852
+A linha de base é a peça que normalmente falta.
+
+00:01:12.152 --> 00:01:15.853
+Sem ela, um número solto, como 91% de acerto,
+
+00:01:15.853 --> 00:01:19.306
+não diz se a mudança ajudou ou atrapalhou.
+
+00:01:19.606 --> 00:01:22.350
+Com ela, toda discussão vira uma comparação.
+
+00:01:23.550 --> 00:01:26.694
+Antes, a mudança sai com uma opinião.
+
+00:01:26.994 --> 00:01:31.280
+Alguém muda o prompt, olha três casos e publica.
+
+00:01:31.930 --> 00:01:34.058
+Depois, a mudança sai com um número.
+
+00:01:34.358 --> 00:01:39.025
+Alguém propõe uma mudança no prompt, no modelo ou num parâmetro.
+
+00:01:39.675 --> 00:01:44.794
+O eval roda a versão nova no dataset versionado, algumas vezes.
+
+00:01:45.444 --> 00:01:49.897
+O resultado é comparado com a versão anterior, campo a campo,
+
+00:01:49.897 --> 00:01:51.503
+categoria a categoria.
+
+00:01:52.153 --> 00:01:54.696
+Sem regressão, a mudança segue.
+
+00:01:55.346 --> 00:01:57.566
+Com regressão, a mudança para,
+
+00:01:57.566 --> 00:02:00.970
+e os casos que pioraram aparecem para análise.
+
+00:02:01.620 --> 00:02:04.059
+É assim que isso aparece no pull request,
+
+00:02:04.059 --> 00:02:05.843
+como um relatório ilustrativo.
+
+00:02:06.143 --> 00:02:08.811
+Versão seis contra versão sete.
+
+00:02:09.111 --> 00:02:11.012
+O campo emissor se mantém.
+
+00:02:11.312 --> 00:02:12.385
+A data se mantém.
+
+00:02:12.685 --> 00:02:16.660
+E o total cai seis pontos, nas notas com desconto.
+
+00:02:17.310 --> 00:02:19.776
+A execução falha, em três rodadas.
+
+00:02:20.076 --> 00:02:22.228
+O bug de sexta nunca chega à produção.
+
+00:02:23.428 --> 00:02:26.815
+O problema de testar na mão não é preguiça.
+
+00:02:27.115 --> 00:02:28.269
+É estatística.
+
+00:02:28.569 --> 00:02:31.822
+Três exemplos não pegam uma queda de seis pontos
+
+00:02:31.822 --> 00:02:34.804
+numa categoria que aparece em 15% dos casos.
+
+00:02:35.104 --> 00:02:38.965
+Um conjunto de dezenas de casos reais, rodado algumas vezes,
+
+00:02:38.965 --> 00:02:39.286
+pega.
+
+00:02:39.936 --> 00:02:43.124
+A linha de base transforma um número numa comparação.
+
+00:02:43.424 --> 00:02:47.155
+É isso que acaba com o debate do melhorou, piorou.
+
+00:02:47.805 --> 00:02:50.484
+E o eval muda o comportamento do time.
+
+00:02:50.784 --> 00:02:52.620
+Quando apagar um parágrafo do prompt
+
+00:02:52.620 --> 00:02:54.251
+custa alguns minutos de medição,
+
+00:02:54.251 --> 00:02:56.138
+as pessoas começam a limpar o prompt,
+
+00:02:56.138 --> 00:02:57.770
+em vez de só acrescentar regras.
+
+00:02:58.970 --> 00:02:59.802
+Passo zero.
+
+00:03:00.102 --> 00:03:01.870
+Não mude nada ainda.
+
+00:03:02.170 --> 00:03:03.460
+Congele o prompt atual.
+
+00:03:03.760 --> 00:03:06.571
+A linha de base é da versão que está no ar,
+
+00:03:06.571 --> 00:03:08.531
+não da que você quer publicar.
+
+00:03:09.181 --> 00:03:10.656
+Junte casos reais.
+
+00:03:10.956 --> 00:03:14.678
+Comece com trinta a cem entradas de produção, anonimizadas,
+
+00:03:14.678 --> 00:03:18.717
+cobrindo as categorias principais e os bugs que você já conhece.
+
+00:03:19.017 --> 00:03:24.849
+Notas com desconto, com imposto de serviço, com mais de um item.
+
+00:03:25.499 --> 00:03:27.955
+Rotule o resultado esperado.
+
+00:03:28.255 --> 00:03:31.539
+Para extração e classificação, o valor certo.
+
+00:03:31.839 --> 00:03:36.484
+Para texto aberto, critérios verificáveis, ou uma rubrica.
+
+00:03:37.134 --> 00:03:39.491
+Escolha a nota mais simples que funciona.
+
+00:03:39.791 --> 00:03:42.204
+Comparação exata, uma regra no código,
+
+00:03:42.204 --> 00:03:45.315
+ou um modelo como juiz quando não há alternativa.
+
+00:03:45.615 --> 00:03:46.991
+E se o juiz é um modelo,
+
+00:03:46.991 --> 00:03:49.399
+meça o quanto ele concorda com uma pessoa.
+
+00:03:50.049 --> 00:03:52.868
+Rode a versão atual de três a cinco vezes
+
+00:03:52.868 --> 00:03:54.930
+e guarde a média e a variação,
+
+00:03:54.930 --> 00:03:55.893
+por categoria.
+
+00:03:56.193 --> 00:03:57.381
+Essa é a sua linha de base.
+
+00:03:58.031 --> 00:04:03.434
+Versione o dataset e o script no mesmo repositório do prompt.
+
+00:04:04.084 --> 00:04:07.855
+Agora, finalmente, faça a mudança e rode o mesmo eval.
+
+00:04:08.505 --> 00:04:11.408
+Compare por categoria, não só pela média.
+
+00:04:11.708 --> 00:04:14.923
+Combine com o time qual queda bloqueia um deploy.
+
+00:04:15.223 --> 00:04:17.419
+E ligue o eval no seu pipeline,
+
+00:04:17.419 --> 00:04:20.889
+para que toda mudança de prompt rode ele sozinha.
+
+00:04:22.089 --> 00:04:23.562
+Uma pergunta para você.
+
+00:04:23.862 --> 00:04:28.383
+Você rodou o eval uma vez na versão nova e deu 94%.
+
+00:04:28.683 --> 00:04:30.075
+A linha de base é 92%,
+
+00:04:30.075 --> 00:04:33.363
+com variação de três pontos para mais ou para menos,
+
+00:04:33.363 --> 00:04:34.439
+em cinco rodadas.
+
+00:04:34.739 --> 00:04:35.441
+Dá para publicar?
+
+00:04:38.491 --> 00:04:39.291
+Ainda não.
+
+00:04:39.591 --> 00:04:43.146
+Uma rodada só, dentro da faixa de ruído da linha de base,
+
+00:04:43.146 --> 00:04:44.019
+não é melhora.
+
+00:04:44.319 --> 00:04:46.562
+Você pode estar só vendo uma variação
+
+00:04:46.562 --> 00:04:48.319
+que a linha de base já tinha.
+
+00:04:48.619 --> 00:04:50.635
+Rode a versão nova de três a cinco
+
+00:04:50.635 --> 00:04:52.414
+vezes e compare média e faixa,
+
+00:04:52.414 --> 00:04:54.490
+por categoria, com a linha de base.
+
+00:04:54.790 --> 00:04:55.810
+Aí decida.
+
+00:04:56.460 --> 00:04:58.554
+E escreva a regra de publicar ou bloquear
+
+00:04:58.554 --> 00:04:59.781
+antes de ver os números.
+
+00:05:00.081 --> 00:05:00.453
+Depois,
+
+00:05:00.453 --> 00:05:03.749
+todo mundo acha um motivo para gostar do resultado que queria.
+
+00:05:04.949 --> 00:05:06.102
+Agora, as armadilhas.
+
+00:05:06.402 --> 00:05:09.894
+A primeira é a média que esconde uma fila rara.
+
+00:05:10.194 --> 00:05:13.406
+O acerto geral sobe um ponto.
+
+00:05:13.706 --> 00:05:15.520
+A fila de chargeback cai vinte.
+
+00:05:15.820 --> 00:05:19.906
+Se o seu pipeline só olha a média, o pull request passa.
+
+00:05:20.206 --> 00:05:23.764
+A correção é falhar o pull request quando qualquer
+
+00:05:23.764 --> 00:05:26.611
+categoria combinada cair além do limite,
+
+00:05:26.611 --> 00:05:28.960
+e imprimir os casos que pioraram.
+
+00:05:29.260 --> 00:05:31.782
+Isso transforma o número numa correção.
+
+00:05:32.432 --> 00:05:35.023
+Um dataset que não parece produção.
+
+00:05:35.323 --> 00:05:38.912
+Um time tinha quarenta casos, inventados num quadro branco,
+
+00:05:38.912 --> 00:05:39.702
+todos fáceis.
+
+00:05:40.002 --> 00:05:41.800
+O pipeline sempre passava,
+
+00:05:41.800 --> 00:05:44.705
+e a produção falhava nas notas de serviço.
+
+00:05:45.005 --> 00:05:48.426
+Troque o quadro branco por notas reais anonimizadas,
+
+00:05:48.426 --> 00:05:50.728
+incluindo os erros que você já viu.
+
+00:05:51.378 --> 00:05:52.938
+Sobreajuste ao eval.
+
+00:05:53.238 --> 00:05:55.835
+Ajustar o prompt até passar nos cinquenta
+
+00:05:55.835 --> 00:05:58.242
+casos pode piorar o resto da produção.
+
+00:05:58.542 --> 00:06:02.641
+Separe uma parte do dataset e use só na decisão final.
+
+00:06:03.291 --> 00:06:05.764
+Um juiz que ninguém avaliou.
+
+00:06:06.064 --> 00:06:07.397
+Se a nota usa um modelo,
+
+00:06:07.397 --> 00:06:10.673
+confira de tempos em tempos se ele concorda com uma pessoa.
+
+00:06:11.323 --> 00:06:13.656
+E ruído confundido com melhora.
+
+00:06:13.956 --> 00:06:15.048
+Esse a gente acabou de ver.
+
+00:06:16.248 --> 00:06:17.543
+Agora, a recompensa.
+
+00:06:17.843 --> 00:06:19.403
+O time quer levar o classificador
+
+00:06:19.403 --> 00:06:21.199
+de tickets para um modelo mais barato.
+
+00:06:21.499 --> 00:06:23.992
+O que precisa existir antes de rodar o teste?
+
+00:06:24.642 --> 00:06:27.260
+Um dataset de tickets reais com a fila certa,
+
+00:06:27.260 --> 00:06:29.819
+cobrindo todas as filas, inclusive as raras.
+
+00:06:30.469 --> 00:06:32.204
+A linha de base do modelo atual.
+
+00:06:32.504 --> 00:06:35.855
+Acerto por fila, em média de algumas rodadas.
+
+00:06:36.505 --> 00:06:39.462
+Uma regra de decisão, escrita antes do teste.
+
+00:06:39.762 --> 00:06:43.406
+Por exemplo, nenhuma fila pode cair mais de dois pontos,
+
+00:06:43.406 --> 00:06:44.968
+e a média não pode cair.
+
+00:06:45.618 --> 00:06:48.051
+E o custo por mil tickets dos dois modelos,
+
+00:06:48.051 --> 00:06:50.485
+para pesar contra a diferença de qualidade.
+
+00:06:51.135 --> 00:06:54.675
+Com isso, a troca vira uma tarde de trabalho,
+
+00:06:54.675 --> 00:06:57.271
+e uma decisão apoiada num número.
+
+00:06:57.571 --> 00:06:58.488
+Não uma aposta.
+
+00:06:58.788 --> 00:07:02.102
+E não espere o provedor aposentar o seu modelo atual.
+
+00:07:02.402 --> 00:07:04.478
+É o pior momento para começar,
+
+00:07:04.478 --> 00:07:07.178
+trocando com prazo e sem linha de base.
+
+00:07:07.478 --> 00:07:11.121
+Monte o eval agora, enquanto o modelo atual ainda roda.
+
+00:07:12.321 --> 00:07:14.119
+Então, a ideia para levar.
+
+00:07:14.419 --> 00:07:17.678
+O eval vem antes da mudança, nunca depois.
+
+00:07:17.978 --> 00:07:23.542
+Congele o que está no ar, meça em casos reais, algumas vezes,
+
+00:07:23.542 --> 00:07:25.184
+e escreva a regra.
+
+00:07:25.484 --> 00:07:28.282
+Depois mude, e compare por categoria.
+
+00:07:28.582 --> 00:07:30.942
+É isso que transforma o medo de mexer
+
+00:07:30.942 --> 00:07:33.493
+no prompt numa tarde de trabalho medido.
+
+00:07:34.143 --> 00:07:35.258
+Na próxima aula,
+
+00:07:35.258 --> 00:07:38.811
+vamos olhar a máquina que roda tudo isso para você,
+
+00:07:38.811 --> 00:07:40.971
+a cada mudança: o eval harness.
+
+00:07:41.271 --> 00:07:42.101
+Até lá.

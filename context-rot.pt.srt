@@ -1,0 +1,643 @@
+1
+00:00:01,600 --> 00:00:05,349
+Um tutor de matemática acompanha uma aluna há doze aulas.
+
+2
+00:00:05,649 --> 00:00:07,904
+Tudo na mesma conversa.
+
+3
+00:00:08,554 --> 00:00:12,786
+Na aula um, ela pediu: não me mostra a solução, só dicas.
+
+4
+00:00:13,086 --> 00:00:14,565
+Combinado, disse o tutor.
+
+5
+00:00:15,215 --> 00:00:18,825
+Na aula seis, para uma lista de revisão, ela pediu o contrário.
+
+6
+00:00:19,125 --> 00:00:21,607
+Nesta lista, pode mostrar a solução completa.
+
+7
+00:00:22,257 --> 00:00:26,772
+Agora é a aula doze, e o histórico tem quase noventa mil tokens.
+
+8
+00:00:27,072 --> 00:00:29,226
+Ela pede ajuda com a questão quatro.
+
+9
+00:00:29,526 --> 00:00:33,715
+E o tutor alterna entre as duas regras, sem lógica clara.
+
+10
+00:00:34,365 --> 00:00:37,019
+Ninguém avisou o tutor que a regra da aula
+
+11
+00:00:37,019 --> 00:00:39,042
+seis valia só para aquela lista.
+
+12
+00:00:39,342 --> 00:00:43,159
+Ninguém resumiu o que a aluna já domina.
+
+13
+00:00:43,459 --> 00:00:47,350
+O modelo recebe tudo e tenta adivinhar o que ainda vale.
+
+14
+00:00:47,650 --> 00:00:50,672
+Nesta aula, você vai aprender a reconhecer esse smell,
+
+15
+00:00:50,672 --> 00:00:53,751
+e o que colocar no lugar de um histórico que só cresce.
+
+16
+00:00:54,951 --> 00:00:55,897
+O ciclo é este.
+
+17
+00:00:56,197 --> 00:00:57,674
+Chega um turno novo.
+
+18
+00:00:58,324 --> 00:01:01,806
+O código acrescenta ao histórico inteiro, que nunca diminui.
+
+19
+00:01:02,456 --> 00:01:05,407
+O modelo lê dezenas de milhares de tokens,
+
+20
+00:01:05,407 --> 00:01:07,655
+a maioria irrelevante, ou velha.
+
+21
+00:01:08,305 --> 00:01:10,629
+A resposta piora, e custa mais.
+
+22
+00:01:10,929 --> 00:01:14,963
+E ela também entra no histórico, então o ciclo continua.
+
+23
+00:01:15,613 --> 00:01:16,551
+Como identificar?
+
+24
+00:01:16,851 --> 00:01:20,384
+A conversa, ou a sessão do agente, só cresce.
+
+25
+00:01:20,684 --> 00:01:22,329
+Nada nunca sai.
+
+26
+00:01:22,979 --> 00:01:26,586
+O modelo cita informação velha como se fosse atual.
+
+27
+00:01:26,886 --> 00:01:30,640
+Um pedido de três meses atrás, um arquivo que já mudou.
+
+28
+00:01:31,290 --> 00:01:33,775
+Instruções dadas no começo são ignoradas,
+
+29
+00:01:33,775 --> 00:01:35,655
+ou misturadas com as de depois.
+
+30
+00:01:36,305 --> 00:01:38,698
+O custo por turno sobe ao longo da sessão,
+
+31
+00:01:38,698 --> 00:01:40,293
+mesmo para perguntas curtas.
+
+32
+00:01:40,593 --> 00:01:43,587
+E o tempo até a primeira palavra aparecer também.
+
+33
+00:01:44,237 --> 00:01:47,606
+E a qualidade da resposta cai nas sessões longas,
+
+34
+00:01:47,606 --> 00:01:49,600
+enquanto está boa nas curtas.
+
+35
+00:01:50,800 --> 00:01:53,616
+Os exemplos padrão só acrescentam.
+
+36
+00:01:53,916 --> 00:01:56,118
+O código de chat mais simples guarda a lista
+
+37
+00:01:56,118 --> 00:01:57,820
+de mensagens e manda tudo de novo.
+
+38
+00:01:58,120 --> 00:02:00,413
+Funciona nos primeiros dez turnos.
+
+39
+00:02:01,063 --> 00:02:02,753
+Janelas grandes parecem seguras.
+
+40
+00:02:03,053 --> 00:02:06,846
+Se cabe um milhão de tokens, não parece ter motivo para cortar.
+
+41
+00:02:07,146 --> 00:02:09,859
+Mas caber não é o mesmo que ser bem usado.
+
+42
+00:02:10,159 --> 00:02:12,124
+Os modelos usam com menos confiança
+
+43
+00:02:12,124 --> 00:02:14,369
+o que fica no meio de um contexto longo.
+
+44
+00:02:14,669 --> 00:02:17,377
+E as instruções da aula um e da aula
+
+45
+00:02:17,377 --> 00:02:19,934
+seis brigam exatamente nesse meio.
+
+46
+00:02:20,234 --> 00:02:21,379
+A janela comporta.
+
+47
+00:02:21,679 --> 00:02:22,795
+A atenção, não.
+
+48
+00:02:23,445 --> 00:02:24,767
+Apagar dá medo.
+
+49
+00:02:25,067 --> 00:02:29,166
+Sem saber o que importa, guardar tudo parece mais seguro.
+
+50
+00:02:29,816 --> 00:02:32,130
+E agentes produzem muito texto.
+
+51
+00:02:32,430 --> 00:02:35,506
+Resultados de ferramentas, arquivos lidos, saída de testes.
+
+52
+00:02:35,806 --> 00:02:38,451
+Tudo entra no histórico e fica lá,
+
+53
+00:02:38,451 --> 00:02:41,174
+muito depois de deixar de ser útil.
+
+54
+00:02:42,374 --> 00:02:44,149
+O custo começa na qualidade.
+
+55
+00:02:44,449 --> 00:02:46,903
+Regras e fatos enterrados no meio são
+
+56
+00:02:46,903 --> 00:02:48,825
+seguidos com menos confiança,
+
+57
+00:02:48,825 --> 00:02:52,405
+e informação contraditória produz respostas instáveis.
+
+58
+00:02:53,055 --> 00:02:55,534
+Depois, dinheiro, com números ilustrativos.
+
+59
+00:02:55,834 --> 00:02:58,420
+Um prompt de sistema de dois mil tokens,
+
+60
+00:02:58,420 --> 00:03:00,553
+e mais quatrocentos a cada turno.
+
+61
+00:03:00,853 --> 00:03:05,475
+No turno três, uma chamada manda uns três mil e duzentos tokens.
+
+62
+00:03:05,775 --> 00:03:08,770
+No turno doze, uns seis mil e oitocentos.
+
+63
+00:03:09,070 --> 00:03:11,572
+No turno quarenta, uns dezoito mil.
+
+64
+00:03:12,222 --> 00:03:14,578
+A pergunta da aluna cabe numa linha.
+
+65
+00:03:14,878 --> 00:03:15,840
+A conta, não.
+
+66
+00:03:16,140 --> 00:03:18,839
+O cache de prompt barateia um começo estável,
+
+67
+00:03:18,839 --> 00:03:21,118
+mas um histórico que muda a cada turno
+
+68
+00:03:21,118 --> 00:03:22,977
+não fica nesse começo guardado.
+
+69
+00:03:23,277 --> 00:03:26,632
+E em algum momento a sessão estoura a janela,
+
+70
+00:03:26,632 --> 00:03:30,583
+e o corte acontece no pior lugar, sem lógica nenhuma.
+
+71
+00:03:31,233 --> 00:03:34,353
+A mesma coisa aparece no atendimento de um banco pelo WhatsApp.
+
+72
+00:03:34,653 --> 00:03:38,740
+No mês um, o cliente falou de um Pix cancelado.
+
+73
+00:03:39,040 --> 00:03:41,462
+No mês três, ele pergunta o saldo,
+
+74
+00:03:41,462 --> 00:03:45,237
+e o bot ainda fala daquele Pix como o problema atual.
+
+75
+00:03:45,537 --> 00:03:47,563
+A mensagem nova tinha doze palavras.
+
+76
+00:03:47,863 --> 00:03:50,036
+O contexto carregava meses de atendimento.
+
+77
+00:03:51,236 --> 00:03:52,233
+Uma pergunta para você.
+
+78
+00:03:52,533 --> 00:03:55,275
+Um chat de atendimento sempre manda só as últimas
+
+79
+00:03:55,275 --> 00:03:57,122
+dez mensagens e descarta o resto.
+
+80
+00:03:57,422 --> 00:03:59,904
+Agora os clientes reclamam que o bot esquece
+
+81
+00:03:59,904 --> 00:04:02,385
+o número do pedido que eles deram no começo.
+
+82
+00:04:02,685 --> 00:04:04,134
+Isso é context rot?
+
+83
+00:04:07,184 --> 00:04:07,849
+Não.
+
+84
+00:04:08,149 --> 00:04:10,726
+O contexto não está podre, está curto demais.
+
+85
+00:04:11,026 --> 00:04:14,810
+Cortar por uma janela fixa resolve o custo, mas perde fatos.
+
+86
+00:04:15,110 --> 00:04:17,852
+O que falta é um estado explícito da conversa,
+
+87
+00:04:17,852 --> 00:04:19,461
+uma memória de curto prazo.
+
+88
+00:04:19,761 --> 00:04:22,886
+O número do pedido mora ali, fora do histórico bruto,
+
+89
+00:04:22,886 --> 00:04:25,009
+onde o seu código mantém atualizado.
+
+90
+00:04:26,209 --> 00:04:27,854
+São duas refatorações.
+
+91
+00:04:28,154 --> 00:04:30,780
+Quando a sessão é uma conversa longa,
+
+92
+00:04:30,780 --> 00:04:33,123
+troque o histórico por um resumo.
+
+93
+00:04:33,423 --> 00:04:35,542
+Os turnos antigos viram um resumo,
+
+94
+00:04:35,542 --> 00:04:37,412
+e os fatos que precisam durar,
+
+95
+00:04:37,412 --> 00:04:39,780
+como preferências e regras combinadas,
+
+96
+00:04:39,780 --> 00:04:41,587
+vão para um estado explícito.
+
+97
+00:04:42,237 --> 00:04:45,312
+E quando o contexto incha com trabalho de leitura,
+
+98
+00:04:45,312 --> 00:04:48,572
+como arquivos, páginas ou logs, extraia um subagente.
+
+99
+00:04:48,872 --> 00:04:53,404
+Ele lê num contexto limpo e devolve só a conclusão.
+
+100
+00:04:54,054 --> 00:04:56,945
+Aqui está a aula doze, antes e depois.
+
+101
+00:04:57,245 --> 00:05:00,045
+Antes, noventa mil tokens de chat bruto,
+
+102
+00:05:00,045 --> 00:05:03,405
+com duas regras em conflito, enterradas no meio.
+
+103
+00:05:03,705 --> 00:05:05,872
+Depois, um resumo curto, o estado,
+
+104
+00:05:05,872 --> 00:05:09,950
+com o nível da aluna e a regra atual, e os turnos mais recentes.
+
+105
+00:05:10,250 --> 00:05:13,825
+A regra ativa mora num campo só, que dá para ler,
+
+106
+00:05:13,825 --> 00:05:14,992
+editar e testar.
+
+107
+00:05:15,642 --> 00:05:18,514
+E cuidado com um erro quando começar a cortar.
+
+108
+00:05:18,814 --> 00:05:21,430
+Digamos que você resume a cada vinte turnos.
+
+109
+00:05:21,730 --> 00:05:26,134
+No mês três, o resumo ainda diz: cliente com Pix cancelado,
+
+110
+00:05:26,134 --> 00:05:27,626
+tratar como urgente.
+
+111
+00:05:27,926 --> 00:05:32,892
+E o bot volta a falar disso, quando o cliente só pediu o saldo.
+
+112
+00:05:33,192 --> 00:05:35,306
+Você só compactou o apodrecimento.
+
+113
+00:05:35,606 --> 00:05:37,486
+Um resumo precisa de validade.
+
+114
+00:05:37,786 --> 00:05:41,261
+O que vale agora vai para o estado, com prazo de validade.
+
+115
+00:05:41,561 --> 00:05:46,017
+E o passado fica no resumo como passado, ou sai.
+
+116
+00:05:47,217 --> 00:05:49,014
+Mais uma, do mundo dos agentes.
+
+117
+00:05:49,314 --> 00:05:51,785
+Um agente de código leu quarenta arquivos,
+
+118
+00:05:51,785 --> 00:05:55,256
+achou a causa de um bug e agora está escrevendo a correção.
+
+119
+00:05:55,556 --> 00:05:58,450
+Os quarenta arquivos ainda vão em todo turno.
+
+120
+00:05:58,750 --> 00:06:00,862
+Qual é o próximo passo mais útil?
+
+121
+00:06:03,912 --> 00:06:06,922
+Limpe os resultados antigos de ferramentas,
+
+122
+00:06:06,922 --> 00:06:11,332
+ou leve a leitura para um subagente que devolve só a conclusão.
+
+123
+00:06:11,632 --> 00:06:13,201
+Os arquivos já cumpriram o papel deles.
+
+124
+00:06:13,501 --> 00:06:15,495
+Agora eles empurram a instrução
+
+125
+00:06:15,495 --> 00:06:17,810
+da correção para o meio do contexto,
+
+126
+00:06:17,810 --> 00:06:19,225
+onde o modelo lê pior.
+
+127
+00:06:19,525 --> 00:06:21,491
+Uma janela maior não resolve.
+
+128
+00:06:21,791 --> 00:06:25,510
+E mandar o modelo ignorar os arquivos que não vai usar disputa
+
+129
+00:06:25,510 --> 00:06:28,569
+com dezenas de milhares de tokens que continuam lá.
+
+130
+00:06:28,869 --> 00:06:30,925
+Quem tira o que não serve é o código.
+
+131
+00:06:31,225 --> 00:06:32,633
+Não o modelo.
+
+132
+00:06:33,833 --> 00:06:36,649
+E um caso que parece, mas não é.
+
+133
+00:06:36,949 --> 00:06:40,033
+Um prompt de sistema de oito mil tokens,
+
+134
+00:06:40,033 --> 00:06:44,736
+que nunca muda entre turnos, em conversas de uns seis turnos.
+
+135
+00:06:45,036 --> 00:06:46,776
+O custo por mensagem é alto.
+
+136
+00:06:47,076 --> 00:06:49,760
+Mas o contexto não cresce durante a sessão.
+
+137
+00:06:50,060 --> 00:06:52,319
+O peso está fixo no prompt.
+
+138
+00:06:52,619 --> 00:06:53,953
+Isso é prompt bloat.
+
+139
+00:06:54,253 --> 00:06:57,948
+Enxugue o prompt e, se o começo é estável, use cache.
+
+140
+00:06:59,148 --> 00:07:00,337
+Quando dá para ignorar?
+
+141
+00:07:00,637 --> 00:07:02,681
+Sessões curtas por natureza.
+
+142
+00:07:02,981 --> 00:07:04,929
+Um chat de atendimento que dura cinco
+
+143
+00:07:04,929 --> 00:07:06,719
+turnos não precisa de compactação.
+
+144
+00:07:07,369 --> 00:07:10,342
+Tarefas em que a entrada inteira é o documento.
+
+145
+00:07:10,642 --> 00:07:13,636
+Revisar um contrato de uma vez é diferente
+
+146
+00:07:13,636 --> 00:07:15,846
+de carregar uma conversa velha.
+
+147
+00:07:16,146 --> 00:07:19,327
+Ali, o texto é o trabalho, não sobra de turnos.
+
+148
+00:07:19,977 --> 00:07:20,863
+E protótipo.
+
+149
+00:07:21,163 --> 00:07:24,996
+Acrescentar tudo é o jeito mais rápido de testar uma ideia.
+
+150
+00:07:25,296 --> 00:07:27,602
+Só não coloque sessões longas no ar assim.
+
+151
+00:07:28,802 --> 00:07:31,188
+Então, a ideia para levar.
+
+152
+00:07:31,488 --> 00:07:33,619
+Um histórico longo não é memória.
+
+153
+00:07:33,919 --> 00:07:37,215
+É uma pilha que o modelo precisa revirar a cada turno,
+
+154
+00:07:37,215 --> 00:07:38,252
+e pagar por isso.
+
+155
+00:07:38,552 --> 00:07:41,832
+Guarde os fatos que precisam durar num estado explícito,
+
+156
+00:07:41,832 --> 00:07:43,589
+resuma o passado como passado,
+
+157
+00:07:43,589 --> 00:07:46,283
+e deixe o trabalho terminado sair do contexto.
+
+158
+00:07:46,933 --> 00:07:48,012
+Na próxima aula,
+
+159
+00:07:48,012 --> 00:07:51,317
+a gente faz a primeira refatoração passo a passo:
+
+160
+00:07:51,317 --> 00:07:53,272
+replace history with summary.
+
+161
+00:07:53,572 --> 00:07:54,321
+Até lá.

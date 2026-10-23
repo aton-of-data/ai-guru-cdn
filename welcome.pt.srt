@@ -1,0 +1,263 @@
+1
+00:00:01,600 --> 00:00:04,977
+Olá, eu sou o Aton Bertini, e este é o ai-guru.
+
+2
+00:00:05,627 --> 00:00:08,689
+Antes de começar uma trilha, me dá três minutos.
+
+3
+00:00:08,989 --> 00:00:13,080
+Eu conto o que é isto, para quem é, e como aproveitar ao máximo.
+
+4
+00:00:14,280 --> 00:00:16,632
+O software está mudando.
+
+5
+00:00:16,932 --> 00:00:19,592
+Cada vez mais sistemas que a gente constrói têm
+
+6
+00:00:19,592 --> 00:00:22,138
+um modelo de linguagem em algum lugar dentro.
+
+7
+00:00:22,788 --> 00:00:26,465
+Ele atende os seus clientes, no chat e no telefone.
+
+8
+00:00:27,115 --> 00:00:31,741
+Ele lê os contratos e as notas que ninguém quer digitar.
+
+9
+00:00:32,391 --> 00:00:36,901
+E, cada vez mais, chama ferramentas e toma decisões sozinho.
+
+10
+00:00:37,551 --> 00:00:39,931
+Fazer uma demo funcionar é fácil.
+
+11
+00:00:40,231 --> 00:00:43,719
+Fazer funcionar todo dia, com custo previsível,
+
+12
+00:00:43,719 --> 00:00:47,727
+sem vazar dados nem inventar coisas, é outro trabalho.
+
+13
+00:00:48,377 --> 00:00:51,287
+Esse trabalho tem nome: o engenheiro de IA.
+
+14
+00:00:51,587 --> 00:00:55,310
+E é uma das carreiras que mais crescem no software hoje.
+
+15
+00:00:55,960 --> 00:00:58,765
+O ai-guru é uma formação para essa mudança.
+
+16
+00:00:59,065 --> 00:01:02,865
+É para quem já sabe construir software e quer formar
+
+17
+00:01:02,865 --> 00:01:06,300
+o critério que esse novo tipo de sistema exige.
+
+18
+00:01:07,500 --> 00:01:09,803
+Cada aula vem em dois formatos.
+
+19
+00:01:10,453 --> 00:01:12,205
+Um vídeo, como este.
+
+20
+00:01:12,505 --> 00:01:15,879
+Ele é narrado em inglês, com legenda em português.
+
+21
+00:01:16,179 --> 00:01:18,570
+E você também pode ouvir como podcast,
+
+22
+00:01:18,570 --> 00:01:20,269
+no caminho para o trabalho.
+
+23
+00:01:20,919 --> 00:01:23,334
+E uma página de leitura, com o diagrama,
+
+24
+00:01:23,334 --> 00:01:26,533
+o exemplo trabalhado e o código em mais de uma stack.
+
+25
+00:01:27,183 --> 00:01:31,043
+E no fim, uma checagem curta do que você realmente entendeu,
+
+26
+00:01:31,043 --> 00:01:32,265
+não do que decorou.
+
+27
+00:01:32,565 --> 00:01:35,291
+É respondendo que você conclui a aula.
+
+28
+00:01:35,941 --> 00:01:38,636
+Você pode assistir, ou pode ler.
+
+29
+00:01:38,936 --> 00:01:40,695
+Os dois cobrem o mesmo assunto,
+
+30
+00:01:40,695 --> 00:01:42,737
+então escolha o que cabe no seu dia.
+
+31
+00:01:43,387 --> 00:01:46,985
+Todas as aulas compartilham um vocabulário, em cinco tipos.
+
+32
+00:01:47,635 --> 00:01:50,801
+Fundamentos, o que você precisa saber antes.
+
+33
+00:01:51,451 --> 00:01:55,219
+Smells, os sinais de que algo está errado no seu sistema.
+
+34
+00:01:55,869 --> 00:01:58,141
+Refatorações, o jeito seguro de consertar.
+
+35
+00:01:58,791 --> 00:02:00,845
+Padrões, a forma que você quer alcançar.
+
+36
+00:02:01,495 --> 00:02:05,919
+E cenários, sistemas reais onde tudo se junta.
+
+37
+00:02:07,119 --> 00:02:09,540
+As aulas estão organizadas em seis
+
+38
+00:02:09,540 --> 00:02:11,748
+trilhas que formam um curso só,
+
+39
+00:02:11,748 --> 00:02:13,743
+em ordem, sem aula repetida.
+
+40
+00:02:14,043 --> 00:02:16,384
+Se está começando, comece pela primeira.
+
+41
+00:02:17,034 --> 00:02:18,252
+Fundamentos de LLM,
+
+42
+00:02:18,252 --> 00:02:22,034
+para o que muda quando um modelo vira parte do seu sistema.
+
+43
+00:02:22,684 --> 00:02:24,292
+Evals e confiabilidade,
+
+44
+00:02:24,292 --> 00:02:28,485
+para saber que a feature funciona antes do cliente reclamar.
+
+45
+00:02:29,135 --> 00:02:30,199
+RAG e contexto,
+
+46
+00:02:30,199 --> 00:02:33,889
+para dar ao modelo a informação certa na hora certa.
+
+47
+00:02:34,539 --> 00:02:35,111
+Agentes,
+
+48
+00:02:35,111 --> 00:02:39,116
+para dar autonomia ao modelo sem os acidentes clássicos.
+
+49
+00:02:39,766 --> 00:02:40,440
+Segurança,
+
+50
+00:02:40,440 --> 00:02:44,079
+para quem responde pelo que o agente faz com dinheiro,
+
+51
+00:02:44,079 --> 00:02:45,225
+dados e clientes.
+
+52
+00:02:45,875 --> 00:02:50,215
+E produção, para sistemas baratos, rápidos e observáveis.
+
+53
+00:02:50,865 --> 00:02:53,042
+Cada trilha termina num projeto real.
+
+54
+00:02:53,342 --> 00:02:56,357
+Quando você conclui, recebe um certificado assinado,
+
+55
+00:02:56,357 --> 00:02:58,387
+que qualquer pessoa pode verificar,
+
+56
+00:02:58,387 --> 00:03:00,765
+pronto para baixar ou postar no LinkedIn.
+
+57
+00:03:01,965 --> 00:03:03,287
+Meu conselho é simples:
+
+58
+00:03:03,287 --> 00:03:06,275
+comece pela primeira trilha e faça uma aula por dia.
+
+59
+00:03:06,575 --> 00:03:10,430
+São uns dez minutos de vídeo, e mais alguns na checagem.
+
+60
+00:03:11,080 --> 00:03:12,015
+Em poucas semanas,
+
+61
+00:03:12,015 --> 00:03:13,937
+você vai olhar para um sistema com IA
+
+62
+00:03:13,937 --> 00:03:15,547
+e saber o que está errado nele.
+
+63
+00:03:15,847 --> 00:03:19,099
+E vai saber consertar, sem quebrar o resto.
+
+64
+00:03:19,749 --> 00:03:24,034
+É esse o critério que as empresas procuram num engenheiro de IA.
+
+65
+00:03:24,334 --> 00:03:25,791
+Então comece a primeira trilha.
+
+66
+00:03:26,091 --> 00:03:28,056
+A gente se vê na primeira aula.

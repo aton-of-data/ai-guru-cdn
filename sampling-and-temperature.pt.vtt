@@ -1,0 +1,469 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.477
+Mesmo mês, mesma empresa, duas reclamações.
+
+00:00:04.777 --> 00:00:07.762
+O time de marketing pediu ao modelo dez títulos
+
+00:00:07.762 --> 00:00:10.748
+de campanha e recebeu dez títulos quase iguais.
+
+00:00:11.398 --> 00:00:16.128
+Enquanto isso, o time de dados extraía o CNPJ das notas fiscais.
+
+00:00:16.428 --> 00:00:20.623
+E a cada execução, o campo voltava num formato diferente.
+
+00:00:21.273 --> 00:00:24.043
+Os dois times pediram a mesma coisa ao engenheiro:
+
+00:00:24.043 --> 00:00:25.151
+mexe na temperatura.
+
+00:00:25.451 --> 00:00:27.173
+Um queria mais variação.
+
+00:00:27.473 --> 00:00:29.298
+O outro queria menos.
+
+00:00:29.948 --> 00:00:32.929
+Para saber se a temperatura é mesmo o botão certo,
+
+00:00:32.929 --> 00:00:35.612
+você precisa entender de onde vem a variação.
+
+00:00:35.912 --> 00:00:37.144
+É esta aula.
+
+00:00:37.444 --> 00:00:41.040
+E você vai ver por que, para um desses dois times,
+
+00:00:41.040 --> 00:00:43.197
+a resposta é outra ferramenta.
+
+00:00:44.397 --> 00:00:45.172
+A cada passo,
+
+00:00:45.172 --> 00:00:47.198
+o modelo calcula uma probabilidade
+
+00:00:47.198 --> 00:00:49.164
+para cada próximo token possível.
+
+00:00:49.464 --> 00:00:51.895
+Amostragem é a regra que escolhe um token
+
+00:00:51.895 --> 00:00:53.733
+a partir dessas probabilidades.
+
+00:00:54.383 --> 00:00:55.692
+Imagine um dado viciado.
+
+00:00:55.992 --> 00:00:58.586
+A palavra mais provável tem a face maior.
+
+00:00:58.886 --> 00:01:02.565
+Mas as outras faces continuam lá, e às vezes elas saem.
+
+00:01:03.765 --> 00:01:05.017
+Vamos seguir um passo.
+
+00:01:05.317 --> 00:01:08.322
+O modelo olha tudo o que já está na sequência.
+
+00:01:08.972 --> 00:01:10.803
+Ele produz uma distribuição.
+
+00:01:11.103 --> 00:01:14.924
+Digamos, Eletrônicos com 80%, Áudio com 15%,
+
+00:01:14.924 --> 00:01:19.005
+e dezenas de outras palavras dividindo o resto.
+
+00:01:19.655 --> 00:01:22.980
+Aí os parâmetros de amostragem remodelam essa distribuição,
+
+00:01:22.980 --> 00:01:23.939
+antes do sorteio.
+
+00:01:24.589 --> 00:01:27.388
+Um token é sorteado da distribuição ajustada.
+
+00:01:28.038 --> 00:01:31.238
+E o token escolhido entra na sequência.
+
+00:01:31.538 --> 00:01:33.645
+Toda escolha seguinte depende dele.
+
+00:01:34.295 --> 00:01:36.857
+Esse último passo pesa mais do que parece.
+
+00:01:37.157 --> 00:01:40.069
+Como cada token depende dos anteriores,
+
+00:01:40.069 --> 00:01:43.729
+uma escolha diferente no começo muda tudo depois.
+
+00:01:44.029 --> 00:01:46.234
+Duas respostas podem se afastar muito,
+
+00:01:46.234 --> 00:01:48.672
+mesmo quando cada passo varia só um pouco.
+
+00:01:49.322 --> 00:01:51.087
+Foi o que o time de dados viu.
+
+00:01:51.387 --> 00:01:55.448
+O CNPJ veio com pontos e barra, depois só com dígitos,
+
+00:01:55.448 --> 00:01:57.403
+depois com um ponto final.
+
+00:01:57.703 --> 00:02:00.730
+Três caminhos, a poucos tokens de distância,
+
+00:02:00.730 --> 00:02:02.175
+e os três plausíveis.
+
+00:02:03.375 --> 00:02:05.391
+São três botões clássicos.
+
+00:02:05.691 --> 00:02:08.769
+A temperatura afia ou achata a distribuição.
+
+00:02:09.069 --> 00:02:10.695
+Temperatura baixa sobe o pico,
+
+00:02:10.695 --> 00:02:13.188
+e o token da frente fica ainda mais na frente.
+
+00:02:13.488 --> 00:02:15.368
+Temperatura alta achata o gráfico,
+
+00:02:15.368 --> 00:02:18.463
+e o segundo e o terceiro lugar ganham chance de verdade.
+
+00:02:19.113 --> 00:02:20.844
+O top p não estica o gráfico.
+
+00:02:21.144 --> 00:02:23.973
+Ele corta a cauda e sorteia só entre os tokens mais
+
+00:02:23.973 --> 00:02:26.414
+prováveis que somam uma certa probabilidade.
+
+00:02:27.064 --> 00:02:31.147
+E o top k fica só com um número fixo dos tokens mais prováveis.
+
+00:02:31.797 --> 00:02:33.121
+Um conselho.
+
+00:02:33.421 --> 00:02:35.705
+Mexer em mais de um ao mesmo tempo
+
+00:02:35.705 --> 00:02:37.921
+deixa o efeito impossível de ler.
+
+00:02:38.221 --> 00:02:41.062
+Se for usar esses botões, escolha um.
+
+00:02:41.362 --> 00:02:44.358
+Só a temperatura basta para um experimento.
+
+00:02:45.008 --> 00:02:46.770
+De volta ao exemplo da categoria.
+
+00:02:47.070 --> 00:02:51.419
+Perto de temperatura zero, Eletrônicos sai quase sempre.
+
+00:02:51.719 --> 00:02:55.336
+Com temperatura alta, aparece Áudio, e até Informática.
+
+00:02:55.636 --> 00:02:58.301
+Mas repare no que nenhum desses sorteios faz.
+
+00:02:58.601 --> 00:03:01.931
+Nenhum transforma um CNPJ com pontuação
+
+00:03:01.931 --> 00:03:04.236
+em quatorze dígitos limpos.
+
+00:03:04.536 --> 00:03:07.479
+O formato não mora nesse botão.
+
+00:03:08.679 --> 00:03:11.761
+Temperatura baixa reduz a variação.
+
+00:03:12.061 --> 00:03:15.116
+Ela não transforma o modelo numa função determinística.
+
+00:03:15.766 --> 00:03:18.076
+Detalhes de como o provedor roda
+
+00:03:18.076 --> 00:03:20.602
+o modelo ainda podem mudar a saída.
+
+00:03:21.252 --> 00:03:25.498
+Uma mudança mínima no prompt muda tudo o que vem depois.
+
+00:03:26.148 --> 00:03:28.638
+E alguns provedores oferecem um parâmetro de seed,
+
+00:03:28.638 --> 00:03:30.133
+para tentar repetir o sorteio.
+
+00:03:30.433 --> 00:03:31.524
+Mesmo quando existe,
+
+00:03:31.524 --> 00:03:34.252
+a documentação costuma dizer que é melhor esforço.
+
+00:03:34.552 --> 00:03:38.620
+Então não monte um teste que depende de duas chamadas idênticas.
+
+00:03:39.820 --> 00:03:41.293
+Uma pergunta para você.
+
+00:03:41.593 --> 00:03:46.209
+O extrator de CNPJ devolve pontos e barra numa execução,
+
+00:03:46.209 --> 00:03:48.022
+e só dígitos na outra.
+
+00:03:48.322 --> 00:03:50.868
+O time de dados quer temperatura zero.
+
+00:03:51.168 --> 00:03:53.331
+O que resolve o formato de verdade?
+
+00:03:56.381 --> 00:03:59.885
+Um schema que pede uma string de quatorze dígitos,
+
+00:03:59.885 --> 00:04:03.108
+e validação no código antes de gravar o valor.
+
+00:04:03.408 --> 00:04:07.285
+Com temperatura zero, as três grafias continuam plausíveis,
+
+00:04:07.285 --> 00:04:10.504
+então nada no sorteio obriga os quatorze dígitos.
+
+00:04:11.154 --> 00:04:15.130
+E escrever use sempre o mesmo formato, por favor, em maiúsculas,
+
+00:04:15.130 --> 00:04:17.242
+ajuda um pouco e não garante nada.
+
+00:04:17.542 --> 00:04:19.538
+O modelo ainda pode errar.
+
+00:04:19.838 --> 00:04:23.868
+É o seu código que se recusa a deixar o valor errado entrar.
+
+00:04:24.168 --> 00:04:27.116
+Esse é o trabalho da saída estruturada, não da temperatura.
+
+00:04:28.316 --> 00:04:29.729
+Isso diz muito.
+
+00:04:30.029 --> 00:04:32.904
+Os modelos mais novos de vários provedores
+
+00:04:32.904 --> 00:04:34.752
+estão tirando esses botões.
+
+00:04:35.052 --> 00:04:37.322
+Nos modelos atuais da Anthropic,
+
+00:04:37.322 --> 00:04:39.733
+como o Claude Opus e o Sonnet 5.5,
+
+00:04:39.733 --> 00:04:43.563
+a API recusa qualquer temperatura diferente do padrão.
+
+00:04:43.863 --> 00:04:48.343
+Modelos mais antigos, como o Haiku 4.5, ainda aceitam.
+
+00:04:48.993 --> 00:04:52.018
+O controle foi para outro lugar: o formato de saída,
+
+00:04:52.018 --> 00:04:54.518
+o esforço de raciocínio e o próprio prompt.
+
+00:04:54.818 --> 00:04:56.561
+E isso ensina algo útil.
+
+00:04:56.861 --> 00:04:59.004
+Mexer na amostragem nunca foi o jeito
+
+00:04:59.004 --> 00:05:01.088
+certo de garantir formato ou acerto.
+
+00:05:01.388 --> 00:05:03.608
+Os provedores só estão deixando isso explícito.
+
+00:05:04.258 --> 00:05:04.650
+Então,
+
+00:05:04.650 --> 00:05:07.787
+se você migrar o extrator para um desses modelos
+
+00:05:07.787 --> 00:05:10.074
+e o time de dados entrar em pânico,
+
+00:05:10.074 --> 00:05:11.577
+a resposta é tranquila.
+
+00:05:11.877 --> 00:05:13.831
+Nada muda no contrato.
+
+00:05:14.131 --> 00:05:19.356
+O schema, a validação e o eval sempre foram o controle.
+
+00:05:20.556 --> 00:05:22.085
+Agora, o lado do marketing.
+
+00:05:22.385 --> 00:05:24.559
+Na página tem um experimento,
+
+00:05:24.559 --> 00:05:27.781
+com um modelo que ainda aceita temperatura.
+
+00:05:28.081 --> 00:05:30.794
+Você gera cinco títulos com temperatura
+
+00:05:30.794 --> 00:05:33.228
+baixa e cinco com temperatura alta.
+
+00:05:33.878 --> 00:05:36.407
+Compare a variedade entre os dois blocos.
+
+00:05:36.707 --> 00:05:38.451
+Depois, tente outro caminho.
+
+00:05:39.101 --> 00:05:43.270
+Peça, numa única chamada, dez títulos diferentes entre si,
+
+00:05:43.270 --> 00:05:46.577
+com tons diferentes, para públicos diferentes.
+
+00:05:46.877 --> 00:05:52.374
+Variedade pedida no prompt costuma vencer variedade sorteada.
+
+00:05:53.024 --> 00:05:54.639
+E aqui está a armadilha desse lado.
+
+00:05:54.939 --> 00:05:57.077
+Temperatura alta espalha os títulos,
+
+00:05:57.077 --> 00:05:58.740
+e espalha a qualidade junto.
+
+00:05:59.040 --> 00:06:01.979
+Um é certeiro, o seguinte é um slogan vazio.
+
+00:06:02.279 --> 00:06:05.863
+Leve ao extremo e você troca parecido por inútil.
+
+00:06:06.163 --> 00:06:10.406
+Dez opções numa chamada deixam você escolher com o seu critério,
+
+00:06:10.406 --> 00:06:13.456
+em vez de torcer para o sorteio acertar o tom.
+
+00:06:14.656 --> 00:06:15.899
+Então, o que muda?
+
+00:06:16.199 --> 00:06:17.256
+Para extração,
+
+00:06:17.256 --> 00:06:21.105
+classificação e qualquer saída que o seu código lê,
+
+00:06:21.105 --> 00:06:23.898
+use saída estruturada mais validação.
+
+00:06:24.198 --> 00:06:25.869
+Não se apoie na temperatura.
+
+00:06:26.519 --> 00:06:27.905
+Para criatividade,
+
+00:06:27.905 --> 00:06:32.833
+peça variedade explicitamente e gere várias opções numa chamada.
+
+00:06:33.483 --> 00:06:37.237
+Para decisões importantes, pense onde a variação machuca.
+
+00:06:37.537 --> 00:06:40.801
+Um parecer de crédito com temperatura alta quer dizer que dois
+
+00:06:40.801 --> 00:06:43.643
+clientes parecidos podem receber respostas diferentes,
+
+00:06:43.643 --> 00:06:44.801
+sem motivo de negócio.
+
+00:06:45.101 --> 00:06:47.959
+Ali você quer menos variação, não mais.
+
+00:06:48.259 --> 00:06:51.430
+E rodar a mesma tarefa várias vezes
+
+00:06:51.430 --> 00:06:54.239
+e comparar é um padrão próprio,
+
+00:06:54.239 --> 00:06:55.598
+chamado voting.
+
+00:06:56.248 --> 00:06:58.241
+E a variação está sempre lá.
+
+00:06:58.541 --> 00:07:02.530
+Se você roda o mesmo caso de teste três vezes e passa três,
+
+00:07:02.530 --> 00:07:05.235
+depois dois, depois três, isso é normal.
+
+00:07:05.535 --> 00:07:08.721
+O número que importa é a taxa em muitas execuções.
+
+00:07:09.021 --> 00:07:12.436
+Por isso todo sistema com modelo precisa de evals,
+
+00:07:12.436 --> 00:07:14.827
+e não de um teste que roda uma vez.
+
+00:07:16.027 --> 00:07:18.128
+Então, de volta aos dois times.
+
+00:07:18.428 --> 00:07:20.659
+O marketing não precisava de um dado mais quente.
+
+00:07:20.959 --> 00:07:22.712
+Precisava pedir variedade.
+
+00:07:23.012 --> 00:07:25.419
+E o time de dados não precisava de um mais frio.
+
+00:07:25.719 --> 00:07:28.083
+Precisava de um schema e de uma checagem no código.
+
+00:07:28.383 --> 00:07:30.709
+A temperatura muda a largura do sorteio.
+
+00:07:31.009 --> 00:07:33.100
+Ela nunca garante o que sai.
+
+00:07:33.750 --> 00:07:34.894
+Na próxima aula,
+
+00:07:34.894 --> 00:07:39.254
+vamos olhar o próprio prompt e tratá-lo como ele realmente é:
+
+00:07:39.254 --> 00:07:42.542
+uma interface, com contrato, versões e testes.
+
+00:07:42.842 --> 00:07:43.671
+Até lá.

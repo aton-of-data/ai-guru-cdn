@@ -1,0 +1,502 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:03.426
+O Rafael escreveu uma função pequena.
+
+00:00:03.726 --> 00:00:06.264
+Ela manda a descrição de um produto
+
+00:00:06.264 --> 00:00:08.656
+para o modelo e pede a categoria.
+
+00:00:09.306 --> 00:00:12.719
+No teste, voltou Eletrônicos dez vezes seguidas.
+
+00:00:13.019 --> 00:00:13.526
+Perfeito.
+
+00:00:14.176 --> 00:00:19.672
+Em produção, no mesmo produto, voltou Eletrônico, no singular.
+
+00:00:19.972 --> 00:00:23.840
+Depois eletrônicos, minúsculo, com ponto final.
+
+00:00:24.140 --> 00:00:26.954
+E uma vez, Eletrônicos e Informática.
+
+00:00:27.604 --> 00:00:30.478
+O código que comparava a resposta com a lista
+
+00:00:30.478 --> 00:00:32.842
+de categorias do marketplace quebrou.
+
+00:00:33.142 --> 00:00:36.429
+E alguns produtos novos nunca chegaram à vitrine.
+
+00:00:37.079 --> 00:00:39.044
+O modelo não tinha defeito nenhum.
+
+00:00:39.344 --> 00:00:42.907
+O Rafael tratou a chamada ao modelo como uma função comum,
+
+00:00:42.907 --> 00:00:46.224
+que sempre devolve a mesma saída para a mesma entrada.
+
+00:00:46.524 --> 00:00:47.306
+Ela não é.
+
+00:00:47.606 --> 00:00:48.330
+Nesta aula,
+
+00:00:48.330 --> 00:00:50.962
+você vai conhecer as quatro propriedades
+
+00:00:50.962 --> 00:00:52.870
+que explicam o que aconteceu,
+
+00:00:52.870 --> 00:00:56.884
+e que quase todo padrão deste catálogo existe para controlar.
+
+00:00:58.084 --> 00:00:59.286
+Para um engenheiro,
+
+00:00:59.286 --> 00:01:03.017
+este é o jeito mais útil de pensar num modelo de linguagem.
+
+00:01:03.317 --> 00:01:06.076
+É uma função probabilística de texto para texto.
+
+00:01:06.726 --> 00:01:10.215
+Ela recebe uma sequência de tokens, que são pedacinhos de texto.
+
+00:01:10.515 --> 00:01:14.728
+E devolve a continuação mais provável, um token de cada vez.
+
+00:01:15.378 --> 00:01:18.333
+Duas palavras dessa frase pesam muito.
+
+00:01:18.633 --> 00:01:21.750
+Probabilística, porque tem um sorteio lá dentro.
+
+00:01:22.050 --> 00:01:26.589
+E continuação, porque o modelo não está consultando nada.
+
+00:01:26.889 --> 00:01:28.257
+Está completando texto.
+
+00:01:29.457 --> 00:01:31.141
+Vamos acompanhar uma chamada.
+
+00:01:31.441 --> 00:01:35.625
+Tudo o que o modelo sabe sobre a sua tarefa está na entrada.
+
+00:01:35.925 --> 00:01:38.110
+O prompt de sistema, a conversa,
+
+00:01:38.110 --> 00:01:41.388
+os documentos e as ferramentas que você oferece.
+
+00:01:42.038 --> 00:01:44.047
+O modelo calcula uma probabilidade
+
+00:01:44.047 --> 00:01:45.997
+para cada próximo token possível.
+
+00:01:46.647 --> 00:01:49.661
+Aí um token é escolhido a partir dessas probabilidades,
+
+00:01:49.661 --> 00:01:50.976
+com um pouco de sorteio.
+
+00:01:51.626 --> 00:01:55.786
+Esse token é colado no texto, e o ciclo roda de novo.
+
+00:01:56.436 --> 00:01:58.601
+Ele para quando o modelo emite um token de fim,
+
+00:01:58.601 --> 00:02:00.950
+ou quando bate no limite de saída que você definiu.
+
+00:02:01.600 --> 00:02:04.921
+Desse desenho saem quatro propriedades.
+
+00:02:05.221 --> 00:02:08.149
+E cada uma muda o jeito de escrever o código em volta do modelo.
+
+00:02:09.349 --> 00:02:11.365
+Primeira: ela não é determinística.
+
+00:02:11.665 --> 00:02:14.348
+A mesma entrada pode gerar saídas diferentes,
+
+00:02:14.348 --> 00:02:16.315
+porque o passo três é um sorteio.
+
+00:02:16.615 --> 00:02:20.988
+Uma diferença pequena num token do começo muda tudo depois.
+
+00:02:21.288 --> 00:02:22.844
+Foi isso que pegou o Rafael.
+
+00:02:23.144 --> 00:02:27.530
+Eletrônicos e Eletrônico estão a um token de distância.
+
+00:02:28.180 --> 00:02:31.162
+Então o seu código precisa aceitar variação,
+
+00:02:31.162 --> 00:02:32.992
+ou eliminá-la na fronteira.
+
+00:02:33.292 --> 00:02:35.396
+É para isso que existe a saída estruturada.
+
+00:02:36.046 --> 00:02:38.042
+Segunda: ela não tem memória.
+
+00:02:38.342 --> 00:02:40.257
+Toda chamada começa do zero.
+
+00:02:40.557 --> 00:02:43.082
+Se o modelo parece lembrar da conversa,
+
+00:02:43.082 --> 00:02:46.773
+é porque o seu código mandou o histórico inteiro de novo.
+
+00:02:47.423 --> 00:02:49.285
+Pense na terceira mensagem de um chat.
+
+00:02:49.585 --> 00:02:53.318
+O cliente pergunta: e o frete do mais barato para Boston?
+
+00:02:53.618 --> 00:02:56.679
+Se o seu código manda só essa última mensagem,
+
+00:02:56.679 --> 00:02:59.741
+o modelo não faz ideia do que é o mais barato.
+
+00:03:00.041 --> 00:03:01.547
+Memória é trabalho seu.
+
+00:03:01.847 --> 00:03:05.280
+E cada turno guardado é pago de novo, a cada chamada.
+
+00:03:05.930 --> 00:03:08.825
+Terceira: ela não sabe o que não está na entrada.
+
+00:03:09.125 --> 00:03:11.039
+O modelo aprendeu muita coisa no treino.
+
+00:03:11.339 --> 00:03:15.046
+Mas não conhece o seu banco de dados, a sua política de troca,
+
+00:03:15.046 --> 00:03:16.362
+nem o que mudou ontem.
+
+00:03:16.662 --> 00:03:19.158
+Ou você coloca essa informação na entrada,
+
+00:03:19.158 --> 00:03:20.941
+ou ele escreve algo plausível.
+
+00:03:21.591 --> 00:03:23.272
+E plausível não é verdadeiro.
+
+00:03:23.572 --> 00:03:24.079
+Em 2023,
+
+00:03:24.079 --> 00:03:27.441
+advogados em Nova York entregaram uma petição citando
+
+00:03:27.441 --> 00:03:30.359
+decisões que um chatbot simplesmente inventou.
+
+00:03:30.659 --> 00:03:32.065
+O juiz puniu os advogados.
+
+00:03:32.365 --> 00:03:34.846
+O modelo não tinha jurisprudência na entrada,
+
+00:03:34.846 --> 00:03:37.769
+então completou o texto com casos que pareciam reais.
+
+00:03:38.069 --> 00:03:41.417
+É o problema que a busca, o RAG, resolve.
+
+00:03:42.067 --> 00:03:44.304
+Quarta: ela não garante nada.
+
+00:03:44.604 --> 00:03:46.417
+O modelo não tem contrato.
+
+00:03:46.717 --> 00:03:48.862
+Pode ignorar uma instrução,
+
+00:03:48.862 --> 00:03:51.801
+errar uma conta ou inventar um campo.
+
+00:03:52.101 --> 00:03:54.590
+Toda garantia de verdade vem do código em volta.
+
+00:03:55.240 --> 00:03:55.645
+Em 2024,
+
+00:03:55.645 --> 00:03:58.782
+o chatbot de uma companhia aérea falou para um cliente de luto
+
+00:03:58.782 --> 00:04:01.667
+sobre uma regra de reembolso que não era a política real.
+
+00:04:01.967 --> 00:04:04.904
+Um tribunal canadense mandou a empresa pagar.
+
+00:04:05.204 --> 00:04:07.514
+E rejeitou a ideia de que o chatbot
+
+00:04:07.514 --> 00:04:09.758
+respondia pelas próprias palavras.
+
+00:04:10.058 --> 00:04:14.241
+Para o cliente, o que o bot diz é o que a empresa disse.
+
+00:04:15.441 --> 00:04:16.915
+Uma pergunta para você.
+
+00:04:17.215 --> 00:04:20.813
+O seu chatbot responde bem a primeira pergunta do cliente.
+
+00:04:21.113 --> 00:04:24.382
+Na segunda, e quanto é o frete dele, ele responde:
+
+00:04:24.382 --> 00:04:26.605
+de qual produto você está falando?
+
+00:04:26.905 --> 00:04:28.871
+Qual é a causa mais provável?
+
+00:04:31.921 --> 00:04:34.966
+O seu código está mandando só a mensagem atual,
+
+00:04:34.966 --> 00:04:36.585
+sem os turnos anteriores.
+
+00:04:36.885 --> 00:04:39.304
+O modelo não guarda nada entre chamadas,
+
+00:04:39.304 --> 00:04:41.844
+então a palavra dele não aponta para nada.
+
+00:04:42.494 --> 00:04:44.185
+Não é a janela de contexto cheia.
+
+00:04:44.485 --> 00:04:47.011
+Duas mensagens curtas nem chegam perto.
+
+00:04:47.311 --> 00:04:49.049
+E também não é a temperatura.
+
+00:04:49.349 --> 00:04:54.120
+O sorteio muda o jeito de falar, não apaga uma conversa.
+
+00:04:55.320 --> 00:04:59.521
+Na prática, uma chamada tem quatro partes que você controla.
+
+00:04:59.821 --> 00:05:00.532
+O modelo.
+
+00:05:00.832 --> 00:05:05.144
+O erro comum é usar o maior para tudo e pagar caro.
+
+00:05:05.794 --> 00:05:08.954
+O prompt de sistema, com as instruções fixas.
+
+00:05:09.254 --> 00:05:13.446
+O erro ali é transformá-lo num depósito de regras.
+
+00:05:14.096 --> 00:05:14.923
+As mensagens.
+
+00:05:15.223 --> 00:05:18.554
+Aqui, as pessoas mandam histórico demais, ou de menos.
+
+00:05:19.204 --> 00:05:20.381
+E o limite de saída.
+
+00:05:20.681 --> 00:05:24.742
+Curto demais, e a resposta é cortada no meio da frase.
+
+00:05:25.392 --> 00:05:29.118
+A resposta também diz por que a geração parou,
+
+00:05:29.118 --> 00:05:31.547
+num campo chamado stop reason.
+
+00:05:31.847 --> 00:05:33.953
+End turn quer dizer que o modelo terminou.
+
+00:05:34.253 --> 00:05:37.330
+Max tokens quer dizer que o seu limite cortou.
+
+00:05:37.630 --> 00:05:40.004
+Um resumo que para no meio da frase,
+
+00:05:40.004 --> 00:05:44.094
+com um formato que nunca fecha, é quase sempre o segundo caso.
+
+00:05:44.394 --> 00:05:47.740
+Então confira esse campo antes de tentar ler qualquer coisa.
+
+00:05:48.940 --> 00:05:51.871
+Na página tem um experimento de cinco minutos.
+
+00:05:52.171 --> 00:05:55.598
+Você faz a mesma pergunta cinco vezes com um prompt aberto,
+
+00:05:55.598 --> 00:05:58.503
+e cinco vezes com uma lista fechada de categorias.
+
+00:05:59.153 --> 00:06:00.553
+Repare em três coisas.
+
+00:06:00.853 --> 00:06:02.747
+Se as cinco respostas são iguais.
+
+00:06:03.047 --> 00:06:07.660
+Se a forma muda, como maiúscula, plural ou ponto final.
+
+00:06:07.960 --> 00:06:11.043
+E se até a lista fechada gera uma resposta inválida.
+
+00:06:11.693 --> 00:06:15.779
+Mesmo que tudo passe hoje, a última linha é o que importa.
+
+00:06:16.079 --> 00:06:18.871
+A conferência com a sua lista mora no código.
+
+00:06:19.171 --> 00:06:21.664
+E é ela que protege o resto do sistema
+
+00:06:21.664 --> 00:06:23.697
+quando o modelo sai do roteiro.
+
+00:06:24.897 --> 00:06:26.406
+Então fica a regra prática.
+
+00:06:26.706 --> 00:06:29.325
+Deixe o modelo fazer o que só ele faz bem.
+
+00:06:29.625 --> 00:06:34.363
+Entender texto, escrever, decidir em casos ambíguos.
+
+00:06:35.013 --> 00:06:37.363
+E deixe o código fazer todo o resto.
+
+00:06:37.663 --> 00:06:42.720
+Contas, comparar datas, consultar tabela, regras de negócio.
+
+00:06:43.370 --> 00:06:45.165
+Pense numa calculadora de frete.
+
+00:06:45.465 --> 00:06:50.301
+O modelo lê a mensagem do cliente e tira o peso e o CEP.
+
+00:06:50.601 --> 00:06:51.041
+Depois,
+
+00:06:51.041 --> 00:06:53.683
+uma função de dez linhas consulta a tabela
+
+00:06:53.683 --> 00:06:55.695
+da transportadora e faz a conta.
+
+00:06:55.995 --> 00:06:59.724
+Exata, barata, e nunca tem um dia ruim.
+
+00:07:00.374 --> 00:07:02.308
+O erro comum é o contrário.
+
+00:07:02.608 --> 00:07:04.860
+Colar a tabela de preços no prompt
+
+00:07:04.860 --> 00:07:07.245
+e pedir para o modelo fazer a conta.
+
+00:07:07.545 --> 00:07:11.510
+Funciona quase sempre, e falha de vez em quando, em silêncio.
+
+00:07:11.810 --> 00:07:14.785
+Quando o modelo faz esse tipo de trabalho,
+
+00:07:14.785 --> 00:07:18.682
+você tem um smell chamado LLM doing deterministic work.
+
+00:07:19.882 --> 00:07:21.634
+Agora pense de novo no Rafael,
+
+00:07:21.634 --> 00:07:24.261
+e em tudo que escreve num sistema de verdade.
+
+00:07:24.561 --> 00:07:27.490
+Digamos que o modelo lê uma nota fiscal e o seu código
+
+00:07:27.490 --> 00:07:29.715
+grava o total direto no sistema contábil.
+
+00:07:30.015 --> 00:07:33.237
+Onde deve morar a garantia de que o valor faz sentido?
+
+00:07:33.887 --> 00:07:35.239
+Não no prompt.
+
+00:07:35.539 --> 00:07:39.292
+Escrever nunca erre o total, mesmo em maiúsculas,
+
+00:07:39.292 --> 00:07:42.509
+aumenta o acerto, mas nunca vira garantia.
+
+00:07:42.809 --> 00:07:44.888
+E nem num modelo maior.
+
+00:07:45.188 --> 00:07:48.734
+Ele erra menos, e continua sem prometer nada.
+
+00:07:49.384 --> 00:07:50.608
+Ela mora no código.
+
+00:07:50.908 --> 00:07:54.138
+O total precisa ser um número positivo e bater
+
+00:07:54.138 --> 00:07:56.806
+com a soma dos itens menos o desconto.
+
+00:07:57.106 --> 00:07:59.981
+Se não bater, a nota vai para uma fila de revisão,
+
+00:07:59.981 --> 00:08:02.223
+em vez de cair errada na contabilidade.
+
+00:08:03.423 --> 00:08:06.141
+Então, a ideia para levar.
+
+00:08:06.441 --> 00:08:09.255
+Uma chamada ao modelo não é uma função com contrato.
+
+00:08:09.555 --> 00:08:11.249
+Ela varia, esquece,
+
+00:08:11.249 --> 00:08:15.353
+só sabe o que você entrega e não promete nada.
+
+00:08:15.653 --> 00:08:19.830
+É o seu código que transforma quase sempre em sempre tratado.
+
+00:08:20.480 --> 00:08:24.701
+Na próxima aula, vamos olhar a unidade em que tudo é medido,
+
+00:08:24.701 --> 00:08:26.953
+o token, e a janela de contexto,
+
+00:08:26.953 --> 00:08:29.626
+o espaço onde tudo isso precisa caber.
+
+00:08:29.926 --> 00:08:30.756
+Até lá.

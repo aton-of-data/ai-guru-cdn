@@ -1,0 +1,409 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:05.349
+A math tutor has been working with a student for twelve lessons.
+
+00:00:05.649 --> 00:00:07.904
+All of it in the same conversation.
+
+00:00:08.554 --> 00:00:12.786
+In lesson one, she asked: don't show me the solution, just hints.
+
+00:00:13.086 --> 00:00:14.565
+Deal, said the tutor.
+
+00:00:15.215 --> 00:00:18.825
+In lesson six, for a review sheet, she asked the opposite.
+
+00:00:19.125 --> 00:00:21.607
+For this sheet, you can show the full solution.
+
+00:00:22.257 --> 00:00:26.772
+Now it's lesson twelve, and the history is almost ninety thousand tokens.
+
+00:00:27.072 --> 00:00:29.226
+She asks for help with question four.
+
+00:00:29.526 --> 00:00:33.715
+And the tutor switches between the two rules, with no clear logic.
+
+00:00:34.365 --> 00:00:39.042
+Nobody told the tutor that the lesson six rule applied only to that sheet.
+
+00:00:39.342 --> 00:00:43.159
+Nobody summarized what the student has already mastered.
+
+00:00:43.459 --> 00:00:47.350
+The model gets everything, and tries to guess what still holds.
+
+00:00:47.650 --> 00:00:52.531
+In this lesson, you'll learn to recognize this smell, and what to put in place of an
+
+00:00:52.531 --> 00:00:53.751
+ever growing history.
+
+00:00:54.951 --> 00:00:55.897
+Here's the cycle.
+
+00:00:56.197 --> 00:00:57.674
+A new turn arrives.
+
+00:00:58.324 --> 00:01:01.806
+Code appends it to the full history, which never shrinks.
+
+00:01:02.456 --> 00:01:07.655
+The model reads tens of thousands of tokens, most of them irrelevant, or stale.
+
+00:01:08.305 --> 00:01:10.629
+The answer gets worse, and costs more.
+
+00:01:10.929 --> 00:01:14.963
+And it goes into the history too, so the cycle continues.
+
+00:01:15.613 --> 00:01:16.551
+How do you spot it?
+
+00:01:16.851 --> 00:01:20.384
+The conversation, or the agent session, only grows.
+
+00:01:20.684 --> 00:01:22.329
+Nothing ever leaves.
+
+00:01:22.979 --> 00:01:26.586
+The model cites old information as if it were current.
+
+00:01:26.886 --> 00:01:30.640
+An order from three months ago, a file that has since changed.
+
+00:01:31.290 --> 00:01:35.655
+Instructions given at the start get ignored, or mixed with later ones.
+
+00:01:36.305 --> 00:01:40.293
+Cost per turn climbs through the session, even for short questions.
+
+00:01:40.593 --> 00:01:43.587
+And so does the time until the first word appears.
+
+00:01:44.237 --> 00:01:49.600
+And answer quality drops in long sessions, while it's fine in short ones.
+
+00:01:50.800 --> 00:01:53.616
+The default examples just append.
+
+00:01:53.916 --> 00:01:57.820
+The simplest chat code keeps the message list, and sends it all again.
+
+00:01:58.120 --> 00:02:00.413
+It works for the first ten turns.
+
+00:02:01.063 --> 00:02:02.753
+Large windows feel safe.
+
+00:02:03.053 --> 00:02:06.846
+If a million tokens fit, there seems to be no reason to cut.
+
+00:02:07.146 --> 00:02:09.859
+But fitting isn't the same as being used well.
+
+00:02:10.159 --> 00:02:14.369
+Models use what sits in the middle of a long context less reliably.
+
+00:02:14.669 --> 00:02:19.934
+And the lesson one and lesson six instructions fight in exactly that middle.
+
+00:02:20.234 --> 00:02:21.379
+The window fits.
+
+00:02:21.679 --> 00:02:22.795
+Attention doesn't.
+
+00:02:23.445 --> 00:02:24.767
+Deleting is scary.
+
+00:02:25.067 --> 00:02:29.166
+Without knowing what matters, keeping everything feels safer.
+
+00:02:29.816 --> 00:02:32.130
+And agents produce a lot of text.
+
+00:02:32.430 --> 00:02:35.506
+Tool results, files they read, test output.
+
+00:02:35.806 --> 00:02:41.174
+All of it enters the history, and stays there, long after it stopped being useful.
+
+00:02:42.374 --> 00:02:44.149
+The cost starts with quality.
+
+00:02:44.449 --> 00:02:49.886
+Rules and facts buried in the middle are followed less reliably, and contradictory
+
+00:02:49.886 --> 00:02:52.405
+information produces unstable answers.
+
+00:02:53.055 --> 00:02:55.534
+Then money, with illustrative numbers.
+
+00:02:55.834 --> 00:03:00.553
+A system prompt of two thousand tokens, and four hundred more each turn.
+
+00:03:00.853 --> 00:03:05.475
+At turn three, a call sends about three thousand two hundred tokens.
+
+00:03:05.775 --> 00:03:08.770
+At turn twelve, about six thousand eight hundred.
+
+00:03:09.070 --> 00:03:11.572
+At turn forty, about eighteen thousand.
+
+00:03:12.222 --> 00:03:14.578
+The student's question fits in one line.
+
+00:03:14.878 --> 00:03:15.840
+The bill doesn't.
+
+00:03:16.140 --> 00:03:20.955
+Prompt caching makes a stable prefix cheaper, but history that changes every turn
+
+00:03:20.955 --> 00:03:22.977
+doesn't sit in that cached prefix.
+
+00:03:23.277 --> 00:03:28.757
+And at some point the session overflows the window, and the cut happens in the worst
+
+00:03:28.757 --> 00:03:30.583
+place, with no logic at all.
+
+00:03:31.233 --> 00:03:34.353
+The same thing shows up in a bank's WhatsApp support.
+
+00:03:34.653 --> 00:03:38.740
+In month one, the customer mentioned a cancelled instant payment.
+
+00:03:39.040 --> 00:03:43.475
+In month three, they ask for their balance, and the bot still talks about that
+
+00:03:43.475 --> 00:03:45.237
+payment as the current problem.
+
+00:03:45.537 --> 00:03:47.563
+The new message was twelve words.
+
+00:03:47.863 --> 00:03:50.036
+The context held months of support.
+
+00:03:51.236 --> 00:03:52.233
+Here's one for you.
+
+00:03:52.533 --> 00:03:57.122
+A support chat always sends only the last ten messages, and drops the rest.
+
+00:03:57.422 --> 00:04:02.385
+Now customers complain that the bot forgets the order number they gave at the start.
+
+00:04:02.685 --> 00:04:04.134
+Is that context rot?
+
+00:04:07.184 --> 00:04:07.849
+No.
+
+00:04:08.149 --> 00:04:10.726
+The context isn't rotten, it's too short.
+
+00:04:11.026 --> 00:04:14.810
+Cutting by a fixed window fixes the cost, but loses facts.
+
+00:04:15.110 --> 00:04:19.461
+What's missing is explicit conversation state, a short term memory.
+
+00:04:19.761 --> 00:04:24.552
+The order number belongs there, outside the raw history, where your code keeps it up
+
+00:04:24.552 --> 00:04:25.009
+to date.
+
+00:04:26.209 --> 00:04:27.854
+There are two refactorings.
+
+00:04:28.154 --> 00:04:33.123
+When the session is a long conversation, replace the history with a summary.
+
+00:04:33.423 --> 00:04:39.275
+Old turns become a summary, and facts that must last, like preferences and agreed
+
+00:04:39.275 --> 00:04:41.587
+rules, move into explicit state.
+
+00:04:42.237 --> 00:04:47.953
+And when the context bloats with reading work, like files, pages or logs, extract a
+
+00:04:47.953 --> 00:04:48.572
+subagent.
+
+00:04:48.872 --> 00:04:53.404
+It reads in a clean context, and returns only the conclusion.
+
+00:04:54.054 --> 00:04:56.945
+Here's lesson twelve, before and after.
+
+00:04:57.245 --> 00:05:02.668
+Before, ninety thousand tokens of raw chat, with two rules in conflict, buried in
+
+00:05:02.668 --> 00:05:03.405
+the middle.
+
+00:05:03.705 --> 00:05:08.433
+After, a short summary, the state, with the student's level and the current rule,
+
+00:05:08.433 --> 00:05:09.950
+and the most recent turns.
+
+00:05:10.250 --> 00:05:14.992
+The active rule lives in one field, that you can read, edit and test.
+
+00:05:15.642 --> 00:05:18.514
+And watch for one mistake when you start cutting.
+
+00:05:18.814 --> 00:05:21.430
+Say you summarize every twenty turns.
+
+00:05:21.730 --> 00:05:27.168
+In month three, the summary still says: customer with a cancelled payment, treat as
+
+00:05:27.168 --> 00:05:27.626
+urgent.
+
+00:05:27.926 --> 00:05:32.892
+And the bot talks about it again, when the customer only asked for their balance.
+
+00:05:33.192 --> 00:05:35.306
+You only compacted the rot.
+
+00:05:35.606 --> 00:05:37.486
+A summary needs validity.
+
+00:05:37.786 --> 00:05:41.261
+What holds now goes into state, with a lifetime.
+
+00:05:41.561 --> 00:05:46.017
+And the past stays in the summary as past, or it leaves.
+
+00:05:47.217 --> 00:05:49.014
+One more, from the agent world.
+
+00:05:49.314 --> 00:05:54.846
+A coding agent read forty files, found the cause of a bug, and is now writing the
+
+00:05:54.846 --> 00:05:55.256
+patch.
+
+00:05:55.556 --> 00:05:58.450
+All forty files still go out on every turn.
+
+00:05:58.750 --> 00:06:00.862
+What's the most useful next step?
+
+00:06:03.912 --> 00:06:10.173
+Clear the old tool results, or move the reading into a subagent that returns only
+
+00:06:10.173 --> 00:06:11.332
+the conclusion.
+
+00:06:11.632 --> 00:06:13.201
+The files have done their job.
+
+00:06:13.501 --> 00:06:18.349
+Now they push the patch instruction into the middle of the context, where the model
+
+00:06:18.349 --> 00:06:19.225
+reads it worse.
+
+00:06:19.525 --> 00:06:21.491
+A bigger window doesn't fix that.
+
+00:06:21.791 --> 00:06:26.194
+And telling the model to ignore the files it won't use competes with tens of
+
+00:06:26.194 --> 00:06:28.569
+thousands of tokens that are still there.
+
+00:06:28.869 --> 00:06:30.925
+Code has to drop what's unused.
+
+00:06:31.225 --> 00:06:32.633
+Not the model.
+
+00:06:33.833 --> 00:06:36.649
+And one case that looks similar, but isn't.
+
+00:06:36.949 --> 00:06:42.421
+A system prompt of eight thousand tokens, that never changes between turns, in
+
+00:06:42.421 --> 00:06:44.736
+conversations of about six turns.
+
+00:06:45.036 --> 00:06:46.776
+Cost per message is high.
+
+00:06:47.076 --> 00:06:49.760
+But the context doesn't grow during the session.
+
+00:06:50.060 --> 00:06:52.319
+The weight is fixed in the prompt.
+
+00:06:52.619 --> 00:06:53.953
+That's prompt bloat.
+
+00:06:54.253 --> 00:06:57.948
+Trim the prompt, and if the start is stable, cache it.
+
+00:06:59.148 --> 00:07:00.337
+When can you ignore it?
+
+00:07:00.637 --> 00:07:02.681
+Sessions that are short by nature.
+
+00:07:02.981 --> 00:07:06.719
+A support chat that lasts five turns doesn't need compaction.
+
+00:07:07.369 --> 00:07:10.342
+Tasks where the whole input is the document.
+
+00:07:10.642 --> 00:07:15.846
+Reviewing one contract at once is different from carrying an old conversation.
+
+00:07:16.146 --> 00:07:19.327
+There, the text is the work, not leftover turns.
+
+00:07:19.977 --> 00:07:20.863
+And a prototype.
+
+00:07:21.163 --> 00:07:24.996
+Appending everything is the fastest way to test an idea.
+
+00:07:25.296 --> 00:07:27.602
+Just don't ship long sessions that way.
+
+00:07:28.802 --> 00:07:31.188
+So here's the idea to take with you.
+
+00:07:31.488 --> 00:07:33.619
+A long history isn't memory.
+
+00:07:33.919 --> 00:07:38.252
+It's a pile the model has to dig through on every turn, and pay for.
+
+00:07:38.552 --> 00:07:44.150
+Keep the facts that must last in explicit state, summarize the past as past, and let
+
+00:07:44.150 --> 00:07:46.283
+finished work leave the context.
+
+00:07:46.933 --> 00:07:52.386
+In the next lesson, we'll do the first refactoring step by step: replace history
+
+00:07:52.386 --> 00:07:53.272
+with summary.
+
+00:07:53.572 --> 00:07:54.321
+See you there.

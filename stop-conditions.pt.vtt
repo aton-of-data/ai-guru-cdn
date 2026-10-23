@@ -1,0 +1,544 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:05.966
+A Larissa colocou no ar um agente de pesquisa.
+
+00:00:06.266 --> 00:00:09.810
+Ele recebe uma pergunta de mercado, busca na web,
+
+00:00:09.810 --> 00:00:12.196
+lê fontes e escreve um relatório.
+
+00:00:12.496 --> 00:00:14.006
+As primeiras semanas foram bem.
+
+00:00:14.306 --> 00:00:16.658
+Aí começaram três tipos de reclamação.
+
+00:00:17.308 --> 00:00:18.754
+Algumas tarefas nunca terminavam.
+
+00:00:19.054 --> 00:00:21.664
+O agente continuava procurando mais uma fonte,
+
+00:00:21.664 --> 00:00:22.969
+até o orçamento acabar.
+
+00:00:23.619 --> 00:00:25.387
+Outras terminavam cedo demais.
+
+00:00:25.687 --> 00:00:29.583
+Depois de duas buscas, o agente escrevia um relatório confiante,
+
+00:00:29.583 --> 00:00:30.801
+com informação rasa.
+
+00:00:31.451 --> 00:00:33.719
+E algumas terminavam com: não consegui terminar.
+
+00:00:34.019 --> 00:00:37.039
+Sem dizer o que tinha encontrado, nem por que parou.
+
+00:00:37.689 --> 00:00:39.313
+As três têm uma raiz só.
+
+00:00:39.613 --> 00:00:42.636
+Terminar estava definido numa frase do prompt.
+
+00:00:42.936 --> 00:00:45.923
+Quando tiver informação suficiente, escreva o relatório.
+
+00:00:46.223 --> 00:00:49.036
+O modelo decidia sozinho o que era suficiente,
+
+00:00:49.036 --> 00:00:51.237
+e não havia outro jeito de terminar.
+
+00:00:51.537 --> 00:00:55.230
+Nesta aula, você vai aprender a desenhar o fim de um agente,
+
+00:00:55.230 --> 00:00:58.677
+para toda execução terminar, e terminar no estado certo.
+
+00:00:59.877 --> 00:01:02.465
+Trate o fim como parte do desenho.
+
+00:01:02.765 --> 00:01:04.519
+Com quatro saídas explícitas,
+
+00:01:04.519 --> 00:01:07.544
+cada uma conferida por código sempre que possível.
+
+00:01:08.194 --> 00:01:09.117
+Sucesso.
+
+00:01:09.417 --> 00:01:10.785
+O objetivo foi cumprido,
+
+00:01:10.785 --> 00:01:13.235
+e existe um critério verificável para isso.
+
+00:01:13.535 --> 00:01:14.807
+O teste passa.
+
+00:01:15.107 --> 00:01:18.557
+O relatório tem o número exigido de fontes válidas.
+
+00:01:19.207 --> 00:01:19.625
+Limite.
+
+00:01:19.925 --> 00:01:22.557
+O orçamento de passos, tempo ou custo acabou.
+
+00:01:22.857 --> 00:01:26.442
+O agente entrega o que tem e diz que parou no limite.
+
+00:01:27.092 --> 00:01:27.832
+Desistência.
+
+00:01:28.132 --> 00:01:31.679
+O agente concluiu que não consegue fazer a tarefa,
+
+00:01:31.679 --> 00:01:34.304
+por falta de acesso ou de informação.
+
+00:01:34.604 --> 00:01:35.811
+E explica por quê.
+
+00:01:36.461 --> 00:01:37.815
+E pedido de ajuda.
+
+00:01:38.115 --> 00:01:41.253
+O agente precisa de uma decisão, ou de um fato,
+
+00:01:41.253 --> 00:01:42.721
+que só uma pessoa tem.
+
+00:01:43.371 --> 00:01:47.450
+O modelo pode sinalizar sucesso, desistência ou pedido de ajuda,
+
+00:01:47.450 --> 00:01:50.827
+por uma ferramenta própria, ou por saída estruturada.
+
+00:01:51.127 --> 00:01:53.693
+O seu código confirma o sucesso quando consegue.
+
+00:01:53.993 --> 00:01:56.586
+E o limite pertence sempre ao seu código.
+
+00:01:56.886 --> 00:02:01.116
+O juiz encerra a partida no apito, não quando um time cansa.
+
+00:02:02.316 --> 00:02:05.485
+Cada turno do loop termina com uma decisão do modelo.
+
+00:02:06.135 --> 00:02:08.966
+Mas o código confere o orçamento antes de tudo.
+
+00:02:09.266 --> 00:02:13.950
+Sem orçamento, a execução para com o estado atual, e o motivo.
+
+00:02:14.600 --> 00:02:18.282
+O modelo sinaliza uma de quatro intenções, de forma estruturada.
+
+00:02:18.932 --> 00:02:20.409
+E terminei não basta.
+
+00:02:20.709 --> 00:02:22.893
+O código confere o critério de sucesso,
+
+00:02:22.893 --> 00:02:24.293
+quando ele é verificável.
+
+00:02:24.943 --> 00:02:27.386
+Sucesso confirmado encerra a tarefa.
+
+00:02:28.036 --> 00:02:29.979
+Desistir é uma saída válida,
+
+00:02:29.979 --> 00:02:32.478
+com a explicação do que foi tentado.
+
+00:02:33.128 --> 00:02:36.927
+E pedir ajuda pausa a execução, até uma pessoa responder.
+
+00:02:38.127 --> 00:02:39.731
+De volta ao agente da Larissa.
+
+00:02:40.031 --> 00:02:43.250
+O critério de sucesso virou uma regra no código.
+
+00:02:43.550 --> 00:02:47.307
+O relatório precisa citar pelo menos três fontes independentes,
+
+00:02:47.307 --> 00:02:48.857
+e todo link precisa abrir.
+
+00:02:49.157 --> 00:02:51.074
+O orçamento é de vinte e cinco passos.
+
+00:02:51.724 --> 00:02:54.662
+No passo seis, o modelo diz: relatório pronto.
+
+00:02:54.962 --> 00:02:57.750
+A checagem acha duas fontes válidas de três.
+
+00:02:58.050 --> 00:02:58.977
+Recusado.
+
+00:02:59.277 --> 00:03:01.733
+E o modelo recebe o motivo.
+
+00:03:02.033 --> 00:03:04.099
+Falta uma fonte independente.
+
+00:03:04.749 --> 00:03:06.221
+Então ele continua.
+
+00:03:06.521 --> 00:03:09.202
+No passo catorze, diz que terminou de novo.
+
+00:03:09.502 --> 00:03:12.761
+Quatro fontes válidas, todos os links abrem.
+
+00:03:13.061 --> 00:03:13.804
+Aceito.
+
+00:03:14.104 --> 00:03:16.084
+Motivo da parada: sucesso.
+
+00:03:16.734 --> 00:03:18.726
+Aquele primeiro terminei era exatamente
+
+00:03:18.726 --> 00:03:20.411
+o relatório raso das reclamações.
+
+00:03:20.711 --> 00:03:24.165
+A checagem devolveu o motivo, e o modelo continuou trabalhando.
+
+00:03:24.465 --> 00:03:27.174
+Sem ela, a tarefa teria parado no passo seis,
+
+00:03:27.174 --> 00:03:28.499
+com uma fonte a menos.
+
+00:03:29.149 --> 00:03:31.341
+Agora uma pergunta sem resposta pública,
+
+00:03:31.341 --> 00:03:33.862
+como a margem de lucro de uma empresa fechada.
+
+00:03:34.162 --> 00:03:35.941
+Existem duas saídas boas.
+
+00:03:36.591 --> 00:03:38.762
+No passo nove, o agente desiste.
+
+00:03:39.062 --> 00:03:41.475
+Nenhuma fonte pública dá a margem.
+
+00:03:41.775 --> 00:03:45.224
+Só achei estimativas de terceiros, listadas abaixo.
+
+00:03:45.874 --> 00:03:47.962
+Ou, se ele continuar tentando,
+
+00:03:47.962 --> 00:03:50.467
+o código para no passo vinte e cinco
+
+00:03:50.467 --> 00:03:52.764
+e entrega um resumo do que achou.
+
+00:03:53.414 --> 00:03:56.076
+A saída ruim, a que esse padrão evita,
+
+00:03:56.076 --> 00:03:59.509
+é um relatório confiante com um número inventado.
+
+00:04:00.709 --> 00:04:01.831
+Uma pergunta para você.
+
+00:04:02.131 --> 00:04:05.999
+O seu agente de código chama finish, com terminei, e a nota:
+
+00:04:05.999 --> 00:04:06.901
+corrigi o bug.
+
+00:04:07.201 --> 00:04:08.681
+Os testes continuam vermelhos.
+
+00:04:08.981 --> 00:04:10.324
+O que o loop deve fazer?
+
+00:04:13.374 --> 00:04:14.558
+Recusar o sucesso,
+
+00:04:14.558 --> 00:04:18.178
+dizer ao modelo quais testes falham e continuar o loop.
+
+00:04:18.478 --> 00:04:22.756
+A declaração do modelo é um pedido para terminar, não uma prova.
+
+00:04:23.056 --> 00:04:26.538
+Quando existe critério verificável, quem decide é o código.
+
+00:04:27.188 --> 00:04:28.911
+E também não é desistência.
+
+00:04:29.211 --> 00:04:30.607
+O modelo não desistiu.
+
+00:04:30.907 --> 00:04:32.181
+Ele achou que tinha terminado.
+
+00:04:32.481 --> 00:04:34.654
+Encerrar aqui desperdiçaria uma tarefa
+
+00:04:34.654 --> 00:04:36.883
+que pode estar a dois passos de passar.
+
+00:04:37.183 --> 00:04:38.894
+E o orçamento continua valendo,
+
+00:04:38.894 --> 00:04:41.431
+então o loop não fica preso nisso para sempre.
+
+00:04:42.631 --> 00:04:44.155
+Não chute o teto.
+
+00:04:44.455 --> 00:04:47.282
+Olhe os traces das execuções que terminaram
+
+00:04:47.282 --> 00:04:49.451
+em sucesso e veja quantos passos,
+
+00:04:49.451 --> 00:04:51.489
+segundos e dólares elas usaram.
+
+00:04:51.789 --> 00:04:56.262
+Depois coloque o teto acima da grande maioria, com folga.
+
+00:04:56.912 --> 00:04:59.759
+Digamos que 95% das execuções de sucesso
+
+00:04:59.759 --> 00:05:01.467
+usam até catorze passos,
+
+00:05:01.467 --> 00:05:03.460
+e a mais longa usa dezenove.
+
+00:05:03.760 --> 00:05:05.954
+Um teto de vinte e cinco dá espaço
+
+00:05:05.954 --> 00:05:08.988
+para o caso difícil e corta cedo um loop preso.
+
+00:05:09.288 --> 00:05:11.671
+Um teto de duzentos, por via das dúvidas,
+
+00:05:11.671 --> 00:05:15.275
+deixa uma execução presa gastar dez vezes mais antes de parar.
+
+00:05:15.925 --> 00:05:18.980
+E revise os limites quando o tipo de tarefa mudar.
+
+00:05:19.280 --> 00:05:21.347
+Um teto certo para corrigir um teste
+
+00:05:21.347 --> 00:05:23.472
+é curto demais para migrar um módulo.
+
+00:05:24.672 --> 00:05:26.553
+Agora, os erros comuns.
+
+00:05:26.853 --> 00:05:28.888
+Um limite que lança exceção.
+
+00:05:29.188 --> 00:05:33.603
+A tarefa some, sem estado, sem registro e sem resposta.
+
+00:05:33.903 --> 00:05:36.432
+O limite é uma saída como as outras.
+
+00:05:36.732 --> 00:05:39.946
+Ele entrega o que foi feito e diz que parou ali.
+
+00:05:40.596 --> 00:05:43.209
+Sucesso é o modelo ter dito que terminou.
+
+00:05:43.509 --> 00:05:47.050
+Se existe um teste, um schema ou uma contagem, use.
+
+00:05:47.350 --> 00:05:50.878
+A opinião do modelo só decide quando não há nada para conferir.
+
+00:05:51.528 --> 00:05:53.824
+Um prompt que empurra para a desistência.
+
+00:05:54.124 --> 00:05:56.001
+Frases como na dúvida, desista,
+
+00:05:56.001 --> 00:05:58.241
+fazem a taxa de desistência disparar.
+
+00:05:58.541 --> 00:06:00.876
+Diga exatamente quando desistir.
+
+00:06:01.176 --> 00:06:05.584
+Falta de acesso, dado que não existe, permissão negada.
+
+00:06:06.234 --> 00:06:09.460
+E pedir ajuda sem ninguém do outro lado.
+
+00:06:09.760 --> 00:06:12.700
+Se a pessoa demora horas, a execução fica pendurada.
+
+00:06:13.000 --> 00:06:17.278
+Defina um prazo de espera, e o que acontece quando ele vence.
+
+00:06:18.478 --> 00:06:22.101
+Em produção, registre um motivo de parada em todo trace,
+
+00:06:22.101 --> 00:06:24.754
+e olhe a distribuição por tipo de tarefa.
+
+00:06:25.054 --> 00:06:27.846
+Sucesso, limite, desistência e ajuda.
+
+00:06:28.496 --> 00:06:30.557
+E vigie de perto as paradas por limite.
+
+00:06:30.857 --> 00:06:33.353
+Digamos que no agente de navegador,
+
+00:06:33.353 --> 00:06:37.276
+as paradas por limite vão de 3% para 25% das execuções,
+
+00:06:37.276 --> 00:06:38.132
+numa semana.
+
+00:06:38.432 --> 00:06:40.034
+Ninguém fez deploy.
+
+00:06:40.334 --> 00:06:43.526
+Dobrar o orçamento só deixa as execuções presas gastarem mais.
+
+00:06:43.826 --> 00:06:47.578
+Trocar de modelo é o palpite mais caro e menos provável.
+
+00:06:47.878 --> 00:06:49.089
+Abra os traces.
+
+00:06:49.389 --> 00:06:51.819
+Um salto desses, sem mudança de código,
+
+00:06:51.819 --> 00:06:53.876
+normalmente vem do mundo lá fora.
+
+00:06:54.176 --> 00:06:57.589
+Um portal mudou, ou uma ferramenta começou a falhar em silêncio.
+
+00:06:57.889 --> 00:07:01.499
+É exatamente por isso que o motivo da parada vai para o trace.
+
+00:07:02.149 --> 00:07:05.596
+E monte pelo menos um caso de eval por saída.
+
+00:07:05.896 --> 00:07:08.284
+Uma tarefa fácil espera sucesso.
+
+00:07:08.584 --> 00:07:13.128
+Uma tarefa impossível de propósito, como um portal fora do ar,
+
+00:07:13.128 --> 00:07:14.520
+espera desistência.
+
+00:07:14.820 --> 00:07:17.330
+Uma tarefa que depende de decisão
+
+00:07:17.330 --> 00:07:19.916
+de negócio espera pedido de ajuda.
+
+00:07:20.216 --> 00:07:22.901
+E uma ferramenta que responde ok sem
+
+00:07:22.901 --> 00:07:25.511
+progresso espera parada por limite.
+
+00:07:25.811 --> 00:07:29.159
+Se o agente responde a tarefa impossível com sucesso,
+
+00:07:29.159 --> 00:07:31.749
+você achou o caso mais perigoso de todos.
+
+00:07:32.049 --> 00:07:33.388
+Um falso sucesso.
+
+00:07:34.588 --> 00:07:38.159
+Na página, todas as versões dão ao modelo uma ferramenta finish,
+
+00:07:38.159 --> 00:07:41.117
+com três tipos, terminei, desisto e preciso de ajuda,
+
+00:07:41.117 --> 00:07:44.409
+e rodam o loop dentro de um orçamento de passos e de tempo.
+
+00:07:45.059 --> 00:07:48.049
+Quando o sinal é terminei, o código roda os testes.
+
+00:07:48.349 --> 00:07:50.302
+Se passam, sucesso.
+
+00:07:50.602 --> 00:07:54.056
+Se não, o modelo é avisado, e o loop segue.
+
+00:07:54.706 --> 00:07:58.233
+E quando o orçamento acaba, devolve uma parada por limite,
+
+00:07:58.233 --> 00:07:59.084
+com um resumo.
+
+00:07:59.734 --> 00:08:04.430
+Em Python e TypeScript, o sinal é lido dentro do loop.
+
+00:08:04.730 --> 00:08:08.266
+No LangGraph, o mesmo sinal é lido numa aresta.
+
+00:08:08.566 --> 00:08:13.867
+Limite, sucesso, desistência e humano viram destinos do grafo.
+
+00:08:14.167 --> 00:08:16.073
+Não frases num prompt.
+
+00:08:17.273 --> 00:08:19.532
+Então, a ideia para levar.
+
+00:08:19.832 --> 00:08:23.459
+Um agente precisa de um fim desenhado, não de um fim torcido.
+
+00:08:23.759 --> 00:08:27.418
+Sucesso que o código confirma, limite que é do código,
+
+00:08:27.418 --> 00:08:31.685
+desistência que explica e um jeito de pedir ajuda a uma pessoa.
+
+00:08:31.985 --> 00:08:34.735
+Aí toda execução termina num estado conhecido,
+
+00:08:34.735 --> 00:08:37.245
+e o usuário sabe o que recebeu, e por quê.
+
+00:08:37.895 --> 00:08:39.008
+Na próxima aula,
+
+00:08:39.008 --> 00:08:41.582
+a gente sai de como um agente termina
+
+00:08:41.582 --> 00:08:43.530
+para o que ele tem nas mãos:
+
+00:08:43.530 --> 00:08:44.364
+tool sprawl.
+
+00:08:44.664 --> 00:08:45.435
+Até lá.

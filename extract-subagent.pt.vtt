@@ -1,0 +1,556 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:05.332
+O agente de conteúdo de uma fintech está escrevendo sobre Pix.
+
+00:00:05.632 --> 00:00:08.460
+Ele lê trinta páginas, escreve o post,
+
+00:00:08.460 --> 00:00:12.628
+revisa o próprio texto contra o guia da marca e publica.
+
+00:00:13.278 --> 00:00:17.076
+No fim da tarefa, o contexto dele mistura três coisas.
+
+00:00:17.726 --> 00:00:19.817
+Trechos de blogs de concorrentes.
+
+00:00:20.467 --> 00:00:23.527
+Depois o raciocínio de quem escreveu, palavra por palavra.
+
+00:00:23.827 --> 00:00:26.996
+Usei esse argumento porque o jurídico pediu.
+
+00:00:27.646 --> 00:00:28.847
+E a ferramenta de publicar.
+
+00:00:29.497 --> 00:00:32.631
+Então o revisor herda o argumento de quem escreveu
+
+00:00:32.631 --> 00:00:34.763
+e deixa passar o que devia barrar.
+
+00:00:35.063 --> 00:00:37.541
+E uma página com uma instrução escondida
+
+00:00:37.541 --> 00:00:39.400
+fica a um passo da publicação.
+
+00:00:39.700 --> 00:00:42.654
+Você conheceu o mega agent na aula passada.
+
+00:00:42.954 --> 00:00:46.729
+Hoje você vai desmontá-lo, um subagente de cada vez.
+
+00:00:47.929 --> 00:00:51.416
+Dê a uma subtarefa grande e bem delimitada um agente próprio.
+
+00:00:51.716 --> 00:00:52.779
+Com contexto limpo,
+
+00:00:52.779 --> 00:00:55.800
+prompt próprio e só as ferramentas de que ela precisa.
+
+00:00:56.100 --> 00:00:58.589
+O agente principal entrega uma instrução
+
+00:00:58.589 --> 00:01:00.642
+e recebe de volta só o resultado,
+
+00:01:00.642 --> 00:01:02.011
+num formato combinado.
+
+00:01:03.211 --> 00:01:05.737
+Antes, um contexto para tudo.
+
+00:01:06.037 --> 00:01:07.163
+As páginas lidas,
+
+00:01:07.163 --> 00:01:10.743
+a revisão do próprio texto e a ferramenta de publicar,
+
+00:01:10.743 --> 00:01:12.068
+tudo no mesmo lugar.
+
+00:01:12.718 --> 00:01:15.401
+Depois, o briefing chega ao agente principal.
+
+00:01:15.701 --> 00:01:18.167
+Ele planeja, escreve e decide.
+
+00:01:18.467 --> 00:01:20.110
+Ele não lê páginas da web.
+
+00:01:20.760 --> 00:01:24.562
+O subagente de pesquisa lê tudo, no contexto dele,
+
+00:01:24.562 --> 00:01:28.820
+e devolve uma lista curta de fatos, cada um com a fonte.
+
+00:01:29.470 --> 00:01:33.840
+O subagente de revisão recebe só o rascunho e o guia da marca.
+
+00:01:34.140 --> 00:01:35.775
+Sem o raciocínio de quem escreveu.
+
+00:01:36.425 --> 00:01:38.928
+E publicar deixou de ser ferramenta do modelo.
+
+00:01:39.228 --> 00:01:41.361
+Virou uma etapa depois da aprovação.
+
+00:01:42.561 --> 00:01:45.576
+O briefing: oitocentas palavras sobre Pix,
+
+00:01:45.576 --> 00:01:49.236
+para microempreendedor individual, no tom da marca,
+
+00:01:49.236 --> 00:01:51.246
+e nunca prometer rendimento.
+
+00:01:51.546 --> 00:01:54.088
+O agente principal chama a pesquisa,
+
+00:01:54.088 --> 00:01:57.476
+com o tema e a dica de preferir fontes oficiais.
+
+00:01:57.776 --> 00:02:00.028
+O subagente gasta doze passos,
+
+00:02:00.028 --> 00:02:02.729
+lê as trinta páginas e devolve isto.
+
+00:02:03.379 --> 00:02:05.284
+Fatos, cada um com a fonte.
+
+00:02:05.584 --> 00:02:10.165
+Como: um MEI pode receber Pix numa conta pessoal vinculada,
+
+00:02:10.165 --> 00:02:13.348
+com a página do Banco Central como fonte.
+
+00:02:13.998 --> 00:02:15.198
+E perguntas em aberto.
+
+00:02:15.498 --> 00:02:17.327
+Qual é o teto mensal atual?
+
+00:02:17.627 --> 00:02:20.146
+Ninguém achou com certeza, então ele diz isso.
+
+00:02:20.796 --> 00:02:23.006
+O agente principal escreve a partir disso,
+
+00:02:23.006 --> 00:02:24.796
+sem nenhuma página da web à vista.
+
+00:02:25.096 --> 00:02:28.382
+O subagente de revisão recebe o rascunho
+
+00:02:28.382 --> 00:02:30.929
+e o guia e devolve um problema.
+
+00:02:31.229 --> 00:02:34.951
+Diz que o parágrafo quatro promete rendimento ao leitor.
+
+00:02:35.251 --> 00:02:39.603
+Publicar só acontece depois que a pessoa do marketing aprova.
+
+00:02:39.903 --> 00:02:41.779
+O conteúdo da web nunca ficou ao lado
+
+00:02:41.779 --> 00:02:43.554
+da ferramenta com efeito colateral.
+
+00:02:44.754 --> 00:02:47.913
+Um contexto é a memória de trabalho do modelo.
+
+00:02:48.213 --> 00:02:50.155
+Quando ele guarda trinta páginas,
+
+00:02:50.155 --> 00:02:53.273
+o raciocínio de quem escreveu e as regras de revisão,
+
+00:02:53.273 --> 00:02:55.744
+tudo ao mesmo tempo, tudo disputa atenção.
+
+00:02:56.044 --> 00:02:58.275
+Dividir devolve três propriedades.
+
+00:02:58.925 --> 00:02:59.551
+Foco.
+
+00:02:59.851 --> 00:03:02.420
+Cada subagente tem um prompt de um papel só,
+
+00:03:02.420 --> 00:03:03.646
+e poucas ferramentas.
+
+00:03:04.296 --> 00:03:05.220
+Limpeza.
+
+00:03:05.520 --> 00:03:08.423
+O trabalho bruto, páginas, logs e arquivos,
+
+00:03:08.423 --> 00:03:10.179
+morre dentro do subagente.
+
+00:03:10.479 --> 00:03:13.329
+O agente principal recebe uma página de resultado,
+
+00:03:13.329 --> 00:03:14.127
+em vez de cem.
+
+00:03:14.777 --> 00:03:17.152
+E independência.
+
+00:03:17.452 --> 00:03:20.692
+O revisor não herda o raciocínio de quem escreveu,
+
+00:03:20.692 --> 00:03:22.701
+então julga o texto como ele é.
+
+00:03:23.351 --> 00:03:26.679
+E o formato de retorno é o contrato entre os dois.
+
+00:03:26.979 --> 00:03:27.453
+Sem ele,
+
+00:03:27.453 --> 00:03:29.648
+o agente principal recebe texto livre
+
+00:03:29.648 --> 00:03:31.605
+e precisa adivinhar o que voltou.
+
+00:03:31.905 --> 00:03:34.446
+Fatos com fonte dá para revisar.
+
+00:03:34.746 --> 00:03:37.481
+Um parágrafo chamado resumo da pesquisa, não.
+
+00:03:37.781 --> 00:03:40.391
+E cada subagente recebe o seu orçamento,
+
+00:03:40.391 --> 00:03:42.348
+descontado do total da tarefa.
+
+00:03:43.548 --> 00:03:44.570
+Uma pergunta para você.
+
+00:03:44.870 --> 00:03:48.454
+O contrato do subagente de pesquisa era um parágrafo livre.
+
+00:03:48.754 --> 00:03:52.408
+E o agente principal começou a completar fatos sem fonte.
+
+00:03:52.708 --> 00:03:53.889
+Qual é o próximo passo?
+
+00:03:56.939 --> 00:03:59.899
+Mudar o contrato para um schema, com fatos,
+
+00:03:59.899 --> 00:04:01.895
+fontes e perguntas em aberto.
+
+00:04:02.195 --> 00:04:04.470
+E recusar um retorno que não preencha.
+
+00:04:04.770 --> 00:04:07.691
+Sem campos, o agente principal preenche as lacunas.
+
+00:04:08.341 --> 00:04:10.256
+Um orçamento maior para a pesquisa
+
+00:04:10.256 --> 00:04:11.945
+só faz um parágrafo mais rico,
+
+00:04:11.945 --> 00:04:13.353
+que continua texto livre.
+
+00:04:13.653 --> 00:04:16.529
+E mandar as trinta páginas para o agente
+
+00:04:16.529 --> 00:04:18.757
+principal conferir desfaz tudo.
+
+00:04:19.057 --> 00:04:21.403
+Ele volta a ficar ao lado de páginas cruas da web.
+
+00:04:22.603 --> 00:04:24.229
+Passo zero, medir.
+
+00:04:24.529 --> 00:04:28.874
+Rode o eval do agente atual e anote qualidade, custo por tarefa,
+
+00:04:28.874 --> 00:04:33.016
+tokens por turno no fim da tarefa e os incidentes conhecidos.
+
+00:04:33.316 --> 00:04:36.073
+Uma publicação ruim, uma revisão que deixou passar.
+
+00:04:36.723 --> 00:04:37.951
+Ache a fronteira.
+
+00:04:38.251 --> 00:04:41.923
+Procure no trace um trecho com muitos turnos, muita leitura,
+
+00:04:41.923 --> 00:04:44.433
+e um resultado que cabe em poucas linhas.
+
+00:04:44.733 --> 00:04:46.027
+Esse é o candidato.
+
+00:04:46.677 --> 00:04:49.719
+Defina o contrato de saída como um schema.
+
+00:04:50.019 --> 00:04:53.207
+O que o subagente devolve, em que formato,
+
+00:04:53.207 --> 00:04:54.952
+com fonte ou evidência.
+
+00:04:55.602 --> 00:04:58.340
+Escreva o prompt do subagente com um papel só,
+
+00:04:58.340 --> 00:05:00.245
+e a lista mínima de ferramentas.
+
+00:05:00.545 --> 00:05:04.373
+Nunca a ferramenta de publicar, nem as do irmão.
+
+00:05:04.673 --> 00:05:06.235
+E dê a ele um orçamento próprio.
+
+00:05:06.885 --> 00:05:08.024
+No agente principal,
+
+00:05:08.024 --> 00:05:09.676
+troque as ferramentas antigas
+
+00:05:09.676 --> 00:05:12.012
+por uma ferramenta que chama o subagente.
+
+00:05:12.662 --> 00:05:16.128
+Registre o subagente como um span filho no trace,
+
+00:05:16.128 --> 00:05:18.463
+para ver o que ele leu sem trazer
+
+00:05:18.463 --> 00:05:20.656
+isso para o contexto principal.
+
+00:05:21.306 --> 00:05:22.380
+E meça de novo.
+
+00:05:22.680 --> 00:05:24.647
+Qualidade igual ou melhor,
+
+00:05:24.647 --> 00:05:27.901
+menos tokens por turno no agente principal.
+
+00:05:28.201 --> 00:05:30.090
+O custo total pode subir um pouco,
+
+00:05:30.090 --> 00:05:32.258
+com uma chamada a mais de orquestração.
+
+00:05:32.558 --> 00:05:36.966
+Confira se o ganho de qualidade e de isolamento compensa.
+
+00:05:38.166 --> 00:05:39.613
+Agora, os riscos.
+
+00:05:39.913 --> 00:05:40.975
+Contexto que falta.
+
+00:05:41.275 --> 00:05:44.196
+O briefing dizia: não cite o concorrente X.
+
+00:05:44.496 --> 00:05:48.006
+O subagente de pesquisa nunca recebeu essa restrição
+
+00:05:48.006 --> 00:05:50.166
+e devolveu um fato do blog do X.
+
+00:05:50.466 --> 00:05:52.056
+O agente principal usou.
+
+00:05:52.356 --> 00:05:53.557
+De quem é a falha?
+
+00:05:53.857 --> 00:05:55.015
+Do agente principal.
+
+00:05:55.315 --> 00:05:56.799
+Não existe memória compartilhada.
+
+00:05:57.099 --> 00:06:00.748
+Tudo o que o subagente precisa vai na instrução.
+
+00:06:01.398 --> 00:06:02.825
+Um resultado magro demais.
+
+00:06:03.125 --> 00:06:05.540
+Um resumo de três linhas pode perder o detalhe
+
+00:06:05.540 --> 00:06:07.431
+de que o agente principal precisava.
+
+00:06:07.731 --> 00:06:10.921
+Ajuste o schema a partir dos casos que falharam.
+
+00:06:11.571 --> 00:06:12.846
+Multiplicação de agentes.
+
+00:06:13.146 --> 00:06:16.578
+Quatro subagentes para pesquisar, escrever o título,
+
+00:06:16.578 --> 00:06:20.669
+escrever o corpo e escolher um emoji é decorative multi-agent.
+
+00:06:20.969 --> 00:06:22.839
+Cada extração precisa de um motivo.
+
+00:06:23.139 --> 00:06:25.096
+Contexto que não pode misturar,
+
+00:06:25.096 --> 00:06:29.072
+ferramentas que não podem conviver, ou julgamento independente.
+
+00:06:29.372 --> 00:06:31.668
+E formatar uma data não conta.
+
+00:06:31.968 --> 00:06:33.263
+Isso é uma linha de código.
+
+00:06:33.913 --> 00:06:35.005
+E recursão.
+
+00:06:35.305 --> 00:06:38.654
+Se o subagente de pesquisa pode abrir outro pesquisador,
+
+00:06:38.654 --> 00:06:42.302
+cada um com quinze passos novos e sem limite de profundidade,
+
+00:06:42.302 --> 00:06:43.319
+a árvore explode.
+
+00:06:43.619 --> 00:06:46.324
+Limite a profundidade e passe o mesmo orçamento para baixo.
+
+00:06:46.974 --> 00:06:47.992
+E mais uma armadilha.
+
+00:06:48.292 --> 00:06:51.401
+A ferramenta de publicar continua na lista do agente principal,
+
+00:06:51.401 --> 00:06:52.388
+para casos urgentes.
+
+00:06:52.688 --> 00:06:55.049
+O subagente de pesquisa continua sem ela,
+
+00:06:55.049 --> 00:06:56.489
+então parece mais seguro.
+
+00:06:56.789 --> 00:06:58.369
+É mais seguro que antes.
+
+00:06:58.669 --> 00:07:02.369
+Mas o agente principal ainda pode publicar um rascunho cru,
+
+00:07:02.369 --> 00:07:03.247
+sem aprovação.
+
+00:07:03.547 --> 00:07:07.126
+E um prompt dizendo não publique sem revisão é justamente
+
+00:07:07.126 --> 00:07:09.952
+o que a gente está tentando deixar para trás.
+
+00:07:10.252 --> 00:07:13.436
+Ferramenta disponível vai ser usada, cedo ou tarde.
+
+00:07:14.636 --> 00:07:15.974
+Vamos praticar.
+
+00:07:16.274 --> 00:07:20.439
+Um agente de incidentes lê logs, métricas e o runbook,
+
+00:07:20.439 --> 00:07:22.907
+e decide se reinicia um serviço.
+
+00:07:23.207 --> 00:07:26.534
+O que você extrairia, e o que deveria voltar?
+
+00:07:29.584 --> 00:07:31.608
+Extraia a investigação.
+
+00:07:31.908 --> 00:07:35.090
+Um subagente de diagnóstico lê os logs e as métricas,
+
+00:07:35.090 --> 00:07:38.932
+que são grandes e não confiáveis, com ferramentas só de leitura.
+
+00:07:39.232 --> 00:07:41.580
+E devolve um relatório estruturado.
+
+00:07:42.230 --> 00:07:43.447
+A causa provável.
+
+00:07:43.747 --> 00:07:46.991
+As evidências, cada uma com fonte e trecho.
+
+00:07:47.291 --> 00:07:49.917
+A confiança, baixa, média ou alta.
+
+00:07:50.217 --> 00:07:51.808
+E uma ação sugerida.
+
+00:07:52.108 --> 00:07:55.429
+Reiniciar, voltar versão, escalar ou nada.
+
+00:07:56.079 --> 00:07:59.734
+O agente principal decide com base nesse relatório e no runbook.
+
+00:08:00.034 --> 00:08:02.747
+E o reinício em si fica fora dos dois agentes,
+
+00:08:02.747 --> 00:08:05.283
+atrás da aprovação de quem está de plantão,
+
+00:08:05.283 --> 00:08:07.052
+quando a confiança não é alta.
+
+00:08:07.352 --> 00:08:10.122
+Log cru nunca fica ao lado da ferramenta de reiniciar.
+
+00:08:11.322 --> 00:08:13.239
+Então, a ideia para levar.
+
+00:08:13.539 --> 00:08:17.150
+Extraia um subagente onde o trabalho é pesado, não confiável,
+
+00:08:17.150 --> 00:08:18.690
+ou precisa de olhos novos.
+
+00:08:18.990 --> 00:08:21.122
+Dê a ele um papel, poucas ferramentas,
+
+00:08:21.122 --> 00:08:24.265
+orçamento próprio e tudo o que ele precisa na instrução.
+
+00:08:24.565 --> 00:08:27.520
+E faça ele devolver um contrato, não um parágrafo.
+
+00:08:28.170 --> 00:08:29.311
+Na próxima aula,
+
+00:08:29.311 --> 00:08:33.379
+vamos olhar o padrão completo por trás dessa refatoração:
+
+00:08:33.379 --> 00:08:34.807
+subagent delegation.
+
+00:08:35.107 --> 00:08:35.985
+Até lá.

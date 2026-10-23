@@ -1,0 +1,457 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.734
+Renata's coding agent handles long tasks.
+
+00:00:05.034 --> 00:00:06.608
+Two or three hours.
+
+00:00:06.908 --> 00:00:11.254
+Migrating a module, upgrading dependencies, fixing a batch of tests.
+
+00:00:11.904 --> 00:00:14.542
+At the start of a task, it's precise.
+
+00:00:14.842 --> 00:00:20.099
+After one hundred fifty turns, the context holds hundreds of tool results.
+
+00:00:20.399 --> 00:00:25.653
+Whole files, test output thousands of lines long, searches that led nowhere.
+
+00:00:26.303 --> 00:00:30.418
+Near the end, the agent starts editing files it already fixed.
+
+00:00:31.068 --> 00:00:35.460
+Reapplying changes that someone had already reverted, on purpose.
+
+00:00:36.110 --> 00:00:39.238
+And forgetting the constraint agreed at the start.
+
+00:00:39.538 --> 00:00:41.412
+Don't touch the public API.
+
+00:00:41.712 --> 00:00:45.468
+On some tasks, the window overflows, and the run fails.
+
+00:00:46.118 --> 00:00:48.456
+Starting a fresh session doesn't help.
+
+00:00:48.756 --> 00:00:53.108
+The agent would lose the plan, the decisions, and what's been done.
+
+00:00:53.408 --> 00:00:58.547
+In this lesson, you'll learn to keep an agent clear headed on a task longer than its
+
+00:00:58.547 --> 00:01:00.015
+context window can hold.
+
+00:01:01.215 --> 00:01:04.949
+Treat the context as working memory, with ongoing maintenance.
+
+00:01:05.249 --> 00:01:07.781
+Three operations, in order of cost.
+
+00:01:08.431 --> 00:01:09.015
+Prune.
+
+00:01:09.315 --> 00:01:14.219
+Delete the contents of old tool results that were already used, like a file read
+
+00:01:14.219 --> 00:01:15.261
+eighty turns ago.
+
+00:01:15.561 --> 00:01:16.926
+The call stays on record.
+
+00:01:17.226 --> 00:01:18.612
+The content goes.
+
+00:01:19.262 --> 00:01:20.158
+Summarize.
+
+00:01:20.458 --> 00:01:25.802
+When the context passes a limit, replace the old part with a summary that keeps the
+
+00:01:25.802 --> 00:01:29.601
+goal, the decisions, the current state, and the next steps.
+
+00:01:30.251 --> 00:01:31.472
+And externalize.
+
+00:01:31.772 --> 00:01:37.232
+Facts that must survive any summary, like the plan, the constraints, and the list of
+
+00:01:37.232 --> 00:01:40.937
+changed files, go to a file or state outside the context.
+
+00:01:41.237 --> 00:01:43.687
+The agent reads them when it needs to.
+
+00:01:44.337 --> 00:01:47.761
+The trigger is a token limit, checked before each turn.
+
+00:01:48.061 --> 00:01:50.686
+The most recent turns always stay whole.
+
+00:01:50.986 --> 00:01:52.941
+And here's the division of labor.
+
+00:01:53.241 --> 00:01:55.261
+Code decides when to cut.
+
+00:01:55.561 --> 00:01:57.799
+The model only writes the summary.
+
+00:01:58.999 --> 00:02:00.705
+The agent works as usual.
+
+00:02:01.355 --> 00:02:04.550
+Before each turn, code measures the context.
+
+00:02:05.200 --> 00:02:07.025
+The first measure is cheap.
+
+00:02:07.325 --> 00:02:10.190
+Delete the contents of old tool results.
+
+00:02:10.840 --> 00:02:13.674
+If pruning was enough, the loop continues.
+
+00:02:14.324 --> 00:02:18.776
+If not, a model summarizes everything before the latest turns.
+
+00:02:19.426 --> 00:02:24.969
+And critical facts live outside the context, in a notes file or in state.
+
+00:02:25.269 --> 00:02:26.863
+The summary points to them.
+
+00:02:28.063 --> 00:02:29.233
+Back to Renata.
+
+00:02:29.533 --> 00:02:34.969
+On turn three, she agreed: don't change the public API of the billing module.
+
+00:02:35.269 --> 00:02:40.350
+On turn eighty, the agent read the billing API file, about two thousand four hundred
+
+00:02:40.350 --> 00:02:44.826
+tokens, and ran the tests, about one thousand eight hundred tokens of log.
+
+00:02:45.126 --> 00:02:50.540
+On turn one hundred fifty, those results still ride along on every call, with dozens
+
+00:02:50.540 --> 00:02:51.185
+of others.
+
+00:02:51.835 --> 00:02:57.053
+With illustrative numbers, by turn one hundred fifty, input already passes sixty
+
+00:02:57.053 --> 00:02:58.684
+thousand tokens per call.
+
+00:02:58.984 --> 00:03:03.067
+Without pruning, the next fifty turns resend that volume.
+
+00:03:03.367 --> 00:03:07.549
+About three million input tokens, just to finish the task.
+
+00:03:08.199 --> 00:03:10.947
+Pruning swaps the old content for one line.
+
+00:03:11.247 --> 00:03:13.757
+The history still says the read happened.
+
+00:03:14.057 --> 00:03:16.774
+The two thousand four hundred tokens leave.
+
+00:03:17.074 --> 00:03:20.503
+And if the agent needs the file again, it reads it again.
+
+00:03:20.803 --> 00:03:23.790
+That's cheaper than carrying the file for fifty turns.
+
+00:03:24.440 --> 00:03:27.408
+When pruning isn't enough, the summary comes in.
+
+00:03:27.708 --> 00:03:30.251
+Here's a schema that holds up in Renata's eval.
+
+00:03:30.551 --> 00:03:31.211
+The goal.
+
+00:03:31.511 --> 00:03:32.422
+Decisions.
+
+00:03:32.722 --> 00:03:33.563
+What's done.
+
+00:03:33.863 --> 00:03:35.030
+The current state.
+
+00:03:35.330 --> 00:03:36.364
+The next steps.
+
+00:03:37.014 --> 00:03:38.041
+And this line.
+
+00:03:38.341 --> 00:03:39.221
+Constraints.
+
+00:03:39.521 --> 00:03:42.093
+Do not change the public API.
+
+00:03:43.293 --> 00:03:44.417
+Here's one for you.
+
+00:03:44.717 --> 00:03:49.057
+After a compaction, Renata's agent changes a public signature.
+
+00:03:49.357 --> 00:03:53.170
+The summary had the goal, what's done, and the next steps.
+
+00:03:53.470 --> 00:03:54.930
+But no constraints field.
+
+00:03:55.230 --> 00:03:56.193
+What's the fix?
+
+00:03:59.243 --> 00:04:04.131
+Put constraints in the summary schema, and in a notes file outside the context.
+
+00:04:04.431 --> 00:04:09.534
+Anything that must survive every cut needs a place in the summary, and a copy
+
+00:04:09.534 --> 00:04:10.263
+outside it.
+
+00:04:10.563 --> 00:04:14.033
+A goal and next steps don't store a do not.
+
+00:04:14.683 --> 00:04:19.737
+Raising the limit so compaction never runs only delays the rot.
+
+00:04:20.037 --> 00:04:24.035
+And a bigger model doesn't remember what you removed from the context.
+
+00:04:24.335 --> 00:04:29.319
+Without that field, the compactor helps you forget the one thing that must not be
+
+00:04:29.319 --> 00:04:29.934
+forgotten.
+
+00:04:31.134 --> 00:04:32.230
+Short tasks.
+
+00:04:32.530 --> 00:04:35.647
+The compaction step costs more than it saves.
+
+00:04:36.297 --> 00:04:38.913
+Heavy reading in a well bounded subtask.
+
+00:04:39.213 --> 00:04:40.826
+Isolate it in a subagent.
+
+00:04:41.126 --> 00:04:43.679
+Sometimes the two patterns go together.
+
+00:04:43.979 --> 00:04:46.730
+Isolation keeps heavy material out.
+
+00:04:47.030 --> 00:04:49.444
+Compaction cleans what already got in.
+
+00:04:50.094 --> 00:04:56.023
+Content that must be read in full for the answer, like a contract reviewed clause by
+
+00:04:56.023 --> 00:04:56.517
+clause.
+
+00:04:56.817 --> 00:04:59.749
+Summarizing there loses what matters.
+
+00:05:00.399 --> 00:05:01.825
+And a short support chat.
+
+00:05:02.125 --> 00:05:07.100
+Say it ends in eight turns, and a colleague wants to compact every four, to save
+
+00:05:07.100 --> 00:05:07.473
+money.
+
+00:05:07.773 --> 00:05:09.458
+Don't.
+
+00:05:09.758 --> 00:05:15.048
+The history fits, and a summary only risks losing the original request, like the
+
+00:05:15.048 --> 00:05:17.296
+order number in the first message.
+
+00:05:17.596 --> 00:05:20.823
+Keep those facts as explicit state instead.
+
+00:05:21.473 --> 00:05:22.958
+Now the common traps.
+
+00:05:23.258 --> 00:05:25.113
+Summarizing too early.
+
+00:05:25.413 --> 00:05:30.966
+Compacting every few turns spends a call, and deletes detail that would still be
+
+00:05:30.966 --> 00:05:31.313
+used.
+
+00:05:31.613 --> 00:05:32.391
+Measure first.
+
+00:05:32.691 --> 00:05:34.832
+Cut when the token curve hurts.
+
+00:05:35.482 --> 00:05:37.392
+A schema with no constraints.
+
+00:05:37.692 --> 00:05:39.163
+We just saw that one.
+
+00:05:39.463 --> 00:05:42.052
+Your retention eval needs a case like it.
+
+00:05:42.702 --> 00:05:45.130
+Cutting in the middle of a tool call.
+
+00:05:45.430 --> 00:05:50.771
+Separate a tool request from its result, and the next API request is invalid.
+
+00:05:51.071 --> 00:05:53.273
+The cut starts on a user turn.
+
+00:05:53.923 --> 00:05:56.054
+And throwing the raw history away.
+
+00:05:56.354 --> 00:05:59.884
+You'll need it to debug a summary that invented a decision.
+
+00:06:00.184 --> 00:06:04.160
+Compaction changes what the model sees, not what you keep.
+
+00:06:05.360 --> 00:06:07.545
+One question teams always ask.
+
+00:06:07.845 --> 00:06:13.776
+After pruning, the agent rereads a file it already read eighty turns ago.
+
+00:06:14.076 --> 00:06:15.021
+Is that a bug?
+
+00:06:15.321 --> 00:06:15.989
+No.
+
+00:06:16.289 --> 00:06:18.491
+Pruned content is gone on purpose.
+
+00:06:18.791 --> 00:06:21.971
+If the file still matters, the tool is called again.
+
+00:06:22.271 --> 00:06:25.235
+And the summary shouldn't copy whole files either.
+
+00:06:25.535 --> 00:06:28.744
+It stores decisions and state, not source code.
+
+00:06:29.394 --> 00:06:30.988
+How do you evaluate it?
+
+00:06:31.288 --> 00:06:32.536
+Retention first.
+
+00:06:32.836 --> 00:06:37.800
+Ask questions about facts from early in the task, after compaction.
+
+00:06:38.100 --> 00:06:40.138
+That's the eval most people skip.
+
+00:06:40.438 --> 00:06:44.802
+Without it, compaction works on cost, and fails on the product.
+
+00:06:45.452 --> 00:06:48.081
+Then the completion rate, and rework.
+
+00:06:48.381 --> 00:06:51.157
+Files edited twice, for the same reason.
+
+00:06:51.807 --> 00:06:54.437
+Then tokens per turn, over the run.
+
+00:06:54.737 --> 00:06:57.669
+The curve should have teeth, not climb forever.
+
+00:06:57.969 --> 00:07:03.519
+And if the tokens before and after a compaction barely change, the old messages were
+
+00:07:03.519 --> 00:07:04.972
+never really replaced.
+
+00:07:05.622 --> 00:07:06.799
+And the prompt cache.
+
+00:07:07.099 --> 00:07:10.027
+Changing the start of the context can reset it.
+
+00:07:10.327 --> 00:07:13.125
+Watch the cached tokens after each compaction.
+
+00:07:13.775 --> 00:07:16.622
+Some providers already do part of this for you.
+
+00:07:16.922 --> 00:07:21.770
+Server side compaction, where the API summarizes old context on its own.
+
+00:07:22.070 --> 00:07:27.407
+Or context editing, where the API clears old tool results before the model sees
+
+00:07:27.407 --> 00:07:27.745
+them.
+
+00:07:28.045 --> 00:07:30.323
+Prefer those when they cover your case.
+
+00:07:30.623 --> 00:07:32.202
+And one privacy note.
+
+00:07:32.502 --> 00:07:35.925
+The summary and the notes file often end up in logs.
+
+00:07:36.225 --> 00:07:41.583
+If the conversation holds personal data, compaction creates one more copy.
+
+00:07:41.883 --> 00:07:43.935
+Restrict who can read those logs.
+
+00:07:45.135 --> 00:07:47.462
+So here's the idea to take with you.
+
+00:07:47.762 --> 00:07:51.785
+A long task needs a maintained memory, not a growing pile.
+
+00:07:52.085 --> 00:07:58.411
+Prune what's been used, summarize the rest into a schema that has room for every do
+
+00:07:58.411 --> 00:08:03.365
+not, and keep the critical facts in a file no summary can delete.
+
+00:08:03.665 --> 00:08:06.006
+Then hour three looks like minute three.
+
+00:08:06.656 --> 00:08:12.162
+In the next lesson, a smell about the shape of the agent itself: one agent trying to
+
+00:08:12.162 --> 00:08:13.080
+do everything.
+
+00:08:13.380 --> 00:08:14.512
+The mega agent.
+
+00:08:14.812 --> 00:08:15.575
+See you there.

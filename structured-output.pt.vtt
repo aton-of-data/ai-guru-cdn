@@ -1,0 +1,499 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:06.608
+A Bianca automatizou a leitura de notas de fornecedores.
+
+00:00:06.908 --> 00:00:10.199
+Toda empresa no Brasil é identificada por um CNPJ,
+
+00:00:10.199 --> 00:00:13.754
+catorze dígitos com dois dígitos verificadores no fim.
+
+00:00:14.404 --> 00:00:17.411
+O prompt dela pedia: devolva o CNPJ do emissor,
+
+00:00:17.411 --> 00:00:21.185
+a data de emissão e o valor total, como dados estruturados.
+
+00:00:21.485 --> 00:00:24.345
+Na primeira semana, funcionou em quase tudo.
+
+00:00:24.995 --> 00:00:26.740
+Aí começaram os casos estranhos.
+
+00:00:27.040 --> 00:00:30.034
+Uma resposta abriu com uma frase simpática: claro,
+
+00:00:30.034 --> 00:00:31.231
+aqui estão os dados.
+
+00:00:31.531 --> 00:00:34.960
+Outra devolveu o total como texto, com o símbolo da moeda,
+
+00:00:34.960 --> 00:00:37.089
+quando o sistema esperava um número.
+
+00:00:37.389 --> 00:00:40.166
+Uma terceira deu outro nome ao campo.
+
+00:00:40.816 --> 00:00:43.380
+Cada caso virou mais um remendo no código.
+
+00:00:43.680 --> 00:00:46.411
+O parser ficou maior que a regra de negócio,
+
+00:00:46.411 --> 00:00:48.770
+e ainda falhava algumas vezes por dia.
+
+00:00:49.070 --> 00:00:49.770
+Nesta aula,
+
+00:00:49.770 --> 00:00:52.759
+você vai ver como fazer o modelo entregar dados
+
+00:00:52.759 --> 00:00:54.985
+que o seu código usa sem adivinhar.
+
+00:00:55.285 --> 00:00:57.156
+E por que isso é só metade do trabalho.
+
+00:00:58.356 --> 00:01:00.860
+A correção começa com uma mudança de cabeça.
+
+00:01:01.160 --> 00:01:04.580
+Pare de pedir um formato no texto do prompt e passe
+
+00:01:04.580 --> 00:01:07.462
+a declarar o formato como parte da chamada.
+
+00:01:08.112 --> 00:01:12.258
+As APIs atuais aceitam um schema, uma descrição dos campos,
+
+00:01:12.258 --> 00:01:14.717
+dos tipos e dos valores permitidos.
+
+00:01:15.017 --> 00:01:18.513
+E restringem a geração para que a saída siga esse formato.
+
+00:01:18.813 --> 00:01:22.404
+É a diferença entre entregar uma folha em branco para alguém
+
+00:01:22.404 --> 00:01:25.156
+e entregar um formulário com campos rotulados.
+
+00:01:25.806 --> 00:01:27.846
+Mas aqui está a parte que muita gente perde.
+
+00:01:28.146 --> 00:01:30.633
+O schema garante a forma, não a verdade.
+
+00:01:31.283 --> 00:01:35.114
+Um CNPJ pode ter catorze dígitos e mesmo assim ser inválido.
+
+00:01:35.414 --> 00:01:37.910
+Então a segunda metade do padrão é conferir
+
+00:01:37.910 --> 00:01:39.709
+as regras de negócio no código.
+
+00:01:40.009 --> 00:01:43.626
+Dígitos verificadores, data no passado, valor positivo.
+
+00:01:43.926 --> 00:01:47.612
+Forma garantida pela API, conteúdo conferido por você.
+
+00:01:48.812 --> 00:01:50.436
+Vamos seguir uma nota.
+
+00:01:50.736 --> 00:01:53.786
+A entrada é o texto que precisa virar dado.
+
+00:01:54.436 --> 00:01:55.968
+A chamada leva o schema junto.
+
+00:01:56.268 --> 00:01:59.468
+O modelo só consegue gerar saídas naquele formato.
+
+00:02:00.118 --> 00:02:03.923
+O SDK transforma a resposta num objeto tipado.
+
+00:02:04.223 --> 00:02:07.690
+Sem expressão regular, sem caçar chaves.
+
+00:02:08.340 --> 00:02:08.667
+Depois,
+
+00:02:08.667 --> 00:02:10.068
+o seu código confere as regras
+
+00:02:10.068 --> 00:02:11.749
+que o schema não consegue expressar.
+
+00:02:12.399 --> 00:02:15.926
+Dado válido vai direto para o sistema contábil.
+
+00:02:16.576 --> 00:02:19.859
+E dado com a forma certa, mas conteúdo suspeito,
+
+00:02:19.859 --> 00:02:21.775
+vai para uma pessoa revisar.
+
+00:02:22.975 --> 00:02:25.067
+Aqui está uma nota real de uma padaria.
+
+00:02:25.367 --> 00:02:28.544
+Um CNPJ, uma data de emissão em agosto,
+
+00:02:28.544 --> 00:02:32.699
+um total de mil duzentos e trinta e quatro dólares,
+
+00:02:32.699 --> 00:02:35.387
+e dois itens, pão francês e café.
+
+00:02:36.037 --> 00:02:37.985
+Com devolva os dados no prompt,
+
+00:02:37.985 --> 00:02:42.006
+uma resposta realista tinha três falhas de forma ao mesmo tempo.
+
+00:02:42.306 --> 00:02:44.123
+Texto em volta dos dados,
+
+00:02:44.123 --> 00:02:46.813
+o nome errado do campo e o total como
+
+00:02:46.813 --> 00:02:48.776
+texto com símbolo de moeda.
+
+00:02:49.076 --> 00:02:51.646
+Foram três correções no parser.
+
+00:02:51.946 --> 00:02:53.793
+Na semana seguinte, apareceu uma quarta.
+
+00:02:54.443 --> 00:02:59.310
+Com um schema declarado, a API só consegue emitir quatro campos.
+
+00:02:59.610 --> 00:03:02.278
+O CNPJ do emissor, a data de emissão,
+
+00:03:02.278 --> 00:03:05.091
+o total como número e a lista de itens.
+
+00:03:05.391 --> 00:03:08.045
+O SDK devolve um objeto.
+
+00:03:08.695 --> 00:03:12.024
+E aí o código da Bianca ainda tem trabalho.
+
+00:03:12.324 --> 00:03:15.300
+O CNPJ precisa passar na regra dos dígitos verificadores.
+
+00:03:15.950 --> 00:03:18.286
+Os itens precisam somar o total.
+
+00:03:18.936 --> 00:03:21.147
+E a data de emissão não pode estar no futuro.
+
+00:03:21.447 --> 00:03:24.409
+Se alguma falhar, a nota vai para revisão,
+
+00:03:24.409 --> 00:03:26.243
+com a lista do que falhou.
+
+00:03:27.443 --> 00:03:28.916
+Uma pergunta para você.
+
+00:03:29.216 --> 00:03:32.489
+O modelo devolveu um objeto exatamente no schema.
+
+00:03:32.789 --> 00:03:35.218
+O CNPJ tem catorze dígitos.
+
+00:03:35.518 --> 00:03:37.390
+Mas os dígitos verificadores não batem.
+
+00:03:37.690 --> 00:03:39.479
+O que o padrão manda fazer?
+
+00:03:42.529 --> 00:03:44.657
+Valide os dígitos verificadores no código
+
+00:03:44.657 --> 00:03:46.940
+e mande para revisão humana quando falharem.
+
+00:03:47.240 --> 00:03:48.557
+Forma não é verdade.
+
+00:03:48.857 --> 00:03:52.304
+Um valor inválido de catorze dígitos passa num schema
+
+00:03:52.304 --> 00:03:54.970
+de texto e estraga o cadastro do emissor.
+
+00:03:55.620 --> 00:03:58.965
+E pedir de novo, várias vezes, até passar?
+
+00:03:59.265 --> 00:04:01.325
+Um retry no mesmo documento costuma
+
+00:04:01.325 --> 00:04:03.209
+devolver a mesma leitura errada.
+
+00:04:03.509 --> 00:04:06.091
+A fila de revisão existe exatamente
+
+00:04:06.091 --> 00:04:08.600
+para quando a fonte está ilegível,
+
+00:04:08.600 --> 00:04:10.297
+ou o modelo leu errado.
+
+00:04:11.497 --> 00:04:13.658
+Saída estruturada não serve para tudo.
+
+00:04:13.958 --> 00:04:16.459
+Se a saída é texto para uma pessoa ler,
+
+00:04:16.459 --> 00:04:18.126
+como uma resposta de chat,
+
+00:04:18.126 --> 00:04:20.563
+forçar um schema só engessa a escrita.
+
+00:04:20.863 --> 00:04:22.217
+Ninguém vai interpretar aquilo.
+
+00:04:22.867 --> 00:04:27.419
+Se é um texto livre curto que o código só exibe, mesma coisa.
+
+00:04:28.069 --> 00:04:31.786
+E se o seu schema seria um campo chamado resposta,
+
+00:04:31.786 --> 00:04:34.462
+do tipo texto, ele não garante nada.
+
+00:04:34.762 --> 00:04:36.355
+Só acrescenta cerimônia.
+
+00:04:37.005 --> 00:04:38.807
+Agora, o erro mais comum.
+
+00:04:39.107 --> 00:04:41.626
+Toda nota tem um emissor.
+
+00:04:41.926 --> 00:04:44.412
+Mas nem todo contrato de serviço tem multa.
+
+00:04:44.712 --> 00:04:46.939
+Se o campo de multa é obrigatório,
+
+00:04:46.939 --> 00:04:50.081
+o modelo inventa algo como dez por cento padrão,
+
+00:04:50.081 --> 00:04:51.980
+só para não quebrar o schema.
+
+00:04:52.630 --> 00:04:56.953
+Então marque como opcional o que pode mesmo faltar.
+
+00:04:57.253 --> 00:04:58.219
+E meça.
+
+00:04:58.519 --> 00:05:02.502
+No seu eval, inclua documentos em que o campo não existe,
+
+00:05:02.502 --> 00:05:05.647
+e conte quantas vezes o modelo devolve vazio,
+
+00:05:05.647 --> 00:05:07.324
+e quantas vezes inventa.
+
+00:05:07.624 --> 00:05:10.982
+E prefira uma lista fechada de valores a texto aberto.
+
+00:05:11.282 --> 00:05:13.390
+Campo de texto aberto é como super urgente
+
+00:05:13.390 --> 00:05:15.299
+vai parar na sua coluna de prioridade.
+
+00:05:16.499 --> 00:05:20.183
+Com schema nativo, a saída quase sempre é válida.
+
+00:05:20.483 --> 00:05:22.921
+Então válida deixa de ser métrica.
+
+00:05:23.221 --> 00:05:24.893
+Ela esconde erro de conteúdo.
+
+00:05:25.543 --> 00:05:30.009
+Avalie campo a campo, contra valores rotulados.
+
+00:05:30.309 --> 00:05:31.709
+E normalize antes.
+
+00:05:32.009 --> 00:05:36.571
+A nota diz mil duzentos e trinta e quatro dólares com vírgula,
+
+00:05:36.571 --> 00:05:38.557
+e o rótulo guarda o número.
+
+00:05:38.857 --> 00:05:40.576
+Compare texto com texto,
+
+00:05:40.576 --> 00:05:43.654
+e o eval pune a formatação enquanto um CNPJ
+
+00:05:43.654 --> 00:05:46.160
+errado com a pontuação certa passa.
+
+00:05:46.810 --> 00:05:49.539
+Meça a taxa de invenção em documentos
+
+00:05:49.539 --> 00:05:52.194
+em que o campo realmente não existe.
+
+00:05:52.844 --> 00:05:55.120
+E acompanhe o que vai para revisão humana,
+
+00:05:55.120 --> 00:05:57.016
+e quanto disso era erro de verdade.
+
+00:05:57.316 --> 00:05:58.102
+Em produção,
+
+00:05:58.102 --> 00:06:01.440
+uma regra de validação que de repente dispara muito
+
+00:06:01.440 --> 00:06:04.386
+costuma ser um fornecedor que mudou o layout.
+
+00:06:05.036 --> 00:06:09.106
+Versione o schema como você versiona o prompt,
+
+00:06:09.106 --> 00:06:12.025
+e registre os dois em todo trace.
+
+00:06:12.325 --> 00:06:14.579
+Um campo obrigatório novo empurra
+
+00:06:14.579 --> 00:06:16.696
+invenção em documentos antigos.
+
+00:06:16.996 --> 00:06:21.058
+Um campo removido quebra o código que ainda lê o nome velho.
+
+00:06:21.708 --> 00:06:23.380
+E um ponto de segurança.
+
+00:06:23.680 --> 00:06:26.559
+Saída estruturada elimina uma classe de risco.
+
+00:06:26.859 --> 00:06:29.154
+O seu código para de interpretar texto livre
+
+00:06:29.154 --> 00:06:30.928
+que poderia conter qualquer coisa.
+
+00:06:31.228 --> 00:06:33.500
+Mas os valores dos campos ainda vêm
+
+00:06:33.500 --> 00:06:36.226
+de um modelo que leu um documento de fora.
+
+00:06:36.526 --> 00:06:38.746
+Trate como entrada não confiável.
+
+00:06:39.046 --> 00:06:41.095
+Um campo de descrição copiado numa
+
+00:06:41.095 --> 00:06:43.023
+página web pode levar um script.
+
+00:06:43.323 --> 00:06:47.267
+Um campo colado numa consulta ao banco é injeção.
+
+00:06:47.567 --> 00:06:48.896
+Escape antes de exibir,
+
+00:06:48.896 --> 00:06:50.976
+use parâmetros nas consultas e nunca
+
+00:06:50.976 --> 00:06:52.652
+execute um campo como código.
+
+00:06:53.852 --> 00:06:57.385
+Na página, a mesma extração vem em quatro versões.
+
+00:06:57.685 --> 00:07:01.804
+Todas começam igual: uma chamada, com o schema junto,
+
+00:07:01.804 --> 00:07:04.059
+que devolve um objeto tipado.
+
+00:07:04.709 --> 00:07:06.528
+Depois, três checagens no código.
+
+00:07:06.828 --> 00:07:09.588
+Os dígitos verificadores, a data e a soma.
+
+00:07:09.888 --> 00:07:12.159
+O que falha vai para revisão.
+
+00:07:12.459 --> 00:07:14.300
+O resto é gravado.
+
+00:07:14.950 --> 00:07:19.230
+O que muda entre as versões é o provedor e o sistema de tipos.
+
+00:07:19.530 --> 00:07:23.369
+Em Python, uma classe define o schema e o tipo de uma vez.
+
+00:07:23.669 --> 00:07:26.610
+Em TypeScript, um objeto Zod faz o mesmo,
+
+00:07:26.610 --> 00:07:29.049
+e o compilador conhece cada campo.
+
+00:07:29.349 --> 00:07:34.240
+Tem uma versão no SDK da OpenAI com exatamente o mesmo schema.
+
+00:07:34.540 --> 00:07:36.769
+E o LangChain envolve os dois provedores,
+
+00:07:36.769 --> 00:07:40.085
+então as checagens de negócio não mudam quando o modelo muda.
+
+00:07:41.285 --> 00:07:43.084
+Então, a ideia para levar.
+
+00:07:43.384 --> 00:07:45.360
+Não peça um formato ao modelo.
+
+00:07:45.660 --> 00:07:48.672
+Declare, e deixe a API segurar a forma.
+
+00:07:48.972 --> 00:07:50.908
+Depois confira o conteúdo no código,
+
+00:07:50.908 --> 00:07:54.295
+porque um formulário perfeito ainda pode ser preenchido errado.
+
+00:07:54.945 --> 00:07:55.757
+Na próxima aula,
+
+00:07:55.757 --> 00:07:58.293
+a gente usa essa mesma ideia na direção contrária:
+
+00:07:58.293 --> 00:08:00.018
+o modelo preenchendo um formulário
+
+00:08:00.018 --> 00:08:01.945
+que pede para o seu código fazer algo.
+
+00:08:02.245 --> 00:08:04.159
+Ferramentas e function calling.
+
+00:08:04.459 --> 00:08:05.289
+Até lá.
