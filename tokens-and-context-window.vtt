@@ -1,0 +1,403 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.947
+Julia built a chat over her company's internal manuals.
+
+00:00:05.247 --> 00:00:06.316
+There are forty of them.
+
+00:00:06.966 --> 00:00:12.006
+To be safe, her code pastes all forty manuals into every single question.
+
+00:00:12.306 --> 00:00:13.477
+It works.
+
+00:00:13.777 --> 00:00:19.379
+But every answer is slow, and the monthly bill came in ten times over the forecast.
+
+00:00:20.029 --> 00:00:21.286
+And there's something worse.
+
+00:00:21.586 --> 00:00:27.041
+When the answer is in manual twenty-three, the bot sometimes says it found nothing.
+
+00:00:27.691 --> 00:00:33.009
+Two concepts explain both problems: tokens, and the context window.
+
+00:00:33.659 --> 00:00:38.068
+By the end of this lesson, you'll be able to do the math on any design before it
+
+00:00:38.068 --> 00:00:39.115
+reaches production.
+
+00:00:39.415 --> 00:00:42.660
+And you'll know why fitting in the window isn't the same as working.
+
+00:00:43.860 --> 00:00:46.164
+The model doesn't read letters or words.
+
+00:00:46.464 --> 00:00:50.823
+It reads tokens, chunks of text cut by a tokenizer.
+
+00:00:51.123 --> 00:00:54.663
+A common English word is often one token.
+
+00:00:54.963 --> 00:00:58.060
+Long, accented or rare words become several.
+
+00:00:58.710 --> 00:01:00.943
+Tokens matter for three reasons.
+
+00:01:01.243 --> 00:01:06.390
+Price, because you pay for every token going in and every token coming out.
+
+00:01:06.690 --> 00:01:09.465
+And the output usually costs more.
+
+00:01:10.115 --> 00:01:13.817
+Time, because the model writes one token at a time.
+
+00:01:14.117 --> 00:01:16.270
+A long answer is a slow answer.
+
+00:01:16.920 --> 00:01:22.246
+And the limit, because everything going in and out has to fit in one space, the
+
+00:01:22.246 --> 00:01:23.258
+context window.
+
+00:01:23.908 --> 00:01:26.279
+One detail that surprises people.
+
+00:01:26.579 --> 00:01:28.362
+Not all text costs the same.
+
+00:01:28.662 --> 00:01:33.180
+A question in Portuguese often becomes more tokens than the same question in
+
+00:01:33.180 --> 00:01:33.656
+English.
+
+00:01:33.956 --> 00:01:39.561
+Code full of symbols, invoice files, and data with repeated field names swell even
+
+00:01:39.561 --> 00:01:39.903
+more.
+
+00:01:40.203 --> 00:01:44.779
+If your product speaks Portuguese and pastes those files, the estimate you did in
+
+00:01:44.779 --> 00:01:45.739
+your head is low.
+
+00:01:46.939 --> 00:01:51.423
+The context window is the total number of tokens the model sees in one call.
+
+00:01:51.723 --> 00:01:53.485
+Let's look at what's inside it.
+
+00:01:54.135 --> 00:01:56.582
+The system prompt goes into every call.
+
+00:01:56.882 --> 00:02:03.535
+A thousand extra tokens here are a thousand extra tokens on every single message.
+
+00:02:04.185 --> 00:02:09.848
+Each tool you offer takes space too, with its name, its description and its schema.
+
+00:02:10.498 --> 00:02:12.492
+The history grows every turn.
+
+00:02:12.792 --> 00:02:16.156
+The model has no memory, so you resend everything.
+
+00:02:16.806 --> 00:02:20.269
+Documents and tool results are usually the biggest part.
+
+00:02:20.919 --> 00:02:24.276
+The user's question is usually the smallest.
+
+00:02:24.926 --> 00:02:29.090
+And the answer takes room in the window too, with its own separate limit.
+
+00:02:29.740 --> 00:02:32.386
+Those two limits get mixed up all the time.
+
+00:02:32.686 --> 00:02:35.074
+The window is the cap for the whole call.
+
+00:02:35.374 --> 00:02:40.318
+The output limit, called max tokens, is only the cap for the answer.
+
+00:02:40.968 --> 00:02:46.208
+Say the window is two hundred thousand tokens, and you already sent one hundred
+
+00:02:46.208 --> 00:02:48.265
+ninety-eight thousand as input.
+
+00:02:48.565 --> 00:02:53.125
+The answer gets about two thousand, at most, even if your output limit asks for
+
+00:02:53.125 --> 00:02:53.991
+eight thousand.
+
+00:02:54.291 --> 00:02:57.830
+Most APIs reject the call when the total doesn't fit.
+
+00:02:58.130 --> 00:03:03.034
+And some frameworks, to make it fit, quietly drop your oldest messages.
+
+00:03:04.234 --> 00:03:06.873
+Back to Julia, with illustrative numbers.
+
+00:03:07.173 --> 00:03:10.053
+Say each manual is about four thousand tokens.
+
+00:03:10.703 --> 00:03:15.686
+Pasting all forty sends about one hundred sixty thousand input tokens on every
+
+00:03:15.686 --> 00:03:16.261
+question.
+
+00:03:16.561 --> 00:03:19.332
+Her question is a tiny fraction of that.
+
+00:03:19.632 --> 00:03:24.515
+And she pays for all of it on every message, even when the answer lives in three
+
+00:03:24.515 --> 00:03:25.187
+paragraphs.
+
+00:03:25.837 --> 00:03:30.951
+Now retrieve only three relevant passages, five hundred tokens each.
+
+00:03:31.251 --> 00:03:34.696
+That's about two thousand tokens, plus the system prompt.
+
+00:03:34.996 --> 00:03:40.369
+The question competes with far less noise, and the price drops with the size.
+
+00:03:41.019 --> 00:03:42.210
+But that's only the bill.
+
+00:03:42.510 --> 00:03:44.570
+Remember manual twenty-three?
+
+00:03:44.870 --> 00:03:47.385
+Context windows got huge.
+
+00:03:47.685 --> 00:03:50.686
+That doesn't mean the model uses everything in them well.
+
+00:03:51.336 --> 00:03:55.933
+There's a research paper from twenty twenty-three called Lost in the Middle.
+
+00:03:56.233 --> 00:04:00.809
+It showed that models tend to use what sits at the start and the end of the input
+
+00:04:00.809 --> 00:04:02.843
+better than what sits in the middle.
+
+00:04:03.143 --> 00:04:05.550
+Newer models improved on this.
+
+00:04:05.850 --> 00:04:11.224
+But the principle holds: every irrelevant token competes with the relevant ones for
+
+00:04:11.224 --> 00:04:12.648
+the model's attention.
+
+00:04:13.298 --> 00:04:15.993
+That's why Julia's chat failed on manual twenty-three.
+
+00:04:16.293 --> 00:04:18.634
+The information was in the window.
+
+00:04:18.934 --> 00:04:23.306
+It was just drowned among thirty-nine other manuals, right in the middle.
+
+00:04:24.506 --> 00:04:25.979
+Here's one for you.
+
+00:04:26.279 --> 00:04:31.038
+Julia's team upgrades to a model with a much bigger window, two hundred thousand
+
+00:04:31.038 --> 00:04:33.298
+tokens instead of thirty-two thousand.
+
+00:04:33.598 --> 00:04:35.643
+They paste the forty manuals again.
+
+00:04:35.943 --> 00:04:40.311
+The bill stays high, and manual twenty-three still vanishes sometimes.
+
+00:04:40.611 --> 00:04:42.639
+What did the bigger window fix?
+
+00:04:45.689 --> 00:04:47.095
+Neither problem.
+
+00:04:47.395 --> 00:04:50.270
+You still pay for every token you send.
+
+00:04:50.570 --> 00:04:54.108
+And the middle of the input is still at a disadvantage.
+
+00:04:54.408 --> 00:04:57.061
+A bigger window is slack, not a strategy.
+
+00:04:57.361 --> 00:05:01.360
+The fix is to choose passages, not to ask for more room.
+
+00:05:02.560 --> 00:05:06.538
+The beginner trap is treating a big window as a reason not to choose.
+
+00:05:06.838 --> 00:05:09.383
+It fits becomes the only criterion.
+
+00:05:10.033 --> 00:05:11.697
+The right question is different.
+
+00:05:11.997 --> 00:05:16.138
+What needs to be here for this question, and what's only taking up space?
+
+00:05:16.788 --> 00:05:19.446
+Here's a version you'll meet in real life.
+
+00:05:19.746 --> 00:05:23.711
+On turn one, someone pastes a twenty page document into the chat.
+
+00:05:24.011 --> 00:05:27.791
+On turn fifteen, they ask for the store's address.
+
+00:05:28.091 --> 00:05:33.682
+And your code is still resending that document, on every turn, twelve turns after
+
+00:05:33.682 --> 00:05:34.856
+anyone needed it.
+
+00:05:35.156 --> 00:05:37.358
+History isn't a mandatory archive.
+
+00:05:37.658 --> 00:05:41.585
+Send what the question needs, and summarize or drop the rest.
+
+00:05:42.785 --> 00:05:45.776
+Now the habit that saves you from surprises.
+
+00:05:46.076 --> 00:05:48.206
+Count tokens before you send.
+
+00:05:48.506 --> 00:05:53.598
+The provider's API has an endpoint just for that, which generates no answer and uses
+
+00:05:53.598 --> 00:05:55.538
+the same tokenizer as the model.
+
+00:05:56.188 --> 00:05:57.747
+Then do the monthly math.
+
+00:05:58.047 --> 00:06:02.743
+Input tokens, times messages per day, times thirty.
+
+00:06:03.043 --> 00:06:04.526
+Add the average output.
+
+00:06:04.826 --> 00:06:08.022
+Multiply by the model's price per million tokens.
+
+00:06:08.322 --> 00:06:10.264
+That number tends to be scary.
+
+00:06:10.564 --> 00:06:13.516
+And it's much better to be scared before production.
+
+00:06:14.166 --> 00:06:15.678
+Let's do one together.
+
+00:06:15.978 --> 00:06:21.442
+You measured eight thousand input tokens per question, ten thousand questions a day.
+
+00:06:21.742 --> 00:06:27.480
+The team wants to just add the vacation policy, another six thousand tokens, on
+
+00:06:27.480 --> 00:06:28.279
+every call.
+
+00:06:28.929 --> 00:06:32.273
+Before, that's eighty million input tokens a day.
+
+00:06:32.923 --> 00:06:35.888
+After, one hundred forty million.
+
+00:06:36.188 --> 00:06:40.789
+Your daily input nearly doubles, and the policy rides along on questions that have
+
+00:06:40.789 --> 00:06:42.361
+nothing to do with vacation.
+
+00:06:43.011 --> 00:06:45.959
+And don't estimate by dividing characters by four.
+
+00:06:46.259 --> 00:06:49.407
+That rule sometimes works for plain English.
+
+00:06:49.707 --> 00:06:53.820
+For Portuguese, code and structured data, it undercounts.
+
+00:06:54.120 --> 00:06:57.506
+Measure a few real examples with the provider's counter.
+
+00:06:58.706 --> 00:07:00.820
+So what changes in your designs?
+
+00:07:01.120 --> 00:07:04.356
+Sending less and better beats sending everything.
+
+00:07:04.656 --> 00:07:08.484
+That's what retrieval does, instead of pasting whole manuals.
+
+00:07:09.134 --> 00:07:11.353
+The system prompt needs a diet.
+
+00:07:11.653 --> 00:07:15.317
+When it grows unchecked, it becomes a smell called prompt bloat.
+
+00:07:15.967 --> 00:07:18.288
+Long conversations rot.
+
+00:07:18.588 --> 00:07:21.862
+Old history confuses the model and raises the cost.
+
+00:07:22.162 --> 00:07:24.456
+That one's called context rot.
+
+00:07:25.106 --> 00:07:30.704
+And the fixed parts at the start of the input can be reused across calls with prompt
+
+00:07:30.704 --> 00:07:33.504
+caching, which cuts both cost and latency.
+
+00:07:33.804 --> 00:07:38.743
+Just don't use caching as an excuse to paste a whole file the question doesn't need.
+
+00:07:39.943 --> 00:07:42.237
+So here's the idea to keep.
+
+00:07:42.537 --> 00:07:45.570
+The window is a budget, not a storage room.
+
+00:07:45.870 --> 00:07:50.582
+Every token you put there costs money, costs time, and competes for attention.
+
+00:07:50.882 --> 00:07:54.736
+Token math is the first thing to do in any design.
+
+00:07:55.386 --> 00:08:00.075
+In the next lesson, we'll open up that dice roll inside the model: sampling and
+
+00:08:00.075 --> 00:08:02.567
+temperature, and what they really control.
+
+00:08:02.867 --> 00:08:03.697
+See you there.
