@@ -1,0 +1,711 @@
+1
+00:00:01,600 --> 00:00:03,794
+Uma agência montou um time virtual
+
+2
+00:00:03,794 --> 00:00:06,117
+para produzir relatórios de mercado.
+
+3
+00:00:06,417 --> 00:00:07,408
+Cinco agentes.
+
+4
+00:00:07,708 --> 00:00:12,024
+Um pesquisador sênior, um analista de dados, um redator,
+
+5
+00:00:12,024 --> 00:00:14,259
+um revisor e um editor-chefe.
+
+6
+00:00:14,909 --> 00:00:16,833
+Olhe a configuração.
+
+7
+00:00:17,133 --> 00:00:20,004
+Só o pesquisador tem uma ferramenta, a busca na web.
+
+8
+00:00:20,654 --> 00:00:21,973
+Todos os outros não têm nenhuma.
+
+9
+00:00:22,273 --> 00:00:25,090
+E o fluxo é sempre a mesma sequência.
+
+10
+00:00:25,740 --> 00:00:27,491
+O trace mostra o que acontece.
+
+11
+00:00:27,791 --> 00:00:31,096
+O pesquisador faz as buscas e escreve um resumo.
+
+12
+00:00:31,396 --> 00:00:34,655
+O analista reescreve o resumo com outras palavras.
+
+13
+00:00:34,955 --> 00:00:37,150
+O redator transforma em relatório.
+
+14
+00:00:37,450 --> 00:00:39,920
+O revisor muda algumas frases.
+
+15
+00:00:40,220 --> 00:00:42,625
+E o editor responde: aprovado.
+
+16
+00:00:42,925 --> 00:00:47,219
+Cinco chamadas grandes, cada uma relendo o texto da anterior.
+
+17
+00:00:47,519 --> 00:00:49,672
+Um agente só, com a ferramenta de busca,
+
+18
+00:00:49,672 --> 00:00:51,072
+entrega o mesmo relatório.
+
+19
+00:00:51,372 --> 00:00:52,080
+Nesta aula,
+
+20
+00:00:52,080 --> 00:00:54,462
+você vai aprender a separar decoração
+
+21
+00:00:54,462 --> 00:00:56,264
+de divisão real de trabalho.
+
+22
+00:00:57,464 --> 00:00:58,543
+O formato é este.
+
+23
+00:00:58,843 --> 00:01:01,995
+O único agente com ferramenta faz o trabalho de verdade.
+
+24
+00:01:02,645 --> 00:01:06,770
+Os outros leem o texto inteiro e devolvem uma versão parecida.
+
+25
+00:01:07,420 --> 00:01:10,183
+E o resultado custa cinco vezes mais
+
+26
+00:01:10,183 --> 00:01:12,486
+e leva cinco vezes mais tempo.
+
+27
+00:01:13,136 --> 00:01:14,125
+Como identificar?
+
+28
+00:01:14,425 --> 00:01:18,107
+Os agentes têm cargos humanos, como pesquisador,
+
+29
+00:01:18,107 --> 00:01:22,555
+analista ou gerente, em vez de responsabilidades técnicas.
+
+30
+00:01:23,205 --> 00:01:25,263
+Só um ou dois agentes têm ferramentas.
+
+31
+00:01:25,563 --> 00:01:28,106
+Os outros só leem e reescrevem.
+
+32
+00:01:28,756 --> 00:01:31,145
+O fluxo é sempre a mesma sequência,
+
+33
+00:01:31,145 --> 00:01:33,329
+sem decisão sobre quem trabalha.
+
+34
+00:01:33,979 --> 00:01:36,994
+Cada agente recebe o texto inteiro do anterior
+
+35
+00:01:36,994 --> 00:01:38,830
+e devolve um texto parecido.
+
+36
+00:01:39,480 --> 00:01:43,009
+E tirar um agente não muda a qualidade no eval.
+
+37
+00:01:43,309 --> 00:01:46,566
+Enquanto o custo é várias vezes o de uma chamada.
+
+38
+00:01:47,766 --> 00:01:50,278
+O jeito honesto de enxergar esse smell
+
+39
+00:01:50,278 --> 00:01:51,997
+é tirar um agente e medir.
+
+40
+00:01:52,297 --> 00:01:55,633
+Digamos que o eval da agência tem quarenta relatórios,
+
+41
+00:01:55,633 --> 00:01:56,498
+e uma rubrica.
+
+42
+00:01:56,798 --> 00:01:59,851
+Afirmações com fonte, números que batem com a página,
+
+43
+00:01:59,851 --> 00:02:01,118
+a estrutura combinada.
+
+44
+00:02:01,768 --> 00:02:04,852
+Você desliga o revisor e o editor-chefe.
+
+45
+00:02:05,152 --> 00:02:06,462
+A nota não se mexe.
+
+46
+00:02:07,112 --> 00:02:08,711
+Você desliga o analista.
+
+47
+00:02:09,011 --> 00:02:11,943
+O redator trabalha direto do resumo do pesquisador,
+
+48
+00:02:11,943 --> 00:02:13,322
+e a nota continua igual.
+
+49
+00:02:13,972 --> 00:02:16,914
+Sobra um agente que pesquisa e escreve.
+
+50
+00:02:17,214 --> 00:02:19,151
+Os outros quatro eram cargos.
+
+51
+00:02:19,801 --> 00:02:21,871
+E se a nota cai quando você tira alguém,
+
+52
+00:02:21,871 --> 00:02:24,199
+aquela divisão está pagando por alguma coisa.
+
+53
+00:02:24,499 --> 00:02:27,588
+Aí você dá nome ao motivo técnico, e mantém só aquilo.
+
+54
+00:02:28,788 --> 00:02:29,931
+Uma pergunta para você.
+
+55
+00:02:30,231 --> 00:02:33,046
+Você desliga o revisor e o editor-chefe
+
+56
+00:02:33,046 --> 00:02:35,356
+num eval de quarenta relatórios.
+
+57
+00:02:35,656 --> 00:02:38,003
+A nota da rubrica não muda.
+
+58
+00:02:38,303 --> 00:02:40,494
+Qual é o diagnóstico mais útil?
+
+59
+00:02:43,544 --> 00:02:45,836
+Esses dois papéis são decorativos.
+
+60
+00:02:46,136 --> 00:02:49,792
+Eles releem e reescrevem, sem trabalho novo nenhum.
+
+61
+00:02:50,092 --> 00:02:51,920
+Juntar é o próximo passo.
+
+62
+00:02:52,220 --> 00:02:54,532
+Não reforçar o cargo.
+
+63
+00:02:55,182 --> 00:02:59,099
+Um modelo maior no revisor, sem critério próprio,
+
+64
+00:02:59,099 --> 00:03:01,577
+só deixa a reescrita mais cara.
+
+65
+00:03:01,877 --> 00:03:04,078
+E acrescentar um sexto agente, um auditor,
+
+66
+00:03:04,078 --> 00:03:07,275
+para pegar o que o revisor deixa passar, seria o mesmo smell,
+
+67
+00:03:07,275 --> 00:03:08,271
+com um crachá novo.
+
+68
+00:03:09,471 --> 00:03:11,223
+A metáfora é atraente.
+
+69
+00:03:11,523 --> 00:03:14,100
+Um time de agentes é fácil de explicar
+
+70
+00:03:14,100 --> 00:03:16,271
+e fica bonito numa apresentação.
+
+71
+00:03:16,571 --> 00:03:20,512
+Um loop com duas ferramentas e uma rubrica no código, bem menos.
+
+72
+00:03:21,162 --> 00:03:22,514
+Os frameworks incentivam.
+
+73
+00:03:22,814 --> 00:03:25,950
+Muitos tutoriais começam com papéis e objetivos
+
+74
+00:03:25,950 --> 00:03:27,819
+escritos em linguagem de RH.
+
+75
+00:03:28,119 --> 00:03:31,083
+Você copia o exemplo, troca os nomes,
+
+76
+00:03:31,083 --> 00:03:34,207
+e numa tarde tem cinco agentes rodando.
+
+77
+00:03:34,507 --> 00:03:35,626
+A demo conversa.
+
+78
+00:03:35,926 --> 00:03:37,576
+O custo aparece no mês seguinte.
+
+79
+00:03:38,226 --> 00:03:41,162
+Dividir por cargo humano, não por contexto.
+
+80
+00:03:41,462 --> 00:03:44,132
+Numa empresa, dividir por cargo faz sentido,
+
+81
+00:03:44,132 --> 00:03:47,287
+porque pessoas têm memória, horário e especialidade.
+
+82
+00:03:47,587 --> 00:03:50,449
+Para um modelo, os motivos para dividir são outros.
+
+83
+00:03:50,749 --> 00:03:53,452
+A janela de contexto, a permissão de ferramentas,
+
+84
+00:03:53,452 --> 00:03:56,321
+a revisão que não pode ver o raciocínio de quem fez,
+
+85
+00:03:56,321 --> 00:03:58,417
+e trabalho que pode rodar em paralelo.
+
+86
+00:03:59,067 --> 00:04:00,377
+E sem eval.
+
+87
+00:04:00,677 --> 00:04:01,370
+Sem medir,
+
+88
+00:04:01,370 --> 00:04:05,392
+ninguém percebe que três dos cinco agentes não mudam nada.
+
+89
+00:04:05,692 --> 00:04:09,319
+O revisor melhorou o tom é uma impressão.
+
+90
+00:04:09,619 --> 00:04:12,957
+A rubrica diz se melhorou o que importa.
+
+91
+00:04:14,157 --> 00:04:14,952
+O custo.
+
+92
+00:04:15,252 --> 00:04:17,734
+Cada agente relê o trabalho anterior,
+
+93
+00:04:17,734 --> 00:04:20,685
+então o custo cresce com o número de cargos,
+
+94
+00:04:20,685 --> 00:04:22,362
+não com o valor entregue.
+
+95
+00:04:22,662 --> 00:04:24,064
+Com números ilustrativos,
+
+96
+00:04:24,064 --> 00:04:27,262
+a primeira chamada começa com três mil tokens de entrada.
+
+97
+00:04:27,562 --> 00:04:31,231
+Cada cargo seguinte recebe o texto inteiro do anterior.
+
+98
+00:04:31,531 --> 00:04:34,485
+Cinco, sete, nove, onze mil.
+
+99
+00:04:34,785 --> 00:04:37,449
+Você paga o mesmo texto várias vezes,
+
+100
+00:04:37,449 --> 00:04:40,688
+e o que o extra compra são quatro reescritas.
+
+101
+00:04:40,988 --> 00:04:43,637
+O cache de prompt barateia o começo repetido.
+
+102
+00:04:43,937 --> 00:04:46,336
+Não apaga as quatro chamadas a mais.
+
+103
+00:04:46,986 --> 00:04:50,912
+E a latência também se soma, porque os cargos rodam em fila.
+
+104
+00:04:51,212 --> 00:04:54,380
+A qualidade pode piorar, como num telefone sem fio.
+
+105
+00:04:54,680 --> 00:04:57,731
+Um número certo no resumo do pesquisador
+
+106
+00:04:57,731 --> 00:05:00,629
+vira outro número no texto do redator.
+
+107
+00:05:00,929 --> 00:05:03,059
+E quando o relatório sai errado,
+
+108
+00:05:03,059 --> 00:05:05,321
+são cinco prompts para investigar,
+
+109
+00:05:05,321 --> 00:05:08,316
+e ninguém sabe em qual passagem o fato mudou.
+
+110
+00:05:09,516 --> 00:05:12,815
+O tratamento é uma refatoração chamada collapse agents.
+
+111
+00:05:13,115 --> 00:05:16,751
+Junte os agentes que só passam texto adiante num agente só,
+
+112
+00:05:16,751 --> 00:05:18,354
+com as ferramentas certas.
+
+113
+00:05:18,654 --> 00:05:21,906
+E mantenha separado só o que tem motivo técnico.
+
+114
+00:05:22,206 --> 00:05:23,904
+Esses motivos existem.
+
+115
+00:05:24,554 --> 00:05:26,246
+Isolamento de contexto.
+
+116
+00:05:26,546 --> 00:05:29,169
+Quem lê quarenta páginas não deveria escrever
+
+117
+00:05:29,169 --> 00:05:31,093
+o relatório nesse mesmo contexto.
+
+118
+00:05:31,743 --> 00:05:33,110
+Ferramentas restritas.
+
+119
+00:05:33,410 --> 00:05:35,757
+Quem resume o site de um lead não deveria
+
+120
+00:05:35,757 --> 00:05:37,704
+ter a ferramenta de mandar e-mail.
+
+121
+00:05:38,354 --> 00:05:39,516
+Revisão independente.
+
+122
+00:05:39,816 --> 00:05:42,998
+Quem dá nota não vê o raciocínio de quem escreveu,
+
+123
+00:05:42,998 --> 00:05:44,397
+e o eval mostra ganho.
+
+124
+00:05:45,047 --> 00:05:46,273
+E paralelismo,
+
+125
+00:05:46,273 --> 00:05:51,003
+como vinte repositórios explorados em vinte contextos.
+
+126
+00:05:51,653 --> 00:05:52,342
+Checagem rápida.
+
+127
+00:05:52,642 --> 00:05:55,361
+O eval mostra que juntar o leitor de páginas
+
+128
+00:05:55,361 --> 00:05:57,214
+com o redator piora a rubrica.
+
+129
+00:05:57,514 --> 00:06:01,971
+O contexto enche de páginas, e o relatório perde as fontes.
+
+130
+00:06:02,271 --> 00:06:05,713
+O time ainda quer os cinco cargos da apresentação.
+
+131
+00:06:06,013 --> 00:06:07,802
+Qual é o próximo passo mais útil?
+
+132
+00:06:08,102 --> 00:06:13,054
+Manter só a divisão medida, leitor e redator, e juntar o resto.
+
+133
+00:06:13,354 --> 00:06:17,101
+O eval provou um motivo técnico entre dois papéis.
+
+134
+00:06:17,401 --> 00:06:19,092
+Isolamento de contexto.
+
+135
+00:06:19,392 --> 00:06:20,807
+Não cinco cargos.
+
+136
+00:06:21,457 --> 00:06:24,337
+E a armadilha clássica de quem está começando.
+
+137
+00:06:24,637 --> 00:06:28,397
+Colocar um revisor, porque um time humano sempre tem um.
+
+138
+00:06:28,697 --> 00:06:33,395
+Sem rubrica e sem eval, esse revisor aprende a dizer aprovado.
+
+139
+00:06:33,695 --> 00:06:34,967
+Você pagou por um carimbo.
+
+140
+00:06:35,267 --> 00:06:38,346
+E se a sequência de passos é sempre fixa, buscar,
+
+141
+00:06:38,346 --> 00:06:40,419
+depois escrever, depois formatar,
+
+142
+00:06:40,419 --> 00:06:42,556
+talvez você nem precise de agente.
+
+143
+00:06:42,856 --> 00:06:45,360
+Uma chain, com código no meio, resolve,
+
+144
+00:06:45,360 --> 00:06:47,222
+e cada passo tem um contrato.
+
+145
+00:06:48,422 --> 00:06:49,908
+Quatro casos rápidos.
+
+146
+00:06:50,208 --> 00:06:52,587
+Um pipeline com um agente que pesquisa
+
+147
+00:06:52,587 --> 00:06:55,405
+e um segundo que escreve a partir das fontes,
+
+148
+00:06:55,405 --> 00:06:56,406
+sem ferramentas.
+
+149
+00:06:56,706 --> 00:07:00,028
+E o eval mostra que juntar piora a qualidade.
+
+150
+00:07:00,328 --> 00:07:01,355
+Não é esse smell.
+
+151
+00:07:01,655 --> 00:07:04,291
+A divisão tem um motivo técnico medido.
+
+152
+00:07:04,941 --> 00:07:06,922
+Três agentes debatem em rodadas.
+
+153
+00:07:07,222 --> 00:07:10,490
+O otimista, o pessimista e o moderador.
+
+154
+00:07:10,790 --> 00:07:12,352
+Sem critério, sem eval,
+
+155
+00:07:12,352 --> 00:07:16,088
+e a resposta final costuma ser a primeira do moderador.
+
+156
+00:07:16,388 --> 00:07:17,677
+Isso é esse smell.
+
+157
+00:07:17,977 --> 00:07:20,710
+Um debate só se justifica com um juiz,
+
+158
+00:07:20,710 --> 00:07:24,162
+um critério escrito e um eval mostrando melhora.
+
+159
+00:07:24,812 --> 00:07:28,064
+Um agente principal manda vinte subagentes explorarem
+
+160
+00:07:28,064 --> 00:07:31,132
+vinte repositórios diferentes em paralelo e recebe
+
+161
+00:07:31,132 --> 00:07:33,095
+um resumo de uma página de cada.
+
+162
+00:07:33,395 --> 00:07:34,422
+Não é esse smell.
+
+163
+00:07:34,722 --> 00:07:38,436
+Isso é trabalho real e independente, em contextos separados.
+
+164
+00:07:39,086 --> 00:07:40,290
+E depois de juntar,
+
+165
+00:07:40,290 --> 00:07:43,648
+você acrescenta um avaliador com uma rubrica escrita,
+
+166
+00:07:43,648 --> 00:07:46,372
+que só vê o relatório final, e a nota sobe.
+
+167
+00:07:46,672 --> 00:07:48,084
+Também não é esse smell.
+
+168
+00:07:48,384 --> 00:07:51,239
+Isso é revisão independente, com ganho medido.
+
+169
+00:07:52,439 --> 00:07:54,643
+Então, a ideia para levar.
+
+170
+00:07:54,943 --> 00:07:56,761
+Um modelo não precisa de organograma.
+
+171
+00:07:57,061 --> 00:07:59,804
+Ele precisa das ferramentas certas e de um contexto limpo.
+
+172
+00:08:00,104 --> 00:08:01,886
+Tire cada agente e meça.
+
+173
+00:08:02,186 --> 00:08:04,859
+Mantenha só as divisões que mexem na nota,
+
+174
+00:08:04,859 --> 00:08:07,341
+dê nome ao motivo técnico delas e junte
+
+175
+00:08:07,341 --> 00:08:09,760
+o resto num agente que faz o trabalho.
+
+176
+00:08:10,410 --> 00:08:13,950
+Na próxima aula, a gente faz essa junção passo a passo:
+
+177
+00:08:13,950 --> 00:08:14,980
+collapse agents.
+
+178
+00:08:15,280 --> 00:08:16,151
+Até lá.
