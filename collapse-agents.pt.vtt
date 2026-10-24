@@ -1,0 +1,529 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.079
+Um time monta um gerador de relatórios
+
+00:00:04.079 --> 00:00:05.971
+de mercado com cinco agentes.
+
+00:00:06.271 --> 00:00:10.580
+Um pesquisador sênior, um analista de dados, um redator,
+
+00:00:10.580 --> 00:00:12.812
+um revisor e um editor-chefe.
+
+00:00:13.112 --> 00:00:16.070
+Na demo, o diagrama impressiona.
+
+00:00:16.720 --> 00:00:19.892
+Em produção, só o pesquisador tem ferramenta.
+
+00:00:20.192 --> 00:00:24.002
+Os outros quatro recebem texto, reescrevem e passam adiante.
+
+00:00:24.302 --> 00:00:26.602
+O relatório leva vários minutos,
+
+00:00:26.602 --> 00:00:28.974
+custa várias vezes o que deveria,
+
+00:00:28.974 --> 00:00:32.568
+e às vezes chega com um número diferente da fonte.
+
+00:00:32.868 --> 00:00:36.497
+Ninguém sabe em qual das cinco passagens ele mudou.
+
+00:00:36.797 --> 00:00:40.183
+Você conheceu esse smell na aula passada.
+
+00:00:40.483 --> 00:00:45.150
+Hoje você vai juntar tudo, sem perder o que era útil de verdade.
+
+00:00:46.350 --> 00:00:49.146
+Junte os agentes que não têm motivo técnico
+
+00:00:49.146 --> 00:00:51.421
+para ficar separados num agente só,
+
+00:00:51.421 --> 00:00:55.388
+com as ferramentas certas, e um prompt que descreve a tarefa,
+
+00:00:55.388 --> 00:00:56.298
+não os cargos.
+
+00:00:56.598 --> 00:00:59.466
+E mantenha separado só o que isola contexto,
+
+00:00:59.466 --> 00:01:02.073
+restringe ferramentas ou faz uma revisão
+
+00:01:02.073 --> 00:01:03.897
+independente que foi medida.
+
+00:01:05.097 --> 00:01:07.388
+Antes, cinco cargos em fila.
+
+00:01:07.688 --> 00:01:09.676
+Quatro deles reescrevendo texto.
+
+00:01:10.326 --> 00:01:13.375
+Depois, o pedido chega a um agente só.
+
+00:01:13.675 --> 00:01:17.807
+E o prompt dele descreve a tarefa e o formato de saída.
+
+00:01:18.107 --> 00:01:19.241
+Não personagens.
+
+00:01:19.891 --> 00:01:22.792
+O agente pesquisa quantas vezes precisar,
+
+00:01:22.792 --> 00:01:24.986
+com busca e leitura de páginas.
+
+00:01:25.636 --> 00:01:28.774
+E a revisão que importava, toda afirmação tem fonte,
+
+00:01:28.774 --> 00:01:30.525
+virou uma checagem no código.
+
+00:01:31.175 --> 00:01:33.812
+O relatório sai com uma fração das chamadas.
+
+00:01:35.012 --> 00:01:38.816
+Vamos seguir um número pelas cinco passagens do desenho antigo.
+
+00:01:39.116 --> 00:01:41.535
+Os nomes e números são hipotéticos.
+
+00:01:42.185 --> 00:01:44.303
+O pesquisador acha, numa página:
+
+00:01:44.303 --> 00:01:47.545
+o mercado de pagamento por aproximação movimentou
+
+00:01:47.545 --> 00:01:50.986
+um vírgula vinte e quatro bilhão de dólares em 2025,
+
+00:01:50.986 --> 00:01:52.508
+segundo a associação X.
+
+00:01:53.158 --> 00:01:56.396
+O analista escreve: cerca de um vírgula dois bilhão,
+
+00:01:56.396 --> 00:01:57.330
+no ano passado.
+
+00:01:57.980 --> 00:02:00.711
+O redator: mais de um bilhão de dólares por ano.
+
+00:02:01.361 --> 00:02:04.531
+O revisor mantém, com uma redação melhorada.
+
+00:02:05.181 --> 00:02:08.524
+E o editor: movimenta bilhões todo ano.
+
+00:02:09.174 --> 00:02:11.611
+Nenhum agente errou de propósito.
+
+00:02:11.911 --> 00:02:15.823
+Cada um resumiu um pouco e jogou fora o que parecia detalhe.
+
+00:02:16.123 --> 00:02:18.952
+Somadas, as passagens perderam a fonte,
+
+00:02:18.952 --> 00:02:20.983
+o ano e a ordem de grandeza.
+
+00:02:21.283 --> 00:02:24.087
+E cada agente do meio leu o texto anterior
+
+00:02:24.087 --> 00:02:26.423
+inteiro e escreveu de novo inteiro.
+
+00:02:26.723 --> 00:02:29.790
+Quatro leituras e quatro reescritas do mesmo conteúdo,
+
+00:02:29.790 --> 00:02:32.061
+para chegar a um texto que o pesquisador
+
+00:02:32.061 --> 00:02:33.878
+já tinha os dados para escrever.
+
+00:02:34.178 --> 00:02:37.719
+No desenho novo, o agente escreve o relatório uma vez,
+
+00:02:37.719 --> 00:02:40.277
+com as fontes ali, no próprio contexto.
+
+00:02:41.477 --> 00:02:42.601
+Uma pergunta para você.
+
+00:02:42.901 --> 00:02:46.360
+No sistema antigo, o relatório final dizia bilhões todo ano,
+
+00:02:46.360 --> 00:02:49.358
+onde a fonte dizia um vírgula vinte e quatro bilhão.
+
+00:02:49.658 --> 00:02:51.177
+Qual é a causa mais provável?
+
+00:02:54.227 --> 00:02:57.094
+Cada passagem em texto livre resumiu um pouco,
+
+00:02:57.094 --> 00:02:59.836
+e a precisão foi se perdendo, passo a passo.
+
+00:03:00.136 --> 00:03:03.688
+Cada agente reescreve sem ver a fonte original,
+
+00:03:03.688 --> 00:03:05.955
+e as perdas pequenas se somam.
+
+00:03:06.255 --> 00:03:08.514
+Não foi o editor alucinando.
+
+00:03:08.814 --> 00:03:13.163
+O editor só recebeu um texto que já dizia mais de um bilhão.
+
+00:03:13.463 --> 00:03:16.141
+E um sexto agente para conferir os números
+
+00:03:16.141 --> 00:03:17.862
+seria só mais uma passagem,
+
+00:03:17.862 --> 00:03:19.009
+com a mesma perda.
+
+00:03:19.309 --> 00:03:21.812
+A checagem que funciona mora no código,
+
+00:03:21.812 --> 00:03:23.481
+contra a fonte registrada.
+
+00:03:24.681 --> 00:03:28.806
+Para um modelo, dividir em agentes só ajuda por motivo técnico.
+
+00:03:29.106 --> 00:03:32.120
+Quando os agentes dividem tudo e só reescrevem,
+
+00:03:32.120 --> 00:03:34.621
+cada passagem custa uma leitura inteira
+
+00:03:34.621 --> 00:03:36.289
+e arrisca perder detalhes.
+
+00:03:36.589 --> 00:03:37.585
+Quando você junta,
+
+00:03:37.585 --> 00:03:39.854
+o modelo faz numa sequência de raciocínio
+
+00:03:39.854 --> 00:03:41.847
+o que antes fazia em cinco chamadas,
+
+00:03:41.847 --> 00:03:45.112
+sem reler o próprio trabalho como se fosse de outra pessoa.
+
+00:03:45.412 --> 00:03:47.711
+E o que antes era revisão muitas vezes
+
+00:03:47.711 --> 00:03:49.404
+era um critério verificável,
+
+00:03:49.404 --> 00:03:51.219
+que funciona melhor no código.
+
+00:03:51.869 --> 00:03:53.809
+Mas dividir nem sempre é errado.
+
+00:03:54.109 --> 00:03:58.394
+Quando vários subagentes pesquisam perguntas amplas em paralelo,
+
+00:03:58.394 --> 00:04:01.006
+cada um lendo muito material no próprio
+
+00:04:01.006 --> 00:04:03.483
+contexto e devolvendo só o essencial,
+
+00:04:03.483 --> 00:04:04.823
+isso pode compensar.
+
+00:04:05.123 --> 00:04:07.289
+Mesmo com uma conta de tokens bem maior.
+
+00:04:07.939 --> 00:04:10.758
+E quando todos trabalham sobre o mesmo material,
+
+00:04:10.758 --> 00:04:11.932
+como o mesmo código,
+
+00:04:11.932 --> 00:04:14.457
+agentes que não veem o contexto um do outro
+
+00:04:14.457 --> 00:04:16.453
+tomam decisões que se contradizem.
+
+00:04:16.753 --> 00:04:18.138
+Então a regra é simples.
+
+00:04:18.438 --> 00:04:21.294
+Divida quando há leitura pesada e independente,
+
+00:04:21.294 --> 00:04:24.088
+uma ferramenta sensível ou uma revisão medida.
+
+00:04:24.388 --> 00:04:27.723
+Junte quando todos trabalham sobre o mesmo material.
+
+00:04:28.923 --> 00:04:30.475
+Agora, o passo a passo.
+
+00:04:30.775 --> 00:04:32.635
+Passo zero, medir.
+
+00:04:32.935 --> 00:04:35.144
+Rode o eval no sistema atual.
+
+00:04:35.444 --> 00:04:38.219
+Qualidade, custo por tarefa, latência.
+
+00:04:38.519 --> 00:04:41.166
+E guarde a saída de cada agente do meio.
+
+00:04:41.816 --> 00:04:44.587
+Compare a entrada e a saída de cada agente.
+
+00:04:44.887 --> 00:04:47.664
+Se a saída é quase igual à entrada,
+
+00:04:47.664 --> 00:04:50.123
+esse agente é candidato a sair.
+
+00:04:50.773 --> 00:04:53.989
+Tente tirar um de cada vez e rode o eval.
+
+00:04:54.289 --> 00:04:57.887
+Os que, tirados, não mudam a qualidade, saem.
+
+00:04:58.537 --> 00:05:01.858
+Escreva o prompt do agente único, com a tarefa,
+
+00:05:01.858 --> 00:05:06.310
+o formato e as regras úteis que os cargos removidos carregavam.
+
+00:05:06.960 --> 00:05:09.935
+E transforme as revisões verificáveis em código.
+
+00:05:10.235 --> 00:05:13.430
+Fontes, formato, tamanho, termos proibidos.
+
+00:05:13.730 --> 00:05:16.599
+Depois mantenha separado só o que tem motivo,
+
+00:05:16.599 --> 00:05:19.597
+dê um orçamento ao agente único e meça de novo.
+
+00:05:19.897 --> 00:05:23.534
+Qualidade igual ou melhor, custo e latência menores.
+
+00:05:24.734 --> 00:05:26.293
+Agora, o erro comum.
+
+00:05:26.593 --> 00:05:29.165
+Jogar as regras fora junto com os cargos.
+
+00:05:29.465 --> 00:05:33.340
+O prompt do revisor às vezes tinha uma regra que vale guardar,
+
+00:05:33.340 --> 00:05:35.653
+enterrada entre linhas de personagem.
+
+00:05:35.953 --> 00:05:38.735
+Nunca cite dado com mais de dois anos.
+
+00:05:39.385 --> 00:05:44.225
+Digamos que no eval essa regra pegou problema em 6% dos casos.
+
+00:05:44.525 --> 00:05:45.956
+O que fazer com ela?
+
+00:05:46.256 --> 00:05:48.822
+Não manter o revisor como um agente inteiro.
+
+00:05:49.122 --> 00:05:51.507
+Uma data se confere sem modelo.
+
+00:05:51.807 --> 00:05:53.257
+E também não descartar,
+
+00:05:53.257 --> 00:05:56.850
+torcendo para o agente único buscar dado recente sozinho.
+
+00:05:57.150 --> 00:06:00.672
+Transforme numa checagem no código sobre a data de cada fonte,
+
+00:06:00.672 --> 00:06:02.093
+e diga a regra no prompt,
+
+00:06:02.093 --> 00:06:05.161
+para o agente procurar fontes recentes desde o começo.
+
+00:06:05.811 --> 00:06:07.840
+Então, antes de tirar cada cargo,
+
+00:06:07.840 --> 00:06:10.669
+copie as instruções concretas dele numa lista.
+
+00:06:10.969 --> 00:06:12.575
+Descarte as de personagem,
+
+00:06:12.575 --> 00:06:16.405
+como você é um revisor exigente com vinte anos de experiência.
+
+00:06:16.705 --> 00:06:21.136
+E leve as verificáveis para o prompt, ou para o código.
+
+00:06:21.786 --> 00:06:22.627
+Os riscos.
+
+00:06:22.927 --> 00:06:24.238
+Estouro de contexto.
+
+00:06:24.538 --> 00:06:27.629
+Se um dos agentes isolava uma leitura pesada,
+
+00:06:27.629 --> 00:06:29.278
+juntar enche o contexto.
+
+00:06:29.578 --> 00:06:31.579
+Mantenha esse como subagente.
+
+00:06:32.229 --> 00:06:34.177
+Perder uma revisão que importava.
+
+00:06:34.477 --> 00:06:37.738
+Digamos que você tirou o analista e o eval não mudou.
+
+00:06:38.038 --> 00:06:42.444
+Depois tirou o revisor, e a nota caiu nos casos com tabela.
+
+00:06:42.744 --> 00:06:43.948
+Não coloque os dois de volta.
+
+00:06:44.248 --> 00:06:45.919
+O analista pode sair.
+
+00:06:46.219 --> 00:06:48.570
+Descubra o que o revisor corrigia nas tabelas
+
+00:06:48.570 --> 00:06:50.608
+e escolha a casa mais barata para isso.
+
+00:06:50.908 --> 00:06:54.488
+Uma regra, uma checagem no código, ou um avaliador separado.
+
+00:06:55.138 --> 00:06:57.641
+Juntar e criar um mega agente.
+
+00:06:57.941 --> 00:06:58.827
+Se, ao juntar,
+
+00:06:58.827 --> 00:07:01.928
+você também dá ao agente as ferramentas de mandar
+
+00:07:01.928 --> 00:07:04.396
+e-mail para cliente e publicar no site,
+
+00:07:04.396 --> 00:07:06.041
+você criou o smell oposto.
+
+00:07:06.341 --> 00:07:08.405
+Junte só o que é decorativo.
+
+00:07:08.705 --> 00:07:11.569
+Ferramentas com efeito colateral continuam com escopo próprio,
+
+00:07:11.569 --> 00:07:12.308
+e com aprovação.
+
+00:07:12.958 --> 00:07:15.126
+E a resistência de quem desenhou.
+
+00:07:15.426 --> 00:07:19.542
+Cinco agentes com cargo parecem mais sofisticados num slide.
+
+00:07:19.842 --> 00:07:21.580
+Leve a comparação do eval.
+
+00:07:21.880 --> 00:07:24.675
+Mesma qualidade, menos chamadas, menos tempo.
+
+00:07:25.875 --> 00:07:26.831
+Vamos praticar.
+
+00:07:27.131 --> 00:07:29.702
+Cinco agentes que respondem licitações.
+
+00:07:30.002 --> 00:07:33.066
+Quais você juntaria, e quais manteria separados?
+
+00:07:36.116 --> 00:07:37.626
+O leitor fica separado.
+
+00:07:37.926 --> 00:07:40.932
+Ele isola a leitura de quarenta documentos.
+
+00:07:41.232 --> 00:07:42.756
+O resumidor sai.
+
+00:07:43.056 --> 00:07:46.454
+O leitor já pode devolver os requisitos estruturados.
+
+00:07:47.104 --> 00:07:49.539
+O redator e o formatador viram um.
+
+00:07:49.839 --> 00:07:51.817
+Formatar faz parte de escrever,
+
+00:07:51.817 --> 00:07:54.369
+ou o formato vira um template no código.
+
+00:07:54.669 --> 00:07:57.430
+E o revisor de conformidade fica separado,
+
+00:07:57.430 --> 00:08:00.125
+se o eval mostrar que ele pega problemas.
+
+00:08:00.425 --> 00:08:03.987
+Ele revisa com rubrica, e sem o raciocínio de quem escreveu.
+
+00:08:05.187 --> 00:08:07.360
+Então, a ideia para levar.
+
+00:08:07.660 --> 00:08:08.056
+Meça,
+
+00:08:08.056 --> 00:08:12.806
+tire um agente de cada vez e mantenha só o que mexe na nota.
+
+00:08:13.106 --> 00:08:16.483
+Copie as regras úteis antes de apagar qualquer cargo,
+
+00:08:16.483 --> 00:08:18.968
+e transforme as verificáveis em código.
+
+00:08:19.268 --> 00:08:21.737
+Você termina com um agente que faz o trabalho,
+
+00:08:21.737 --> 00:08:24.259
+e poucas separações que você consegue explicar.
+
+00:08:24.909 --> 00:08:28.662
+Na próxima aula, vamos ver a separação que compensa,
+
+00:08:28.662 --> 00:08:31.693
+quando é bem feita: o evaluator optimizer.
+
+00:08:31.993 --> 00:08:32.789
+Até lá.

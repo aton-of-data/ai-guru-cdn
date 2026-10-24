@@ -1,0 +1,418 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:05.971
+A team builds a market report generator with five agents.
+
+00:00:06.271 --> 00:00:12.812
+A senior researcher, a data analyst, a writer, a reviewer, and an editor in chief.
+
+00:00:13.112 --> 00:00:16.070
+In the demo, the diagram looks impressive.
+
+00:00:16.720 --> 00:00:19.892
+In production, only the researcher has a tool.
+
+00:00:20.192 --> 00:00:24.002
+The other four receive text, rewrite it, and pass it on.
+
+00:00:24.302 --> 00:00:29.422
+The report takes several minutes, costs several times what it should, and sometimes
+
+00:00:29.422 --> 00:00:32.568
+arrives with a number that differs from the source.
+
+00:00:32.868 --> 00:00:36.497
+Nobody knows in which of the five handoffs it changed.
+
+00:00:36.797 --> 00:00:40.183
+You met this smell in the last lesson.
+
+00:00:40.483 --> 00:00:45.150
+Today you'll collapse it, without losing what was actually useful.
+
+00:00:46.350 --> 00:00:51.417
+Merge the agents that have no technical reason to be separate into a single agent,
+
+00:00:51.417 --> 00:00:56.298
+with the right tools, and a prompt that describes the task, not the job titles.
+
+00:00:56.598 --> 00:01:01.528
+And keep separate only what isolates context, restricts tools, or provides an
+
+00:01:01.528 --> 00:01:03.897
+independent review that was measured.
+
+00:01:05.097 --> 00:01:07.388
+Before, five roles in a queue.
+
+00:01:07.688 --> 00:01:09.676
+Four of them rewriting text.
+
+00:01:10.326 --> 00:01:13.375
+After, the request reaches a single agent.
+
+00:01:13.675 --> 00:01:17.807
+And its prompt describes the task and the output format.
+
+00:01:18.107 --> 00:01:19.241
+Not characters.
+
+00:01:19.891 --> 00:01:24.986
+The agent researches as many times as it needs, with search and page fetching.
+
+00:01:25.636 --> 00:01:30.525
+And the review that mattered, every claim has a source, became a check in code.
+
+00:01:31.175 --> 00:01:33.812
+The report comes out with a fraction of the calls.
+
+00:01:35.012 --> 00:01:38.816
+Let's follow one number through the old design's five handoffs.
+
+00:01:39.116 --> 00:01:41.535
+The names and numbers are hypothetical.
+
+00:01:42.185 --> 00:01:47.780
+The researcher finds, on a page: the contactless payments market moved one point two
+
+00:01:47.780 --> 00:01:52.508
+four billion dollars in twenty twenty-five, according to association X.
+
+00:01:53.158 --> 00:01:57.330
+The analyst writes: about one point two billion, last year.
+
+00:01:57.980 --> 00:02:00.711
+The writer: over a billion dollars a year.
+
+00:02:01.361 --> 00:02:04.531
+The reviewer keeps it, with improved wording.
+
+00:02:05.181 --> 00:02:08.524
+And the editor: moves billions every year.
+
+00:02:09.174 --> 00:02:11.611
+No agent got it wrong on purpose.
+
+00:02:11.911 --> 00:02:15.823
+Each one summarized a little, and dropped what looked like a detail.
+
+00:02:16.123 --> 00:02:20.983
+Added up, the handoffs lost the source, the year, and the order of magnitude.
+
+00:02:21.283 --> 00:02:26.125
+And each intermediate agent read the previous text in full, and wrote it again in
+
+00:02:26.125 --> 00:02:26.423
+full.
+
+00:02:26.723 --> 00:02:31.927
+Four reads and four rewrites of the same content, to reach a text the researcher
+
+00:02:31.927 --> 00:02:33.878
+already had the data to write.
+
+00:02:34.178 --> 00:02:39.301
+In the new design, the agent writes the report once, with the sources right there in
+
+00:02:39.301 --> 00:02:40.277
+its own context.
+
+00:02:41.477 --> 00:02:42.601
+Here's one for you.
+
+00:02:42.901 --> 00:02:47.773
+In the old system, the final report said billions every year, where the source said
+
+00:02:47.773 --> 00:02:49.358
+one point two four billion.
+
+00:02:49.658 --> 00:02:51.177
+What's the most likely cause?
+
+00:02:54.227 --> 00:02:59.836
+Each free text handoff summarized a little, and the precision eroded, step by step.
+
+00:03:00.136 --> 00:03:05.955
+Each agent rewrites without seeing the original source, and small losses add up.
+
+00:03:06.255 --> 00:03:08.514
+It wasn't the editor hallucinating.
+
+00:03:08.814 --> 00:03:13.163
+The editor only received text that already said over a billion.
+
+00:03:13.463 --> 00:03:18.698
+And a sixth agent to check the numbers would just be one more handoff, with the same
+
+00:03:18.698 --> 00:03:19.009
+loss.
+
+00:03:19.309 --> 00:03:23.481
+The check that works lives in code, against the recorded source.
+
+00:03:24.681 --> 00:03:28.806
+For a model, splitting into agents only helps for technical reasons.
+
+00:03:29.106 --> 00:03:34.715
+When agents share everything and only rewrite, each handoff costs a full read, and
+
+00:03:34.715 --> 00:03:36.289
+risks dropping details.
+
+00:03:36.589 --> 00:03:41.305
+When you merge, the model does in one reasoning sequence what it used to do in five
+
+00:03:41.305 --> 00:03:45.112
+calls, without rereading its own work as if it were someone else's.
+
+00:03:45.412 --> 00:03:50.885
+And what used to be review was often a verifiable criterion, which works better in
+
+00:03:50.885 --> 00:03:51.219
+code.
+
+00:03:51.869 --> 00:03:53.809
+But splitting isn't always wrong.
+
+00:03:54.109 --> 00:03:59.498
+When several subagents research broad questions in parallel, each one reading a lot
+
+00:03:59.498 --> 00:04:04.823
+of material in its own context, and returning only the essentials, it can pay off.
+
+00:04:05.123 --> 00:04:07.289
+Even at a much higher token bill.
+
+00:04:07.939 --> 00:04:12.650
+And when everyone works on the same material, like the same code, agents that can't
+
+00:04:12.650 --> 00:04:16.453
+see each other's context make decisions that contradict each other.
+
+00:04:16.753 --> 00:04:18.138
+So the rule is simple.
+
+00:04:18.438 --> 00:04:23.623
+Split when there's heavy, independent reading, a sensitive tool, or a measured
+
+00:04:23.623 --> 00:04:24.088
+review.
+
+00:04:24.388 --> 00:04:27.723
+Merge when everyone works on the same material.
+
+00:04:28.923 --> 00:04:30.475
+Now the mechanics.
+
+00:04:30.775 --> 00:04:32.635
+Step zero, measure.
+
+00:04:32.935 --> 00:04:35.144
+Run the eval on the current system.
+
+00:04:35.444 --> 00:04:38.219
+Quality, cost per task, latency.
+
+00:04:38.519 --> 00:04:41.166
+And save each intermediate agent's output.
+
+00:04:41.816 --> 00:04:44.587
+Compare each agent's input and output.
+
+00:04:44.887 --> 00:04:50.123
+If the output is nearly the same as the input, that agent is a candidate to go.
+
+00:04:50.773 --> 00:04:53.989
+Try removing one at a time, and run the eval.
+
+00:04:54.289 --> 00:04:57.887
+The ones whose removal doesn't change quality, go.
+
+00:04:58.537 --> 00:05:04.696
+Write the single agent's prompt, with the task, the format, and any useful rules the
+
+00:05:04.696 --> 00:05:06.310
+removed roles carried.
+
+00:05:06.960 --> 00:05:09.935
+And turn the verifiable reviews into code.
+
+00:05:10.235 --> 00:05:13.430
+Sources, format, length, banned terms.
+
+00:05:13.730 --> 00:05:18.704
+Then keep separate only what has a reason, give the merged agent a budget, and
+
+00:05:18.704 --> 00:05:19.597
+measure again.
+
+00:05:19.897 --> 00:05:23.534
+Same or better quality, lower cost and latency.
+
+00:05:24.734 --> 00:05:26.293
+Now the common mistake.
+
+00:05:26.593 --> 00:05:29.165
+Throwing out the rules along with the roles.
+
+00:05:29.465 --> 00:05:35.226
+The reviewer's prompt sometimes held a rule worth keeping, buried among character
+
+00:05:35.226 --> 00:05:35.653
+lines.
+
+00:05:35.953 --> 00:05:38.735
+Never cite data older than two years.
+
+00:05:39.385 --> 00:05:44.225
+Say that in the eval, that rule caught problems in six percent of cases.
+
+00:05:44.525 --> 00:05:45.956
+What do you do with it?
+
+00:05:46.256 --> 00:05:48.822
+Not keep the reviewer as a whole agent.
+
+00:05:49.122 --> 00:05:51.507
+A date is verifiable without a model.
+
+00:05:51.807 --> 00:05:56.610
+And not drop it either, hoping the single agent will look for recent data on its
+
+00:05:56.610 --> 00:05:56.850
+own.
+
+00:05:57.150 --> 00:06:02.016
+Turn it into a code check on each source's date, and state the rule in the prompt,
+
+00:06:02.016 --> 00:06:05.161
+so the agent looks for recent sources from the start.
+
+00:06:05.811 --> 00:06:10.669
+So before you remove each role, copy its concrete instructions into a list.
+
+00:06:10.969 --> 00:06:15.740
+Drop the character ones, like you are a demanding reviewer with twenty years of
+
+00:06:15.740 --> 00:06:16.405
+experience.
+
+00:06:16.705 --> 00:06:21.136
+And move the verifiable ones into the prompt, or into code.
+
+00:06:21.786 --> 00:06:22.627
+The risks.
+
+00:06:22.927 --> 00:06:24.238
+Context overflow.
+
+00:06:24.538 --> 00:06:29.278
+If one of the agents isolated heavy reading, merging fills the context.
+
+00:06:29.578 --> 00:06:31.579
+Keep that one as a subagent.
+
+00:06:32.229 --> 00:06:34.177
+Losing a review that mattered.
+
+00:06:34.477 --> 00:06:37.738
+Say you removed the analyst, and the eval didn't change.
+
+00:06:38.038 --> 00:06:42.444
+Then you removed the reviewer, and the score dropped on cases with tables.
+
+00:06:42.744 --> 00:06:43.948
+Don't put both back.
+
+00:06:44.248 --> 00:06:45.919
+The analyst can go.
+
+00:06:46.219 --> 00:06:50.608
+Find out what the reviewer fixed in tables, and pick the cheapest home for it.
+
+00:06:50.908 --> 00:06:54.488
+A rule, a check in code, or a separate evaluator.
+
+00:06:55.138 --> 00:06:57.641
+Merging into a mega agent.
+
+00:06:57.941 --> 00:07:03.113
+If, while merging, you also give the agent the tools to email customers and publish
+
+00:07:03.113 --> 00:07:06.041
+on the website, you created the opposite smell.
+
+00:07:06.341 --> 00:07:08.405
+Merge only what's decorative.
+
+00:07:08.705 --> 00:07:12.308
+Tools with side effects keep their own scope, and approval.
+
+00:07:12.958 --> 00:07:15.126
+And pushback from whoever designed it.
+
+00:07:15.426 --> 00:07:19.542
+Five agents with job titles look more sophisticated on a slide.
+
+00:07:19.842 --> 00:07:21.580
+Bring the eval comparison.
+
+00:07:21.880 --> 00:07:24.675
+Same quality, fewer calls, less time.
+
+00:07:25.875 --> 00:07:26.831
+Let's practice.
+
+00:07:27.131 --> 00:07:29.702
+Five agents that answer public tenders.
+
+00:07:30.002 --> 00:07:33.066
+Which would you merge, and which would you keep separate?
+
+00:07:36.116 --> 00:07:37.626
+The reader stays separate.
+
+00:07:37.926 --> 00:07:40.932
+It isolates the reading of forty documents.
+
+00:07:41.232 --> 00:07:42.756
+The summarizer goes.
+
+00:07:43.056 --> 00:07:46.454
+The reader can already return structured requirements.
+
+00:07:47.104 --> 00:07:49.539
+The writer and the formatter become one.
+
+00:07:49.839 --> 00:07:54.369
+Formatting is part of writing, or the format becomes a template in code.
+
+00:07:54.669 --> 00:08:00.125
+And the compliance reviewer stays separate, if the eval shows it catches problems.
+
+00:08:00.425 --> 00:08:03.987
+It reviews with a rubric, and without the writer's reasoning.
+
+00:08:05.187 --> 00:08:07.360
+So here's the idea to take with you.
+
+00:08:07.660 --> 00:08:12.806
+Measure, remove one agent at a time, and keep only what moves the score.
+
+00:08:13.106 --> 00:08:18.628
+Copy the useful rules before deleting any role, and turn the verifiable ones into
+
+00:08:18.628 --> 00:08:18.968
+code.
+
+00:08:19.268 --> 00:08:24.259
+You end up with one agent that does the work, and a few separations you can explain.
+
+00:08:24.909 --> 00:08:29.763
+In the next lesson, we'll look at the separation that does pay, when it's done
+
+00:08:29.763 --> 00:08:31.693
+right: the evaluator optimizer.
+
+00:08:31.993 --> 00:08:32.789
+See you there.
