@@ -1,0 +1,591 @@
+1
+00:00:01,600 --> 00:00:03,937
+A Lúcia cuida do chat da base de conhecimento
+
+2
+00:00:03,937 --> 00:00:05,392
+de uma empresa de logística.
+
+3
+00:00:05,692 --> 00:00:08,767
+A busca híbrida devolve 50 trechos por pergunta,
+
+4
+00:00:08,767 --> 00:00:11,138
+e o modelo recebe os cinco primeiros.
+
+5
+00:00:11,438 --> 00:00:14,133
+Aí o eval mostrou algo curioso.
+
+6
+00:00:14,783 --> 00:00:16,793
+Em muitas das respostas erradas,
+
+7
+00:00:16,793 --> 00:00:18,929
+o trecho certo estava entre os 50.
+
+8
+00:00:19,229 --> 00:00:22,098
+Só que na posição 12, ou 20.
+
+9
+00:00:22,398 --> 00:00:23,854
+O modelo nunca chegou a ver.
+
+10
+00:00:24,504 --> 00:00:25,181
+Nesta aula,
+
+11
+00:00:25,181 --> 00:00:28,750
+você vai aprender a levar os melhores trechos para o topo,
+
+12
+00:00:28,750 --> 00:00:31,458
+sem pagar para o modelo principal ler todos.
+
+13
+00:00:32,658 --> 00:00:34,088
+Pense em duas peneiras.
+
+14
+00:00:34,388 --> 00:00:39,084
+A grossa é rápida e separa o cascalho da areia.
+
+15
+00:00:39,384 --> 00:00:41,998
+A fina é lenta e pesca o ouro.
+
+16
+00:00:42,298 --> 00:00:45,468
+Você nunca passa a peneira fina no rio inteiro.
+
+17
+00:00:45,768 --> 00:00:47,931
+Só no que a primeira guardou.
+
+18
+00:00:48,581 --> 00:00:50,563
+A primeira etapa é a busca.
+
+19
+00:00:50,863 --> 00:00:53,376
+Rápida e ampla.
+
+20
+00:00:53,676 --> 00:00:58,307
+Busca híbrida ou vetorial traz de 30 a 100 candidatos.
+
+21
+00:00:58,607 --> 00:01:02,590
+O objetivo é recall: o certo precisa estar na lista.
+
+22
+00:01:03,240 --> 00:01:05,298
+A segunda etapa é o reranking.
+
+23
+00:01:05,598 --> 00:01:07,132
+Lenta e precisa.
+
+24
+00:01:07,432 --> 00:01:10,665
+Um modelo lê a pergunta e cada candidato juntos,
+
+25
+00:01:10,665 --> 00:01:12,551
+e dá uma nota de relevância.
+
+26
+00:01:12,851 --> 00:01:17,118
+O objetivo é precisão: os primeiros têm que ser os melhores.
+
+27
+00:01:17,768 --> 00:01:19,767
+Por que a primeira etapa não faz as duas coisas?
+
+28
+00:01:20,067 --> 00:01:24,732
+Porque a busca rápida nunca lê a pergunta e o trecho juntos.
+
+29
+00:01:25,032 --> 00:01:29,099
+Ela compara os dois separados, como vetores ou listas de termos.
+
+30
+00:01:29,399 --> 00:01:32,036
+Então um trecho que fala em volta do assunto
+
+31
+00:01:32,036 --> 00:01:34,372
+pode vencer um que responde exatamente.
+
+32
+00:01:35,572 --> 00:01:36,871
+A pergunta chega.
+
+33
+00:01:37,171 --> 00:01:40,904
+Qual o prazo para contestar uma multa de trânsito da frota?
+
+34
+00:01:41,204 --> 00:01:46,613
+Repare que frota, multa e prazo aparecem em muitos trechos.
+
+35
+00:01:47,263 --> 00:01:51,071
+Uma busca rápida traz 50 candidatos, favorecendo o recall.
+
+36
+00:01:51,371 --> 00:01:53,083
+Veja o que está no topo.
+
+37
+00:01:53,383 --> 00:01:56,795
+Na posição 1, o seguro da frota.
+
+38
+00:01:57,095 --> 00:02:01,530
+Na 2, descontos em folha por infrações de motoristas.
+
+39
+00:02:01,830 --> 00:02:03,772
+Na 3, combustível.
+
+40
+00:02:04,072 --> 00:02:05,280
+Todos no assunto.
+
+41
+00:02:05,580 --> 00:02:06,804
+Nenhum responde.
+
+42
+00:02:07,454 --> 00:02:10,789
+O reranker lê a pergunta junto com cada trecho.
+
+43
+00:02:11,089 --> 00:02:15,898
+E o da posição 12 é o único que diz 15 dias.
+
+44
+00:02:16,198 --> 00:02:17,525
+Ele ganha a nota mais alta.
+
+45
+00:02:17,825 --> 00:02:23,524
+O trecho da folha fala de multas, mas não de contestar, e cai.
+
+46
+00:02:24,174 --> 00:02:26,817
+Os candidatos são ordenados pela nova nota,
+
+47
+00:02:26,817 --> 00:02:28,723
+e só os cinco primeiros seguem.
+
+48
+00:02:29,373 --> 00:02:32,699
+E o modelo principal responde a partir de poucos trechos,
+
+49
+00:02:32,699 --> 00:02:33,691
+todos relevantes.
+
+50
+00:02:34,341 --> 00:02:35,771
+Tem mais uma peça.
+
+51
+00:02:36,071 --> 00:02:37,224
+Uma nota mínima.
+
+52
+00:02:37,524 --> 00:02:40,980
+Se nenhum dos cinco chega nela, o sistema diz que não encontrou,
+
+53
+00:02:40,980 --> 00:02:42,654
+em vez de inventar uma resposta
+
+54
+00:02:42,654 --> 00:02:44,490
+a partir da página de combustível.
+
+55
+00:02:45,140 --> 00:02:47,848
+E por que não mandar os 50 para o modelo principal?
+
+56
+00:02:48,148 --> 00:02:52,253
+Além do custo, existe um efeito conhecido, o lost in the middle.
+
+57
+00:02:52,553 --> 00:02:54,439
+Mesmo quando tudo cabe,
+
+58
+00:02:54,439 --> 00:02:58,456
+o modelo usa pior o que fica no meio do contexto.
+
+59
+00:02:58,756 --> 00:03:02,315
+Cinquenta trechos medianos não valem 50 trechos úteis.
+
+60
+00:03:03,515 --> 00:03:04,622
+Uma pergunta para você.
+
+61
+00:03:04,922 --> 00:03:08,307
+O eval diz que o recall nos 50 é de 55%,
+
+62
+00:03:08,307 --> 00:03:11,862
+e a precisão nos cinco primeiros é de 50%.
+
+63
+00:03:12,162 --> 00:03:14,435
+O time instala um reranker.
+
+64
+00:03:14,735 --> 00:03:16,554
+O que é mais provável acontecer?
+
+65
+00:03:19,604 --> 00:03:21,992
+A precisão sobe só um pouco.
+
+66
+00:03:22,292 --> 00:03:24,889
+Porque em quase metade das perguntas,
+
+67
+00:03:24,889 --> 00:03:27,416
+o trecho certo nem está entre os 50.
+
+68
+00:03:27,716 --> 00:03:30,782
+O reranking reordena o que chegou.
+
+69
+00:03:31,082 --> 00:03:33,364
+Ele não cria o que a busca não trouxe.
+
+70
+00:03:34,014 --> 00:03:37,763
+O teto da precisão é o recall da busca.
+
+71
+00:03:38,063 --> 00:03:39,566
+Se o recall é baixo,
+
+72
+00:03:39,566 --> 00:03:43,399
+trocar o reranker é mexer na etapa que já funciona.
+
+73
+00:03:44,599 --> 00:03:47,940
+Quando o resultado certo nem aparece entre os candidatos.
+
+74
+00:03:48,240 --> 00:03:49,770
+Conserte a busca primeiro,
+
+75
+00:03:49,770 --> 00:03:52,302
+com busca híbrida ou reescrita de consulta.
+
+76
+00:03:52,952 --> 00:03:56,877
+Quando a latência é muito apertada e a busca já acerta o topo.
+
+77
+00:03:57,177 --> 00:04:01,261
+Uma caixa de busca que precisa responder em 200 milissegundos
+
+78
+00:04:01,261 --> 00:04:03,872
+não tem espaço para um reranker de 400.
+
+79
+00:04:04,522 --> 00:04:07,725
+E quando o material cabe inteiro no contexto.
+
+80
+00:04:08,025 --> 00:04:10,136
+Aí não há o que reordenar.
+
+81
+00:04:10,786 --> 00:04:12,071
+Agora as armadilhas comuns.
+
+82
+00:04:12,371 --> 00:04:15,499
+Primeiro, uma nota de corte copiada de tutorial.
+
+83
+00:04:15,799 --> 00:04:19,266
+A nota de um cross-encoder não é probabilidade.
+
+84
+00:04:19,566 --> 00:04:24,002
+Olhe as notas dos trechos certos e dos errados no seu eval,
+
+85
+00:04:24,002 --> 00:04:24,904
+e corte ali.
+
+86
+00:04:25,554 --> 00:04:28,758
+Segundo, reordenar só oito candidatos.
+
+87
+00:04:29,058 --> 00:04:30,847
+Se o certo está na posição 20,
+
+88
+00:04:30,847 --> 00:04:32,993
+um conjunto curto deixa ele de fora.
+
+89
+00:04:33,293 --> 00:04:34,724
+O conjunto é recall.
+
+90
+00:04:35,024 --> 00:04:37,356
+Os primeiros depois são precisão.
+
+91
+00:04:38,006 --> 00:04:41,233
+E terceiro, trechos quase idênticos no topo.
+
+92
+00:04:41,533 --> 00:04:44,884
+Três parágrafos da mesma política ocupam três vagas.
+
+93
+00:04:45,184 --> 00:04:47,924
+Depois do reranking, tire os vizinhos redundantes.
+
+94
+00:04:49,124 --> 00:04:49,983
+O que medir.
+
+95
+00:04:50,283 --> 00:04:53,711
+Recall para a busca, e precisão depois do reranking.
+
+96
+00:04:54,011 --> 00:04:58,183
+E a qualidade da resposta final, porque o objetivo é a resposta,
+
+97
+00:04:58,183 --> 00:04:58,965
+não a busca.
+
+98
+00:04:59,615 --> 00:05:02,860
+Mantenha sempre o braço só com a busca, para comparar.
+
+99
+00:05:03,160 --> 00:05:06,713
+Se o reranker piora a precisão, ele está fora do domínio.
+
+100
+00:05:07,013 --> 00:05:11,212
+Siglas, documentos vigentes.
+
+101
+00:05:11,512 --> 00:05:15,019
+Um modelo de linguagem pequeno, com um critério escrito,
+
+102
+00:05:15,019 --> 00:05:17,899
+muitas vezes ganha de um encoder genérico ali.
+
+103
+00:05:18,549 --> 00:05:22,820
+Registre um span com os ids antes e depois, e as notas.
+
+104
+00:05:23,120 --> 00:05:25,250
+Quando uma resposta está errada,
+
+105
+00:05:25,250 --> 00:05:28,910
+dá para ver se o trecho certo subiu e o modelo ignorou,
+
+106
+00:05:28,910 --> 00:05:30,375
+ou se ele nunca subiu.
+
+107
+00:05:31,025 --> 00:05:32,876
+E crie um alerta para quando a taxa
+
+108
+00:05:32,876 --> 00:05:34,621
+de respostas sem resultado subir.
+
+109
+00:05:34,921 --> 00:05:38,427
+É o sinal de uma nota de corte ruim, ou de uma busca ruim.
+
+110
+00:05:39,077 --> 00:05:40,353
+Um ponto de segurança.
+
+111
+00:05:40,653 --> 00:05:44,637
+O reranker lê o mesmo conteúdo não confiável que o RAG lê.
+
+112
+00:05:44,937 --> 00:05:47,181
+Uma página de wiki que diz este documento
+
+113
+00:05:47,181 --> 00:05:49,698
+é o mais relevante de todos pode inflar a nota
+
+114
+00:05:49,698 --> 00:05:52,161
+de um reranker feito com modelo de linguagem.
+
+115
+00:05:52,461 --> 00:05:55,614
+Cross-encoders sofrem menos com essa retórica,
+
+116
+00:05:55,614 --> 00:05:57,191
+mas não são uma defesa.
+
+117
+00:05:57,491 --> 00:05:59,486
+Permissão é coisa da busca.
+
+118
+00:05:59,786 --> 00:06:03,442
+O reranker nunca pode ver um trecho que o usuário não pode ver.
+
+119
+00:06:04,642 --> 00:06:06,633
+Na página, tem duas abas.
+
+120
+00:06:06,933 --> 00:06:09,683
+A de Python usa um cross-encoder.
+
+121
+00:06:09,983 --> 00:06:11,953
+Ela pede 50 candidatos à busca,
+
+122
+00:06:11,953 --> 00:06:15,638
+dá nota a cada par de pergunta e trecho, ordena pela nota,
+
+123
+00:06:15,638 --> 00:06:18,752
+e guarda os cinco primeiros que passam do mínimo.
+
+124
+00:06:19,402 --> 00:06:21,477
+Isso é reranking em milissegundos,
+
+125
+00:06:21,477 --> 00:06:23,552
+sem chamada a modelo de linguagem.
+
+126
+00:06:23,852 --> 00:06:27,897
+O preço é que o encoder não entende regra de negócio.
+
+127
+00:06:28,197 --> 00:06:31,536
+Um filtro como só documentos vigentes fica na busca.
+
+128
+00:06:32,186 --> 00:06:35,962
+A aba de TypeScript troca o encoder por um modelo de linguagem.
+
+129
+00:06:36,262 --> 00:06:38,724
+Ela envia os candidatos com as datas
+
+130
+00:06:38,724 --> 00:06:40,844
+e pede uma nota de zero a três,
+
+131
+00:06:40,844 --> 00:06:42,280
+em saída estruturada.
+
+132
+00:06:42,580 --> 00:06:45,426
+Versões substituídas ganham no máximo um.
+
+133
+00:06:45,726 --> 00:06:48,816
+É um critério que você escreve em palavras,
+
+134
+00:06:48,816 --> 00:06:51,763
+e em troca paga uma chamada por pergunta.
+
+135
+00:06:52,413 --> 00:06:54,323
+Comece pelo cross-encoder.
+
+136
+00:06:54,623 --> 00:06:58,393
+Só suba para o modelo de linguagem quando a relevância depender
+
+137
+00:06:58,393 --> 00:07:01,205
+de uma regra que o encoder nunca viu no treino.
+
+138
+00:07:02,405 --> 00:07:04,595
+Então, a ideia para levar.
+
+139
+00:07:04,895 --> 00:07:08,763
+A busca serve para o recall, o reranking serve para a precisão.
+
+140
+00:07:09,063 --> 00:07:11,610
+Deixe a etapa barata lançar a rede larga,
+
+141
+00:07:11,610 --> 00:07:13,909
+deixe a etapa cuidadosa ler os pares,
+
+142
+00:07:13,909 --> 00:07:16,890
+e mande ao modelo principal só o que sobreviveu.
+
+143
+00:07:17,190 --> 00:07:20,859
+E meça cada etapa separada, para saber qual consertar.
+
+144
+00:07:21,509 --> 00:07:24,423
+Mas e se o trecho certo nunca entra na lista,
+
+145
+00:07:24,423 --> 00:07:26,949
+porque a pergunta estava mal formulada?
+
+146
+00:07:27,249 --> 00:07:31,240
+Na próxima aula, a gente reescreve a pergunta antes de buscar:
+
+147
+00:07:31,240 --> 00:07:32,270
+query rewriting.
+
+148
+00:07:32,570 --> 00:07:33,601
+Até lá.
