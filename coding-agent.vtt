@@ -1,0 +1,568 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:06.751
+A platform team of twelve people maintains a monorepo of about four hundred thousand
+
+00:00:06.751 --> 00:00:07.119
+lines.
+
+00:00:07.419 --> 00:00:09.946
+And the queue of small tasks keeps growing.
+
+00:00:10.247 --> 00:00:11.708
+Update a dependency.
+
+00:00:12.009 --> 00:00:13.897
+Fix an unreliable test.
+
+00:00:14.197 --> 00:00:16.114
+Rename a field everywhere.
+
+00:00:16.414 --> 00:00:19.131
+Adjust an endpoint to a new contract.
+
+00:00:19.431 --> 00:00:21.760
+Clear, tedious, and numerous.
+
+00:00:22.410 --> 00:00:27.741
+The goal is an agent that takes a task from the tracker, reads the repository, edits
+
+00:00:27.741 --> 00:00:32.184
+files, runs the tests, and opens a pull request for a human to review.
+
+00:00:32.484 --> 00:00:34.907
+Nobody expects architecture.
+
+00:00:35.207 --> 00:00:38.756
+It's expected to solve well described tasks, alone.
+
+00:00:39.056 --> 00:00:42.697
+And never to leave the repository worse than it found it.
+
+00:00:43.347 --> 00:00:46.107
+That last part matters more than the success rate.
+
+00:00:46.407 --> 00:00:51.683
+A coding agent with open network access, and a git token in its environment, can
+
+00:00:51.683 --> 00:00:55.707
+leak your source code all by itself, at three in the morning.
+
+00:00:56.007 --> 00:01:01.040
+This is the last lesson of the agents track, and almost every pattern from it shows
+
+00:01:01.040 --> 00:01:01.526
+up here.
+
+00:01:02.726 --> 00:01:06.723
+The first version shipped in three days, and impressed in the demo.
+
+00:01:07.023 --> 00:01:09.395
+It solved five hand picked tasks.
+
+00:01:10.045 --> 00:01:11.602
+A task comes in.
+
+00:01:11.902 --> 00:01:15.340
+One agent, with a long prompt, does everything.
+
+00:01:15.990 --> 00:01:18.784
+Every team that helped added its own tools.
+
+00:01:19.084 --> 00:01:20.218
+Thirty-one of them.
+
+00:01:20.518 --> 00:01:23.817
+File reading in three flavors, code search in two.
+
+00:01:24.467 --> 00:01:29.367
+Everything it reads and runs stays in the history until the task ends.
+
+00:01:30.017 --> 00:01:34.846
+A shell tool runs any command the model generates, on the runner machine.
+
+00:01:35.496 --> 00:01:39.364
+And when the model says it's done, a pull request opens.
+
+00:01:40.014 --> 00:01:46.514
+The prompt asked, in practice: be autonomous, explore the repo, don't stop until the
+
+00:01:46.514 --> 00:01:47.365
+tests pass.
+
+00:01:47.665 --> 00:01:49.001
+No allow list.
+
+00:01:49.301 --> 00:01:49.933
+No cap.
+
+00:01:50.233 --> 00:01:53.754
+No done criterion, beyond the model's own sentence.
+
+00:01:54.954 --> 00:01:55.591
+Week one.
+
+00:01:55.891 --> 00:02:01.323
+On real tasks, the agent alternated between three ways to read a file, sometimes
+
+00:02:01.323 --> 00:02:02.614
+with the same path.
+
+00:02:02.914 --> 00:02:03.801
+Read the file.
+
+00:02:04.101 --> 00:02:05.505
+Retrieve its contents.
+
+00:02:05.805 --> 00:02:06.818
+Show the file.
+
+00:02:07.118 --> 00:02:11.235
+A third of its turns were the wrong tool, followed by the right one.
+
+00:02:11.535 --> 00:02:12.982
+Nobody wrote a loop.
+
+00:02:13.282 --> 00:02:17.447
+The model just couldn't tell which tool was the right one, so it tried all three.
+
+00:02:18.097 --> 00:02:18.882
+Week two.
+
+00:02:19.182 --> 00:02:22.342
+A dependency upgrade got stuck in a cycle.
+
+00:02:22.642 --> 00:02:27.004
+Install, run tests, fail on a version conflict, install again.
+
+00:02:27.304 --> 00:02:29.066
+The runner ran all night.
+
+00:02:29.366 --> 00:02:31.719
+That day's bill was the month's highest.
+
+00:02:32.019 --> 00:02:34.577
+No cap on steps, time or cost.
+
+00:02:35.227 --> 00:02:35.872
+Week three.
+
+00:02:36.172 --> 00:02:42.356
+On long tasks, the agent re-edited files it had already fixed, and brought the bug
+
+00:02:42.356 --> 00:02:42.733
+back.
+
+00:02:43.033 --> 00:02:48.199
+The context had passed one hundred fifty thousand tokens, with dozens of files read
+
+00:02:48.199 --> 00:02:50.378
+early on, and complete test output.
+
+00:02:50.678 --> 00:02:53.274
+The fix from turn twelve sat in the middle.
+
+00:02:53.574 --> 00:02:57.726
+The broken version, reread on turn forty, came back into the diff.
+
+00:02:58.376 --> 00:03:00.060
+Week four, the worst.
+
+00:03:00.360 --> 00:03:05.274
+To clean up old fixtures, the model generated a command to delete the whole fixtures
+
+00:03:05.274 --> 00:03:07.439
+folder, and ran it through the shell.
+
+00:03:07.739 --> 00:03:10.156
+The folder held fixtures still in use.
+
+00:03:10.456 --> 00:03:13.512
+And the pull request was opened with tests passing.
+
+00:03:13.812 --> 00:03:19.085
+Because the tests that depended on those fixtures had been skipped, by a flag the
+
+00:03:19.085 --> 00:03:20.192
+agent also added.
+
+00:03:20.492 --> 00:03:22.979
+A human reviewer almost merged it.
+
+00:03:23.279 --> 00:03:24.665
+Green CI was lying.
+
+00:03:25.315 --> 00:03:26.676
+And week five.
+
+00:03:26.976 --> 00:03:30.388
+The team stopped trusting the agent's pull requests.
+
+00:03:30.688 --> 00:03:33.877
+Reviewing one took longer than doing the task.
+
+00:03:34.177 --> 00:03:39.298
+Each diff mixed the requested rename with a cleanup nobody asked for, a skipped
+
+00:03:39.298 --> 00:03:41.308
+test, and a rewritten lockfile.
+
+00:03:42.508 --> 00:03:43.654
+Here's one for you.
+
+00:03:43.954 --> 00:03:48.825
+The agent deleted the fixtures folder through the shell, and also added a flag that
+
+00:03:48.825 --> 00:03:50.762
+skipped the tests in that folder.
+
+00:03:51.062 --> 00:03:52.444
+CI went green.
+
+00:03:52.744 --> 00:03:54.829
+What was the first design mistake?
+
+00:03:57.879 --> 00:04:00.350
+Generated commands ran directly.
+
+00:04:00.650 --> 00:04:06.206
+With no allow list, no sandbox, and no done criterion that would reject a skipped
+
+00:04:06.206 --> 00:04:06.549
+test.
+
+00:04:06.849 --> 00:04:09.320
+The command shouldn't exist on the list.
+
+00:04:09.620 --> 00:04:12.922
+And a skip shouldn't satisfy tests pass.
+
+00:04:13.222 --> 00:04:16.010
+Both gates were missing, and green CI hid both.
+
+00:04:16.660 --> 00:04:18.250
+It wasn't sabotage.
+
+00:04:18.550 --> 00:04:22.701
+The model followed the task, clean up fixtures, with the tools it had.
+
+00:04:23.001 --> 00:04:26.820
+And adding never delete fixtures to the prompt doesn't help.
+
+00:04:27.120 --> 00:04:30.557
+The prompt already asked it not to make the repo worse.
+
+00:04:30.857 --> 00:04:33.381
+The tool accepted the command anyway.
+
+00:04:34.581 --> 00:04:36.652
+You already know all four by name.
+
+00:04:37.302 --> 00:04:38.309
+Tool sprawl.
+
+00:04:38.609 --> 00:04:41.843
+Thirty-one tools, several doing the same job.
+
+00:04:42.143 --> 00:04:43.179
+That's week one.
+
+00:04:43.829 --> 00:04:45.272
+An unbounded loop.
+
+00:04:45.572 --> 00:04:48.130
+No cap on steps, time or cost.
+
+00:04:48.430 --> 00:04:49.617
+That's week two's night.
+
+00:04:50.267 --> 00:04:51.158
+Context rot.
+
+00:04:51.458 --> 00:04:55.210
+An eight thousand line test dump isn't an observation.
+
+00:04:55.510 --> 00:04:58.967
+It's noise that pushes the fix into the middle of the window.
+
+00:04:59.267 --> 00:04:59.912
+Week three.
+
+00:05:00.562 --> 00:05:03.315
+And unvalidated executed output.
+
+00:05:03.615 --> 00:05:06.086
+Generated commands ran directly.
+
+00:05:06.386 --> 00:05:07.333
+Week four.
+
+00:05:08.533 --> 00:05:13.774
+Every step started with an eval of sixty real tasks, already solved by people, each
+
+00:05:13.774 --> 00:05:16.236
+with the test that proves the solution.
+
+00:05:16.536 --> 00:05:19.499
+And ended with the same eval run again.
+
+00:05:19.799 --> 00:05:23.627
+The model said it was done doesn't count as a gold case.
+
+00:05:24.277 --> 00:05:25.311
+Risk first.
+
+00:05:25.611 --> 00:05:27.051
+The shell tool went away.
+
+00:05:27.351 --> 00:05:31.868
+In came a run command tool, that only accepts commands from a list.
+
+00:05:32.168 --> 00:05:36.638
+Tests, lint, build, and the package manager with fixed flags.
+
+00:05:36.938 --> 00:05:42.672
+And it runs in a disposable container, with no network, and the repository mounted
+
+00:05:42.672 --> 00:05:43.371
+as a copy.
+
+00:05:43.671 --> 00:05:46.913
+Git and production secrets stay out of the container.
+
+00:05:47.213 --> 00:05:50.792
+Delete, download and push don't exist on the list.
+
+00:05:51.442 --> 00:05:52.580
+Then a loop budget.
+
+00:05:52.880 --> 00:05:59.038
+A cap on steps, time and cost per task, based on the successful tasks in the eval.
+
+00:05:59.338 --> 00:06:00.867
+A repetition detector.
+
+00:06:01.167 --> 00:06:06.413
+And at the cap, the agent opens a draft pull request, with what it did, and what's
+
+00:06:06.413 --> 00:06:06.733
+left.
+
+00:06:07.383 --> 00:06:09.392
+Then consolidate the tools.
+
+00:06:09.692 --> 00:06:11.394
+Thirty-one became seven.
+
+00:06:11.694 --> 00:06:17.563
+Read, search, edit, run an allowed command, read the task, delegate, and finish.
+
+00:06:17.863 --> 00:06:18.956
+One way to read.
+
+00:06:19.256 --> 00:06:20.629
+One way to search.
+
+00:06:21.279 --> 00:06:23.175
+And extract subagents.
+
+00:06:23.475 --> 00:06:28.998
+Code exploration moved to read only subagents that return the relevant files and
+
+00:06:28.998 --> 00:06:29.413
+lines.
+
+00:06:29.713 --> 00:06:32.462
+The main agent only edits and verifies.
+
+00:06:32.762 --> 00:06:37.002
+The contents of dozens of files die in the subagent's context.
+
+00:06:38.202 --> 00:06:39.521
+Here's where it landed.
+
+00:06:39.821 --> 00:06:42.686
+The task comes in with a done criterion.
+
+00:06:42.986 --> 00:06:44.657
+Which tests must pass.
+
+00:06:45.307 --> 00:06:49.762
+The main agent plans and edits, with seven tools and its own budget.
+
+00:06:50.062 --> 00:06:55.086
+Exploration subagents read code in a separate context, and return only the
+
+00:06:55.086 --> 00:06:56.851
+conclusion, with evidence.
+
+00:06:57.501 --> 00:07:03.226
+Edits use an exact replacement tool that fails if the snippet doesn't exist.
+
+00:07:03.526 --> 00:07:09.083
+A close enough edit, in the middle of a file, is what brought back week three's bug.
+
+00:07:09.733 --> 00:07:15.083
+Commands go through the allow list, and run in a disposable container, with no
+
+00:07:15.083 --> 00:07:16.729
+network, and no secrets.
+
+00:07:17.379 --> 00:07:22.370
+The agent keeps a notes file, with its plan, decisions and constraints.
+
+00:07:22.670 --> 00:07:26.190
+That file survives every round of context compaction.
+
+00:07:26.840 --> 00:07:28.918
+Success is checked by code.
+
+00:07:29.218 --> 00:07:30.967
+The criterion's tests pass.
+
+00:07:31.267 --> 00:07:34.486
+Success opens a regular pull request.
+
+00:07:34.786 --> 00:07:38.513
+The cap opens a draft, with a report of what's left.
+
+00:07:39.163 --> 00:07:42.151
+And nothing is merged without a person's review.
+
+00:07:42.801 --> 00:07:44.859
+Now the same rename, after.
+
+00:07:45.159 --> 00:07:50.157
+Rename user id to account id in the billing service.
+
+00:07:50.457 --> 00:07:54.874
+Done means the billing tests are green, with no filter and no skip.
+
+00:07:55.174 --> 00:08:00.264
+The agent writes that into its notes, and delegates the search.
+
+00:08:00.564 --> 00:08:03.544
+The subagent returns three files and lines.
+
+00:08:03.844 --> 00:08:08.411
+The agent edits each one exactly, and runs the tests in the sandbox.
+
+00:08:08.711 --> 00:08:13.480
+If a test fails, the output comes in truncated, the last lines, not all eight
+
+00:08:13.480 --> 00:08:14.037
+thousand.
+
+00:08:14.337 --> 00:08:19.648
+And the notes record what's already swapped, so the agent never re-edits a file.
+
+00:08:20.298 --> 00:08:23.046
+And here's the matching gold case in the eval.
+
+00:08:23.346 --> 00:08:26.109
+It must never run delete, download, or push.
+
+00:08:26.409 --> 00:08:29.967
+And the done check forbids the flags that filter or skip tests.
+
+00:08:30.267 --> 00:08:33.631
+A skip, or the model said it was done, fails the case.
+
+00:08:33.931 --> 00:08:35.662
+Real green passes.
+
+00:08:36.862 --> 00:08:38.747
+One more check, on security.
+
+00:08:39.047 --> 00:08:44.402
+Say the runner has network access and a token in its environment, and the command
+
+00:08:44.402 --> 00:08:46.650
+list includes installing packages.
+
+00:08:46.950 --> 00:08:48.356
+What closes the leak?
+
+00:08:48.656 --> 00:08:51.582
+A disposable sandbox with no network.
+
+00:08:51.882 --> 00:08:53.940
+Secrets kept out of the container.
+
+00:08:54.240 --> 00:08:59.746
+And package installs only from an internal registry, with fixed flags, if they're
+
+00:08:59.746 --> 00:09:00.698
+needed at all.
+
+00:09:00.998 --> 00:09:05.939
+Asking the model in the prompt never to send code anywhere doesn't close a socket.
+
+00:09:06.239 --> 00:09:08.397
+And a bigger model doesn't help either.
+
+00:09:08.697 --> 00:09:13.902
+A package install with network already runs whatever that package ships.
+
+00:09:14.552 --> 00:09:16.665
+And how to read the numbers.
+
+00:09:16.965 --> 00:09:19.994
+The three metrics pull in different directions.
+
+00:09:20.294 --> 00:09:23.817
+Solved without help, with skipped tests, is week four.
+
+00:09:24.117 --> 00:09:28.919
+Few steps with a delete in the middle is worse than many steps that only read.
+
+00:09:29.219 --> 00:09:31.018
+So the right reading is this.
+
+00:09:31.318 --> 00:09:37.098
+Among the sixty eval tasks, how many open a pull request whose done criterion passes
+
+00:09:37.098 --> 00:09:37.992
+with no skip.
+
+00:09:38.292 --> 00:09:43.540
+How many steps and tokens each one spends, until that pull request or the cap.
+
+00:09:43.840 --> 00:09:48.429
+And how many hit the cap with a useful draft, instead of a stuck runner.
+
+00:09:48.729 --> 00:09:51.415
+Verifiable done comes before tokens.
+
+00:09:52.615 --> 00:09:54.671
+So here's what this system teaches.
+
+00:09:54.971 --> 00:09:58.180
+Running generated code is the first risk to address.
+
+00:09:58.480 --> 00:10:02.160
+Done must be something code can verify, and a skip doesn't count.
+
+00:10:02.460 --> 00:10:04.612
+Fewer tools mean better choices.
+
+00:10:04.912 --> 00:10:09.304
+Reading is what fills the context, so move it out, and keep the plan in notes.
+
+00:10:09.604 --> 00:10:11.376
+And the limit is a feature.
+
+00:10:11.676 --> 00:10:14.826
+A draft with a report beats a runner stuck all night.
+
+00:10:15.476 --> 00:10:17.564
+That closes the agents track.
+
+00:10:17.864 --> 00:10:22.935
+Next, the security track, where we'll look at what an attacker can do with
+
+00:10:22.935 --> 00:10:24.716
+everything an agent reads.
+
+00:10:25.016 --> 00:10:25.770
+See you there.

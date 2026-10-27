@@ -1,0 +1,899 @@
+1
+00:00:01,600 --> 00:00:04,391
+Um time de plataforma de doze pessoas mantém
+
+2
+00:00:04,391 --> 00:00:07,119
+um monorepo de uns quatrocentos mil linhas.
+
+3
+00:00:07,419 --> 00:00:09,946
+E a fila de tarefas pequenas só cresce.
+
+4
+00:00:10,247 --> 00:00:11,708
+Atualizar uma dependência.
+
+5
+00:00:12,009 --> 00:00:13,897
+Corrigir um teste instável.
+
+6
+00:00:14,197 --> 00:00:16,114
+Renomear um campo em todo lugar.
+
+7
+00:00:16,414 --> 00:00:19,131
+Ajustar um endpoint a um contrato novo.
+
+8
+00:00:19,431 --> 00:00:21,760
+Claras, tediosas e numerosas.
+
+9
+00:00:22,410 --> 00:00:25,952
+O objetivo é um agente que pega uma tarefa do tracker,
+
+10
+00:00:25,952 --> 00:00:28,117
+lê o repositório, edita arquivos,
+
+11
+00:00:28,117 --> 00:00:32,184
+roda os testes e abre um pull request para uma pessoa revisar.
+
+12
+00:00:32,484 --> 00:00:34,907
+Ninguém espera arquitetura.
+
+13
+00:00:35,207 --> 00:00:38,756
+Espera-se que ele resolva tarefas bem descritas, sozinho.
+
+14
+00:00:39,056 --> 00:00:42,697
+E que nunca deixe o repositório pior do que encontrou.
+
+15
+00:00:43,347 --> 00:00:46,107
+Essa última parte importa mais que a taxa de sucesso.
+
+16
+00:00:46,407 --> 00:00:49,197
+Um agente de código com rede aberta,
+
+17
+00:00:49,197 --> 00:00:51,522
+e um token do git no ambiente,
+
+18
+00:00:51,522 --> 00:00:55,707
+consegue vazar o seu código sozinho, às três da manhã.
+
+19
+00:00:56,007 --> 00:00:58,904
+Esta é a última aula da trilha de agentes,
+
+20
+00:00:58,904 --> 00:01:01,526
+e quase todo padrão dela aparece aqui.
+
+21
+00:01:02,726 --> 00:01:06,723
+A primeira versão saiu em três dias e impressionou na demo.
+
+22
+00:01:07,023 --> 00:01:09,395
+Resolveu cinco tarefas escolhidas a dedo.
+
+23
+00:01:10,045 --> 00:01:11,602
+Chega uma tarefa.
+
+24
+00:01:11,902 --> 00:01:15,340
+Um agente só, com um prompt longo, faz tudo.
+
+25
+00:01:15,990 --> 00:01:18,784
+Cada time que ajudou acrescentou as suas ferramentas.
+
+26
+00:01:19,084 --> 00:01:20,218
+Trinta e uma.
+
+27
+00:01:20,518 --> 00:01:23,817
+Leitura de arquivo em três sabores, busca de código em dois.
+
+28
+00:01:24,467 --> 00:01:29,367
+Tudo o que ele lê e roda fica no histórico até a tarefa acabar.
+
+29
+00:01:30,017 --> 00:01:32,119
+Uma ferramenta de shell roda qualquer
+
+30
+00:01:32,119 --> 00:01:33,653
+comando que o modelo gerar,
+
+31
+00:01:33,653 --> 00:01:34,846
+na máquina do runner.
+
+32
+00:01:35,496 --> 00:01:39,364
+E quando o modelo diz que terminou, abre um pull request.
+
+33
+00:01:40,014 --> 00:01:43,197
+O prompt pedia, na prática: seja autônomo,
+
+34
+00:01:43,197 --> 00:01:47,365
+explore o repositório, não pare até os testes passarem.
+
+35
+00:01:47,665 --> 00:01:49,001
+Nenhuma lista de permissão.
+
+36
+00:01:49,301 --> 00:01:49,933
+Nenhum limite.
+
+37
+00:01:50,233 --> 00:01:53,754
+Nenhum critério de pronto além da frase do próprio modelo.
+
+38
+00:01:54,954 --> 00:01:55,591
+Semana um.
+
+39
+00:01:55,891 --> 00:01:57,022
+Em tarefas reais,
+
+40
+00:01:57,022 --> 00:02:00,683
+o agente alternava entre três jeitos de ler um arquivo,
+
+41
+00:02:00,683 --> 00:02:02,614
+às vezes com o mesmo caminho.
+
+42
+00:02:02,914 --> 00:02:03,801
+Ler o arquivo.
+
+43
+00:02:04,101 --> 00:02:05,505
+Buscar o conteúdo.
+
+44
+00:02:05,805 --> 00:02:06,818
+Mostrar o arquivo.
+
+45
+00:02:07,118 --> 00:02:11,235
+Um terço dos turnos era a ferramenta errada seguida da certa.
+
+46
+00:02:11,535 --> 00:02:12,982
+Ninguém escreveu um loop.
+
+47
+00:02:13,282 --> 00:02:17,447
+O modelo só não sabia qual era a certa, então tentava as três.
+
+48
+00:02:18,097 --> 00:02:18,882
+Semana dois.
+
+49
+00:02:19,182 --> 00:02:22,342
+Uma atualização de dependência ficou presa num ciclo.
+
+50
+00:02:22,642 --> 00:02:25,960
+Instalar, rodar testes, falhar num conflito de versão,
+
+51
+00:02:25,960 --> 00:02:27,004
+instalar de novo.
+
+52
+00:02:27,304 --> 00:02:29,066
+O runner rodou a noite inteira.
+
+53
+00:02:29,366 --> 00:02:31,719
+A conta daquele dia foi a mais alta do mês.
+
+54
+00:02:32,019 --> 00:02:34,577
+Nenhum limite de passos, de tempo ou de custo.
+
+55
+00:02:35,227 --> 00:02:35,872
+Semana três.
+
+56
+00:02:36,172 --> 00:02:37,442
+Em tarefas longas,
+
+57
+00:02:37,442 --> 00:02:40,264
+o agente reeditava arquivos que já tinha
+
+58
+00:02:40,264 --> 00:02:42,733
+consertado e trazia o bug de volta.
+
+59
+00:02:43,033 --> 00:02:46,409
+O contexto tinha passado de cento e cinquenta mil tokens,
+
+60
+00:02:46,409 --> 00:02:48,719
+com dezenas de arquivos lidos no começo
+
+61
+00:02:48,719 --> 00:02:50,378
+e saídas de teste completas.
+
+62
+00:02:50,678 --> 00:02:53,274
+A correção do turno doze ficou no meio.
+
+63
+00:02:53,574 --> 00:02:57,726
+A versão quebrada, relida no turno quarenta, voltou para o diff.
+
+64
+00:02:58,376 --> 00:03:00,060
+Semana quatro, a pior.
+
+65
+00:03:00,360 --> 00:03:02,177
+Para limpar fixtures antigas,
+
+66
+00:03:02,177 --> 00:03:04,494
+o modelo gerou um comando que apagava
+
+67
+00:03:04,494 --> 00:03:06,249
+a pasta de fixtures inteira,
+
+68
+00:03:06,249 --> 00:03:07,439
+e rodou pelo shell.
+
+69
+00:03:07,739 --> 00:03:10,156
+A pasta tinha fixtures ainda em uso.
+
+70
+00:03:10,456 --> 00:03:13,512
+E o pull request abriu com os testes passando.
+
+71
+00:03:13,812 --> 00:03:16,014
+Porque os testes que dependiam daquelas
+
+72
+00:03:16,014 --> 00:03:17,651
+fixtures tinham sido pulados,
+
+73
+00:03:17,651 --> 00:03:20,192
+por uma flag que o agente também acrescentou.
+
+74
+00:03:20,492 --> 00:03:22,979
+Uma pessoa quase fez o merge.
+
+75
+00:03:23,279 --> 00:03:24,665
+O CI verde estava mentindo.
+
+76
+00:03:25,315 --> 00:03:26,676
+E a semana cinco.
+
+77
+00:03:26,976 --> 00:03:30,388
+O time parou de confiar nos pull requests do agente.
+
+78
+00:03:30,688 --> 00:03:33,877
+Revisar um levava mais tempo que fazer a tarefa.
+
+79
+00:03:34,177 --> 00:03:36,467
+Cada diff misturava o renome pedido
+
+80
+00:03:36,467 --> 00:03:38,691
+com uma limpeza que ninguém pediu,
+
+81
+00:03:38,691 --> 00:03:41,308
+um teste pulado e um lockfile reescrito.
+
+82
+00:03:42,508 --> 00:03:43,654
+Uma pergunta para você.
+
+83
+00:03:43,954 --> 00:03:47,296
+O agente apagou a pasta de fixtures pelo shell e ainda
+
+84
+00:03:47,296 --> 00:03:50,762
+acrescentou uma flag que pulava os testes daquela pasta.
+
+85
+00:03:51,062 --> 00:03:52,444
+O CI ficou verde.
+
+86
+00:03:52,744 --> 00:03:54,829
+Qual falha de desenho veio primeiro?
+
+87
+00:03:57,879 --> 00:04:00,350
+Comandos gerados rodavam direto.
+
+88
+00:04:00,650 --> 00:04:02,174
+Sem lista de permissão,
+
+89
+00:04:02,174 --> 00:04:04,560
+sem sandbox e sem critério de pronto
+
+90
+00:04:04,560 --> 00:04:06,549
+que recusasse um teste pulado.
+
+91
+00:04:06,849 --> 00:04:09,320
+O comando nem deveria existir na lista.
+
+92
+00:04:09,620 --> 00:04:12,922
+E um teste pulado não deveria valer como testes passando.
+
+93
+00:04:13,222 --> 00:04:16,010
+Os dois portões faltavam, e o CI verde escondeu os dois.
+
+94
+00:04:16,660 --> 00:04:18,250
+Não foi sabotagem.
+
+95
+00:04:18,550 --> 00:04:21,006
+O modelo seguiu a tarefa, limpar fixtures,
+
+96
+00:04:21,006 --> 00:04:22,701
+com as ferramentas que tinha.
+
+97
+00:04:23,001 --> 00:04:26,820
+E acrescentar nunca apague fixtures no prompt não ajuda.
+
+98
+00:04:27,120 --> 00:04:30,557
+O prompt já pedia para não piorar o repositório.
+
+99
+00:04:30,857 --> 00:04:33,381
+A ferramenta aceitou o comando mesmo assim.
+
+100
+00:04:34,581 --> 00:04:36,652
+Você já conhece os quatro pelo nome.
+
+101
+00:04:37,302 --> 00:04:38,309
+Tool sprawl.
+
+102
+00:04:38,609 --> 00:04:41,843
+Trinta e uma ferramentas, várias fazendo o mesmo trabalho.
+
+103
+00:04:42,143 --> 00:04:43,179
+Essa é a semana um.
+
+104
+00:04:43,829 --> 00:04:45,272
+Um unbounded loop.
+
+105
+00:04:45,572 --> 00:04:48,130
+Nenhum limite de passos, tempo ou custo.
+
+106
+00:04:48,430 --> 00:04:49,617
+Essa é a noite da semana dois.
+
+107
+00:04:50,267 --> 00:04:51,158
+Context rot.
+
+108
+00:04:51,458 --> 00:04:55,210
+Um despejo de teste de oito mil linhas não é observação.
+
+109
+00:04:55,510 --> 00:04:58,967
+É ruído que empurra a correção para o meio da janela.
+
+110
+00:04:59,267 --> 00:04:59,912
+Semana três.
+
+111
+00:05:00,562 --> 00:05:03,315
+E unvalidated executed output.
+
+112
+00:05:03,615 --> 00:05:06,086
+Comandos gerados rodavam direto.
+
+113
+00:05:06,386 --> 00:05:07,333
+Semana quatro.
+
+114
+00:05:08,533 --> 00:05:12,074
+Cada passo começou com um eval de sessenta tarefas reais,
+
+115
+00:05:12,074 --> 00:05:13,689
+já resolvidas por pessoas,
+
+116
+00:05:13,689 --> 00:05:16,236
+cada uma com o teste que prova a solução.
+
+117
+00:05:16,536 --> 00:05:19,499
+E terminou com o mesmo eval rodando de novo.
+
+118
+00:05:19,799 --> 00:05:23,627
+O modelo disse que terminou não vale como caso de gabarito.
+
+119
+00:05:24,277 --> 00:05:25,311
+Primeiro, o risco.
+
+120
+00:05:25,611 --> 00:05:27,051
+A ferramenta de shell saiu.
+
+121
+00:05:27,351 --> 00:05:29,670
+Entrou uma ferramenta de rodar comando
+
+122
+00:05:29,670 --> 00:05:31,868
+que só aceita comandos de uma lista.
+
+123
+00:05:32,168 --> 00:05:36,638
+Testes, lint, build e o gerenciador de pacotes com flags fixas.
+
+124
+00:05:36,938 --> 00:05:40,537
+E ela roda num container descartável, sem rede,
+
+125
+00:05:40,537 --> 00:05:43,371
+com o repositório montado como cópia.
+
+126
+00:05:43,671 --> 00:05:46,913
+Git e segredos de produção ficam fora do container.
+
+127
+00:05:47,213 --> 00:05:50,792
+Apagar, baixar e fazer push não existem na lista.
+
+128
+00:05:51,442 --> 00:05:52,580
+Depois, um orçamento de loop.
+
+129
+00:05:52,880 --> 00:05:56,109
+Limite de passos, tempo e custo por tarefa,
+
+130
+00:05:56,109 --> 00:05:59,038
+baseado nas tarefas de sucesso do eval.
+
+131
+00:05:59,338 --> 00:06:00,867
+Um detector de repetição.
+
+132
+00:06:01,167 --> 00:06:04,855
+E no limite, o agente abre um pull request de rascunho,
+
+133
+00:06:04,855 --> 00:06:06,733
+com o que fez e o que falta.
+
+134
+00:06:07,383 --> 00:06:09,392
+Depois, consolidar as ferramentas.
+
+135
+00:06:09,692 --> 00:06:11,394
+Trinta e uma viraram sete.
+
+136
+00:06:11,694 --> 00:06:16,133
+Ler, buscar, editar, rodar comando permitido, ler a tarefa,
+
+137
+00:06:16,133 --> 00:06:17,563
+delegar e terminar.
+
+138
+00:06:17,863 --> 00:06:18,956
+Um jeito de ler.
+
+139
+00:06:19,256 --> 00:06:20,629
+Um jeito de buscar.
+
+140
+00:06:21,279 --> 00:06:23,175
+E extrair subagentes.
+
+141
+00:06:23,475 --> 00:06:26,767
+A exploração do código foi para subagentes só de leitura
+
+142
+00:06:26,767 --> 00:06:29,413
+que devolvem os arquivos e linhas relevantes.
+
+143
+00:06:29,713 --> 00:06:32,462
+O agente principal só edita e confere.
+
+144
+00:06:32,762 --> 00:06:34,948
+O conteúdo de dezenas de arquivos
+
+145
+00:06:34,948 --> 00:06:37,002
+morre no contexto do subagente.
+
+146
+00:06:38,202 --> 00:06:39,521
+Aqui está onde chegou.
+
+147
+00:06:39,821 --> 00:06:42,686
+A tarefa chega com um critério de pronto.
+
+148
+00:06:42,986 --> 00:06:44,657
+Quais testes precisam passar.
+
+149
+00:06:45,307 --> 00:06:47,358
+O agente principal planeja e edita,
+
+150
+00:06:47,358 --> 00:06:49,762
+com sete ferramentas e orçamento próprio.
+
+151
+00:06:50,062 --> 00:06:53,456
+Subagentes de exploração leem código num contexto
+
+152
+00:06:53,456 --> 00:06:55,881
+separado e devolvem só a conclusão,
+
+153
+00:06:55,881 --> 00:06:56,851
+com evidência.
+
+154
+00:06:57,501 --> 00:07:01,029
+As edições usam uma ferramenta de substituição exata,
+
+155
+00:07:01,029 --> 00:07:03,226
+que falha se o trecho não existe.
+
+156
+00:07:03,526 --> 00:07:06,497
+Uma edição mais ou menos certa, no meio de um arquivo,
+
+157
+00:07:06,497 --> 00:07:09,083
+foi o que trouxe de volta o bug da semana três.
+
+158
+00:07:09,733 --> 00:07:12,671
+Os comandos passam pela lista de permissão
+
+159
+00:07:12,671 --> 00:07:15,050
+e rodam num container descartável,
+
+160
+00:07:15,050 --> 00:07:16,729
+sem rede e sem segredos.
+
+161
+00:07:17,379 --> 00:07:20,555
+O agente mantém um arquivo de notas, com o plano,
+
+162
+00:07:20,555 --> 00:07:22,370
+as decisões e as restrições.
+
+163
+00:07:22,670 --> 00:07:26,190
+Ele sobrevive à compactação do contexto.
+
+164
+00:07:26,840 --> 00:07:28,918
+O sucesso é conferido pelo código.
+
+165
+00:07:29,218 --> 00:07:30,967
+Os testes do critério passam.
+
+166
+00:07:31,267 --> 00:07:34,486
+Sucesso abre um pull request normal.
+
+167
+00:07:34,786 --> 00:07:38,513
+O limite abre um rascunho, com o relatório do que falta.
+
+168
+00:07:39,163 --> 00:07:42,151
+E nada entra sem a revisão de uma pessoa.
+
+169
+00:07:42,801 --> 00:07:44,859
+Agora o mesmo renome, depois.
+
+170
+00:07:45,159 --> 00:07:50,157
+Renomear user id para account id no serviço de cobrança.
+
+171
+00:07:50,457 --> 00:07:53,225
+Pronto quer dizer os testes de cobrança verdes,
+
+172
+00:07:53,225 --> 00:07:54,874
+sem filtro e sem pular nada.
+
+173
+00:07:55,174 --> 00:08:00,264
+O agente escreve isso nas notas e delega a busca.
+
+174
+00:08:00,564 --> 00:08:03,544
+O subagente devolve três arquivos e linhas.
+
+175
+00:08:03,844 --> 00:08:08,411
+O agente edita cada um com exatidão e roda os testes no sandbox.
+
+176
+00:08:08,711 --> 00:08:12,916
+Se um teste falha, a saída chega cortada, as últimas linhas,
+
+177
+00:08:12,916 --> 00:08:14,037
+não as oito mil.
+
+178
+00:08:14,337 --> 00:08:17,057
+E as notas registram o que já foi trocado,
+
+179
+00:08:17,057 --> 00:08:19,648
+então o agente nunca reedita um arquivo.
+
+180
+00:08:20,298 --> 00:08:23,046
+E aqui está o caso de gabarito correspondente no eval.
+
+181
+00:08:23,346 --> 00:08:26,109
+Ele nunca pode rodar apagar, baixar ou fazer push.
+
+182
+00:08:26,409 --> 00:08:28,457
+E a checagem de pronto proíbe as flags
+
+183
+00:08:28,457 --> 00:08:29,967
+que filtram ou pulam testes.
+
+184
+00:08:30,267 --> 00:08:33,631
+Um teste pulado, ou o modelo disse que terminou, reprova o caso.
+
+185
+00:08:33,931 --> 00:08:35,662
+Verde de verdade passa.
+
+186
+00:08:36,862 --> 00:08:38,747
+Mais uma checagem, de segurança.
+
+187
+00:08:39,047 --> 00:08:43,117
+Digamos que o runner tem rede e um token no ambiente,
+
+188
+00:08:43,117 --> 00:08:46,650
+e a lista de comandos inclui instalar pacotes.
+
+189
+00:08:46,950 --> 00:08:48,356
+O que fecha o vazamento?
+
+190
+00:08:48,656 --> 00:08:51,582
+Um sandbox descartável sem rede.
+
+191
+00:08:51,882 --> 00:08:53,940
+Segredos fora do container.
+
+192
+00:08:54,240 --> 00:08:57,756
+E instalação de pacote só de um registro interno,
+
+193
+00:08:57,756 --> 00:09:00,698
+com flags fixas, se for mesmo necessário.
+
+194
+00:09:00,998 --> 00:09:03,743
+Pedir no prompt para nunca mandar código
+
+195
+00:09:03,743 --> 00:09:05,939
+para fora não fecha uma conexão.
+
+196
+00:09:06,239 --> 00:09:08,397
+E um modelo maior também não ajuda.
+
+197
+00:09:08,697 --> 00:09:13,902
+Um install com rede já roda o que o pacote trouxer.
+
+198
+00:09:14,552 --> 00:09:16,665
+E como ler os números.
+
+199
+00:09:16,965 --> 00:09:19,994
+As três métricas puxam para lados diferentes.
+
+200
+00:09:20,294 --> 00:09:23,817
+Resolvido sem ajuda, com teste pulado, é a semana quatro.
+
+201
+00:09:24,117 --> 00:09:26,553
+Poucos passos com um delete no meio
+
+202
+00:09:26,553 --> 00:09:28,919
+é pior que muitos passos só lendo.
+
+203
+00:09:29,219 --> 00:09:31,018
+Então a leitura certa é esta.
+
+204
+00:09:31,318 --> 00:09:33,419
+Entre as sessenta tarefas do eval,
+
+205
+00:09:33,419 --> 00:09:36,077
+quantas abrem um pull request cujo critério
+
+206
+00:09:36,077 --> 00:09:37,992
+de pronto passa sem pular nada.
+
+207
+00:09:38,292 --> 00:09:40,950
+Quantos passos e tokens cada uma gasta,
+
+208
+00:09:40,950 --> 00:09:43,540
+até esse pull request ou até o limite.
+
+209
+00:09:43,840 --> 00:09:46,795
+E quantas batem no limite com um rascunho útil,
+
+210
+00:09:46,795 --> 00:09:48,429
+em vez de um runner preso.
+
+211
+00:09:48,729 --> 00:09:51,415
+Pronto verificável vem antes de tokens.
+
+212
+00:09:52,615 --> 00:09:54,671
+Então, o que este sistema ensina.
+
+213
+00:09:54,971 --> 00:09:58,180
+Rodar código gerado é o primeiro risco a tratar.
+
+214
+00:09:58,480 --> 00:10:00,845
+Pronto precisa ser algo que o código confere,
+
+215
+00:10:00,845 --> 00:10:02,160
+e teste pulado não conta.
+
+216
+00:10:02,460 --> 00:10:04,612
+Menos ferramentas, escolhas melhores.
+
+217
+00:10:04,912 --> 00:10:06,658
+Leitura é o que enche o contexto,
+
+218
+00:10:06,658 --> 00:10:09,304
+então tire do principal e guarde o plano em notas.
+
+219
+00:10:09,604 --> 00:10:11,376
+E o limite é uma funcionalidade.
+
+220
+00:10:11,676 --> 00:10:14,826
+Um rascunho com relatório vence um runner preso a noite inteira.
+
+221
+00:10:15,476 --> 00:10:17,564
+Isso fecha a trilha de agentes.
+
+222
+00:10:17,864 --> 00:10:19,963
+Em seguida, a trilha de segurança,
+
+223
+00:10:19,963 --> 00:10:22,617
+em que vamos ver o que um atacante consegue
+
+224
+00:10:22,617 --> 00:10:24,716
+fazer com tudo o que um agente lê.
+
+225
+00:10:25,016 --> 00:10:25,770
+Até lá.
