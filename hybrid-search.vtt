@@ -1,0 +1,364 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:04.968
+Pedro runs the search for an online auto parts store.
+
+00:00:05.268 --> 00:00:08.918
+Vector search did well on brake pads for a compact car.
+
+00:00:09.218 --> 00:00:11.768
+It found pads that fit several models.
+
+00:00:12.418 --> 00:00:15.776
+Then a customer typed the part number, and nothing else.
+
+00:00:16.076 --> 00:00:20.401
+And the search returned pads from other brands, none of them with that code.
+
+00:00:21.051 --> 00:00:24.157
+The old keyword search had the opposite problem.
+
+00:00:24.457 --> 00:00:27.682
+It got the code right and the natural language wrong.
+
+00:00:27.982 --> 00:00:33.337
+Each method fails exactly where the other one succeeds, and customers write both
+
+00:00:33.337 --> 00:00:35.546
+ways, often in the same sentence.
+
+00:00:36.196 --> 00:00:41.175
+In this lesson, you'll learn to run both searches together, and to combine them so
+
+00:00:41.175 --> 00:00:44.333
+one query gets the meaning and the exact term right.
+
+00:00:45.533 --> 00:00:47.131
+Think of two librarians.
+
+00:00:47.431 --> 00:00:52.499
+One knows the catalog by heart, every code, every acronym, every name.
+
+00:00:52.799 --> 00:00:57.718
+The other doesn't remember codes, but understands what you meant, even when you
+
+00:00:57.718 --> 00:00:58.465
+asked badly.
+
+00:00:59.115 --> 00:01:01.180
+The first is lexical search.
+
+00:01:01.480 --> 00:01:07.021
+It scores documents by the words they contain, and it gets codes, acronyms, names
+
+00:01:07.021 --> 00:01:08.458
+and rare words right.
+
+00:01:09.108 --> 00:01:11.032
+The second is vector search.
+
+00:01:11.332 --> 00:01:17.176
+It scores by closeness in meaning, so synonyms, paraphrases and clumsy questions
+
+00:01:17.176 --> 00:01:17.542
+work.
+
+00:01:18.192 --> 00:01:22.737
+You ask both, over the same documents, and combine the answers.
+
+00:01:23.037 --> 00:01:25.488
+The same trouble shows up outside shops.
+
+00:01:25.788 --> 00:01:30.931
+An invoice access key has forty four digits, and only an exact match finds it.
+
+00:01:31.231 --> 00:01:33.754
+An embedding approximates meaning.
+
+00:01:34.054 --> 00:01:36.202
+It doesn't memorize identifiers.
+
+00:01:37.402 --> 00:01:41.083
+The query arrives exactly as the customer wrote it.
+
+00:01:41.733 --> 00:01:46.385
+Both searches run in parallel, over the same index, with the same filters.
+
+00:01:46.685 --> 00:01:50.107
+Total time is that of the slower one, not the sum.
+
+00:01:50.757 --> 00:01:52.348
+Then comes fusion.
+
+00:01:52.648 --> 00:01:56.104
+The most common recipe is reciprocal rank fusion.
+
+00:01:56.404 --> 00:02:01.423
+Each document earns points for its position in each list, and the sum decides the
+
+00:02:01.423 --> 00:02:02.166
+final order.
+
+00:02:02.816 --> 00:02:05.380
+It uses positions, not raw scores.
+
+00:02:05.680 --> 00:02:11.128
+And that matters, because keyword scores and vector scores live on different scales,
+
+00:02:11.128 --> 00:02:14.177
+and you'd have to calibrate them before adding.
+
+00:02:14.827 --> 00:02:19.900
+The top results move on, either as the search results or as the context for a model.
+
+00:02:21.100 --> 00:02:25.807
+Now the mixed sentence: front pad, the part number, for an A4.
+
+00:02:26.107 --> 00:02:31.398
+First, the code gets normalized, so the dashes and the case don't matter.
+
+00:02:32.048 --> 00:02:37.307
+Keyword search puts the two right products at the top, because they contain the
+
+00:02:37.307 --> 00:02:37.640
+code.
+
+00:02:37.940 --> 00:02:42.533
+Vector search puts at the top pads that fit that car, but without the code.
+
+00:02:43.183 --> 00:02:47.535
+One product shows up on both lists, third on one and first on the other.
+
+00:02:47.835 --> 00:02:51.360
+It collects points twice, and it rises to first place.
+
+00:02:51.660 --> 00:02:54.817
+The look-alike pads, without the code, sit lower.
+
+00:02:55.467 --> 00:02:59.261
+The mixed sentence stops being a tie between two bad systems.
+
+00:02:59.561 --> 00:03:04.619
+Each one contributes what it knows, and fusion promotes whoever showed up on both.
+
+00:03:05.819 --> 00:03:06.799
+Think fast.
+
+00:03:07.099 --> 00:03:09.850
+A customer types only the part number.
+
+00:03:10.150 --> 00:03:13.160
+Vector search returns other manufacturers' pads.
+
+00:03:13.460 --> 00:03:16.250
+Keyword search returns the two right products.
+
+00:03:16.550 --> 00:03:20.013
+After fusion, the right ones are first and second.
+
+00:03:20.313 --> 00:03:22.976
+What did fusion do that was useful?
+
+00:03:26.026 --> 00:03:29.528
+It kept at the top what keyword search had already got right.
+
+00:03:29.828 --> 00:03:35.439
+When one list is right and the other is wrong, rank fusion preserves the top of the
+
+00:03:35.439 --> 00:03:36.115
+good list.
+
+00:03:36.415 --> 00:03:40.163
+The vector adds candidates, but it can't bury the code.
+
+00:03:40.813 --> 00:03:43.809
+And no, it didn't calibrate any scales.
+
+00:03:44.109 --> 00:03:47.783
+The method never looks at raw scores, only at positions.
+
+00:03:48.983 --> 00:03:51.825
+Skip it when queries are always identifiers.
+
+00:03:52.125 --> 00:03:57.339
+If people only ever paste a code, that's a lookup, and the database already does it
+
+00:03:57.339 --> 00:04:00.982
+with an equality check, cheaper and without false matches.
+
+00:04:01.632 --> 00:04:05.854
+Skip it when the material is small and fits in the context window.
+
+00:04:06.154 --> 00:04:08.240
+Then you don't need search at all.
+
+00:04:08.890 --> 00:04:14.728
+And skip it when vector search already passes the eval, with no failures on exact
+
+00:04:14.728 --> 00:04:15.160
+terms.
+
+00:04:15.460 --> 00:04:17.405
+One search is simpler than two.
+
+00:04:18.055 --> 00:04:19.391
+Now the mistakes.
+
+00:04:19.691 --> 00:04:21.991
+The classic one is different filters.
+
+00:04:22.291 --> 00:04:27.690
+Keyword search respects the category, vector search doesn't, and an out of stock
+
+00:04:27.690 --> 00:04:32.886
+item from another category leaks into the final list through the vector side.
+
+00:04:33.186 --> 00:04:35.995
+The same filter goes into both searches.
+
+00:04:36.645 --> 00:04:39.284
+Second, two ids for one product.
+
+00:04:39.584 --> 00:04:44.759
+If the text index and the vector index name it differently, fusion never adds the
+
+00:04:44.759 --> 00:04:45.206
+points.
+
+00:04:45.856 --> 00:04:49.169
+Third, an eval set with only natural sentences.
+
+00:04:49.469 --> 00:04:51.539
+You'll conclude that vectors are enough.
+
+00:04:51.839 --> 00:04:56.246
+Put codes, invoice keys and internal acronyms in there.
+
+00:04:56.896 --> 00:05:02.196
+Also normalize identifiers, before indexing and before searching.
+
+00:05:02.496 --> 00:05:07.898
+Code with dashes, code without, code with spaces must become the same token.
+
+00:05:08.198 --> 00:05:12.780
+Otherwise keyword search misses the very case it exists for.
+
+00:05:13.980 --> 00:05:14.946
+What to measure.
+
+00:05:15.246 --> 00:05:17.303
+Recall, split by query type.
+
+00:05:17.603 --> 00:05:20.639
+Code queries, natural queries, and mixed ones.
+
+00:05:21.289 --> 00:05:23.769
+Compare hybrid against each search alone.
+
+00:05:24.069 --> 00:05:29.422
+If hybrid doesn't beat keyword search on codes, nor vector search on natural
+
+00:05:29.422 --> 00:05:31.394
+sentences, fusion is broken.
+
+00:05:31.694 --> 00:05:36.511
+Look at ids, filters and normalization before blaming the domain.
+
+00:05:37.161 --> 00:05:41.460
+And log a span with the top of each list and the final list.
+
+00:05:41.760 --> 00:05:47.615
+On a bad answer, that span tells you whether keyword search, vector search or fusion
+
+00:05:47.615 --> 00:05:48.103
+failed.
+
+00:05:48.753 --> 00:05:49.883
+One security point.
+
+00:05:50.183 --> 00:05:53.631
+Permission filters go into both searches, before fusion.
+
+00:05:53.931 --> 00:05:56.236
+Filtering afterwards is late.
+
+00:05:56.536 --> 00:06:01.748
+The ranking already mixed in documents the user can't see, and one bug in the post
+
+00:06:01.748 --> 00:06:03.210
+filter leaks a passage.
+
+00:06:04.410 --> 00:06:06.461
+On the page, there are two tabs.
+
+00:06:06.761 --> 00:06:11.789
+The Python one runs everything in memory, so you can see fusion with no search
+
+00:06:11.789 --> 00:06:12.240
+engine.
+
+00:06:12.540 --> 00:06:18.207
+It tokenizes with the normalization step, scores with a keyword ranking library, and
+
+00:06:18.207 --> 00:06:20.838
+embeds with a small multilingual model.
+
+00:06:21.488 --> 00:06:26.133
+Both searches take the same filters and return fifty candidates each.
+
+00:06:26.783 --> 00:06:28.523
+Fusion is a few lines.
+
+00:06:28.823 --> 00:06:33.896
+Each document gets one over sixty plus its position, from each list, and the points
+
+00:06:33.896 --> 00:06:34.324
+add up.
+
+00:06:34.974 --> 00:06:39.533
+The TypeScript tab does it inside Postgres, with text search and the vector
+
+00:06:39.533 --> 00:06:40.140
+extension.
+
+00:06:40.440 --> 00:06:46.011
+Two queries become two temporary tables, and the same fusion is one SQL statement.
+
+00:06:46.311 --> 00:06:52.195
+What you gain is a single database, with identical filters on both searches by
+
+00:06:52.195 --> 00:06:53.176
+construction.
+
+00:06:53.476 --> 00:06:57.455
+What you give up is fine tuning beyond what Postgres offers.
+
+00:06:58.655 --> 00:07:00.951
+So here's the idea to take with you.
+
+00:07:01.251 --> 00:07:04.705
+Meaning without exact terms loses the part number.
+
+00:07:05.005 --> 00:07:09.644
+Exact terms without meaning lose the customer who asked badly.
+
+00:07:09.944 --> 00:07:15.123
+Run both, over the same documents, with the same filters, and let the ranks vote.
+
+00:07:15.773 --> 00:07:18.017
+Hybrid search finds the right result.
+
+00:07:18.317 --> 00:07:20.968
+It doesn't always put it where the model will read it.
+
+00:07:21.268 --> 00:07:26.311
+If the right passage is at position eighteen and the model only reads five, you need
+
+00:07:26.311 --> 00:07:27.992
+a sharper judge for the top.
+
+00:07:28.292 --> 00:07:30.648
+That's the next lesson: reranking.
+
+00:07:30.948 --> 00:07:32.317
+See you there.

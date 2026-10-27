@@ -1,0 +1,583 @@
+1
+00:00:01,600 --> 00:00:04,968
+O Pedro cuida da busca de uma loja online de autopeças.
+
+2
+00:00:05,268 --> 00:00:07,307
+A busca vetorial foi bem com "pastilha
+
+3
+00:00:07,307 --> 00:00:08,918
+de freio para carro compacto".
+
+4
+00:00:09,218 --> 00:00:11,768
+Achou pastilhas que servem em vários modelos.
+
+5
+00:00:12,418 --> 00:00:15,776
+Aí um cliente digitou só o código da peça.
+
+6
+00:00:16,076 --> 00:00:18,839
+E a busca devolveu pastilhas de outras marcas,
+
+7
+00:00:18,839 --> 00:00:20,401
+nenhuma com aquele código.
+
+8
+00:00:21,051 --> 00:00:24,157
+A busca antiga por palavra-chave tinha o problema oposto.
+
+9
+00:00:24,457 --> 00:00:27,682
+Acertava o código e errava a linguagem natural.
+
+10
+00:00:27,982 --> 00:00:30,719
+Cada método falha onde o outro acerta,
+
+11
+00:00:30,719 --> 00:00:33,529
+e os clientes escrevem dos dois jeitos,
+
+12
+00:00:33,529 --> 00:00:35,546
+muitas vezes na mesma frase.
+
+13
+00:00:36,196 --> 00:00:36,895
+Nesta aula,
+
+14
+00:00:36,895 --> 00:00:40,837
+você vai aprender a rodar as duas buscas juntas e combiná-las,
+
+15
+00:00:40,837 --> 00:00:44,333
+para que uma consulta acerte o sentido e o termo exato.
+
+16
+00:00:45,533 --> 00:00:47,131
+Pense em dois bibliotecários.
+
+17
+00:00:47,431 --> 00:00:52,499
+Um sabe o catálogo de cor, cada código, cada sigla, cada nome.
+
+18
+00:00:52,799 --> 00:00:56,746
+O outro não decora códigos, mas entende o que você quis dizer,
+
+19
+00:00:56,746 --> 00:00:58,465
+mesmo quando perguntou mal.
+
+20
+00:00:59,115 --> 00:01:01,180
+O primeiro é a busca lexical.
+
+21
+00:01:01,480 --> 00:01:05,038
+Ela pontua os documentos pelas palavras que contêm,
+
+22
+00:01:05,038 --> 00:01:08,458
+e acerta códigos, siglas, nomes e palavras raras.
+
+23
+00:01:09,108 --> 00:01:11,032
+O segundo é a busca vetorial.
+
+24
+00:01:11,332 --> 00:01:14,809
+Ela pontua pela proximidade de sentido, então sinônimos,
+
+25
+00:01:14,809 --> 00:01:17,542
+paráfrases e perguntas mal feitas funcionam.
+
+26
+00:01:18,192 --> 00:01:21,324
+Você pergunta aos dois, sobre os mesmos documentos,
+
+27
+00:01:21,324 --> 00:01:22,737
+e combina as respostas.
+
+28
+00:01:23,037 --> 00:01:25,488
+O mesmo problema aparece fora das lojas.
+
+29
+00:01:25,788 --> 00:01:28,972
+A chave de acesso de uma nota fiscal tem 44 dígitos,
+
+30
+00:01:28,972 --> 00:01:30,931
+e só uma busca exata a encontra.
+
+31
+00:01:31,231 --> 00:01:33,754
+Um embedding aproxima o sentido.
+
+32
+00:01:34,054 --> 00:01:36,202
+Ele não decora identificadores.
+
+33
+00:01:37,402 --> 00:01:41,083
+A consulta chega exatamente como o cliente escreveu.
+
+34
+00:01:41,733 --> 00:01:44,963
+As duas buscas rodam em paralelo, no mesmo índice,
+
+35
+00:01:44,963 --> 00:01:46,385
+com os mesmos filtros.
+
+36
+00:01:46,685 --> 00:01:50,107
+O tempo total é o da mais lenta, não a soma.
+
+37
+00:01:50,757 --> 00:01:52,348
+Aí vem a fusão.
+
+38
+00:01:52,648 --> 00:01:56,104
+A receita mais comum é a fusão por ranking recíproco.
+
+39
+00:01:56,404 --> 00:02:00,132
+Cada documento ganha pontos pela posição em cada lista,
+
+40
+00:02:00,132 --> 00:02:02,166
+e a soma decide a ordem final.
+
+41
+00:02:02,816 --> 00:02:05,380
+Ela usa posições, não pontuações brutas.
+
+42
+00:02:05,680 --> 00:02:06,523
+Isso importa,
+
+43
+00:02:06,523 --> 00:02:09,183
+porque as pontuações da busca por palavra
+
+44
+00:02:09,183 --> 00:02:11,583
+e da vetorial têm escalas diferentes,
+
+45
+00:02:11,583 --> 00:02:14,177
+e você teria de calibrar antes de somar.
+
+46
+00:02:14,827 --> 00:02:16,878
+Os melhores resultados seguem adiante,
+
+47
+00:02:16,878 --> 00:02:19,900
+como resultado da busca ou como contexto para um modelo.
+
+48
+00:02:21,100 --> 00:02:25,057
+Agora a frase mista: pastilha dianteira, o código da peça,
+
+49
+00:02:25,057 --> 00:02:25,807
+para um A4.
+
+50
+00:02:26,107 --> 00:02:28,435
+Primeiro, o código é normalizado,
+
+51
+00:02:28,435 --> 00:02:31,398
+para que hífens e maiúsculas não importem.
+
+52
+00:02:32,048 --> 00:02:35,776
+A busca por palavra põe os dois produtos certos no topo,
+
+53
+00:02:35,776 --> 00:02:37,640
+porque eles contêm o código.
+
+54
+00:02:37,940 --> 00:02:41,569
+A busca vetorial põe no topo pastilhas que servem naquele carro,
+
+55
+00:02:41,569 --> 00:02:42,533
+mas sem o código.
+
+56
+00:02:43,183 --> 00:02:45,214
+Um produto aparece nas duas listas,
+
+57
+00:02:45,214 --> 00:02:47,535
+em terceiro numa e em primeiro na outra.
+
+58
+00:02:47,835 --> 00:02:51,360
+Ele junta pontos duas vezes e sobe para o primeiro lugar.
+
+59
+00:02:51,660 --> 00:02:54,817
+As pastilhas parecidas, sem o código, ficam mais abaixo.
+
+60
+00:02:55,467 --> 00:02:59,261
+A frase mista deixa de ser um empate entre dois sistemas ruins.
+
+61
+00:02:59,561 --> 00:03:01,817
+Cada um contribui com o que sabe,
+
+62
+00:03:01,817 --> 00:03:04,619
+e a fusão promove quem apareceu nas duas.
+
+63
+00:03:05,819 --> 00:03:06,799
+Pensa rápido.
+
+64
+00:03:07,099 --> 00:03:09,850
+Um cliente digita só o código da peça.
+
+65
+00:03:10,150 --> 00:03:13,160
+A vetorial devolve pastilhas de outras marcas.
+
+66
+00:03:13,460 --> 00:03:16,250
+A busca por palavra devolve os dois produtos certos.
+
+67
+00:03:16,550 --> 00:03:20,013
+Depois da fusão, os certos estão em primeiro e segundo.
+
+68
+00:03:20,313 --> 00:03:22,976
+O que a fusão fez de útil?
+
+69
+00:03:26,026 --> 00:03:29,528
+Ela manteve no topo o que a busca por palavra já tinha acertado.
+
+70
+00:03:29,828 --> 00:03:33,278
+Quando uma lista está certa e a outra errada,
+
+71
+00:03:33,278 --> 00:03:36,115
+a fusão preserva o topo da lista boa.
+
+72
+00:03:36,415 --> 00:03:38,145
+O vetor acrescenta candidatos,
+
+73
+00:03:38,145 --> 00:03:40,163
+mas não consegue enterrar o código.
+
+74
+00:03:40,813 --> 00:03:43,809
+E não, ela não calibrou escala nenhuma.
+
+75
+00:03:44,109 --> 00:03:47,783
+O método nunca olha as pontuações brutas, só as posições.
+
+76
+00:03:48,983 --> 00:03:51,825
+Dispense quando as consultas são sempre identificadores.
+
+77
+00:03:52,125 --> 00:03:56,164
+Se as pessoas só colam um código, isso é uma busca exata,
+
+78
+00:03:56,164 --> 00:03:58,644
+e o banco já faz com uma igualdade,
+
+79
+00:03:58,644 --> 00:04:00,982
+mais barato e sem falsos acertos.
+
+80
+00:04:01,632 --> 00:04:03,971
+Dispense quando o material é pequeno
+
+81
+00:04:03,971 --> 00:04:05,854
+e cabe na janela de contexto.
+
+82
+00:04:06,154 --> 00:04:08,240
+Aí você nem precisa de busca.
+
+83
+00:04:08,890 --> 00:04:12,966
+E dispense quando a busca vetorial já passa no eval,
+
+84
+00:04:12,966 --> 00:04:15,160
+sem falhas em termos exatos.
+
+85
+00:04:15,460 --> 00:04:17,405
+Uma busca é mais simples que duas.
+
+86
+00:04:18,055 --> 00:04:19,391
+Agora os erros.
+
+87
+00:04:19,691 --> 00:04:21,991
+O clássico são filtros diferentes.
+
+88
+00:04:22,291 --> 00:04:26,485
+A busca por palavra respeita a categoria, a vetorial não,
+
+89
+00:04:26,485 --> 00:04:29,722
+e um item fora de estoque de outra categoria
+
+90
+00:04:29,722 --> 00:04:32,886
+vaza para a lista final pelo lado vetorial.
+
+91
+00:04:33,186 --> 00:04:35,995
+O mesmo filtro vai nas duas buscas.
+
+92
+00:04:36,645 --> 00:04:39,284
+Segundo, dois ids para um produto.
+
+93
+00:04:39,584 --> 00:04:43,453
+Se o índice de texto e o vetorial o chamam de formas diferentes,
+
+94
+00:04:43,453 --> 00:04:45,206
+a fusão nunca soma os pontos.
+
+95
+00:04:45,856 --> 00:04:49,169
+Terceiro, um eval só com frases naturais.
+
+96
+00:04:49,469 --> 00:04:51,539
+Você vai concluir que vetor basta.
+
+97
+00:04:51,839 --> 00:04:56,246
+Coloque códigos, chaves de nota e siglas internas.
+
+98
+00:04:56,896 --> 00:04:59,832
+Normalize também os identificadores,
+
+99
+00:04:59,832 --> 00:05:02,196
+antes de indexar e de buscar.
+
+100
+00:05:02,496 --> 00:05:07,898
+Código com hífen, sem hífen e com espaço viram o mesmo token.
+
+101
+00:05:08,198 --> 00:05:12,780
+Senão a busca por palavra erra justo o caso para o qual existe.
+
+102
+00:05:13,980 --> 00:05:14,946
+O que medir.
+
+103
+00:05:15,246 --> 00:05:17,303
+O recall, separado por tipo de consulta.
+
+104
+00:05:17,603 --> 00:05:20,639
+Consultas de código, naturais e mistas.
+
+105
+00:05:21,289 --> 00:05:23,769
+Compare a híbrida com cada busca sozinha.
+
+106
+00:05:24,069 --> 00:05:27,635
+Se a híbrida não vence a busca por palavra nos códigos,
+
+107
+00:05:27,635 --> 00:05:31,394
+nem a vetorial nas frases naturais, a fusão está quebrada.
+
+108
+00:05:31,694 --> 00:05:36,511
+Olhe ids, filtros e normalização antes de culpar o domínio.
+
+109
+00:05:37,161 --> 00:05:41,460
+E registre um span com o topo de cada lista e a lista final.
+
+110
+00:05:41,760 --> 00:05:43,130
+Numa resposta ruim,
+
+111
+00:05:43,130 --> 00:05:46,517
+esse span mostra se falhou a busca por palavra,
+
+112
+00:05:46,517 --> 00:05:48,103
+a vetorial ou a fusão.
+
+113
+00:05:48,753 --> 00:05:49,883
+Um ponto de segurança.
+
+114
+00:05:50,183 --> 00:05:53,631
+Os filtros de permissão entram nas duas buscas, antes da fusão.
+
+115
+00:05:53,931 --> 00:05:56,236
+Filtrar depois é tarde.
+
+116
+00:05:56,536 --> 00:06:00,386
+O ranking já misturou documentos que o usuário não pode ver,
+
+117
+00:06:00,386 --> 00:06:03,210
+e um bug no filtro posterior vaza um trecho.
+
+118
+00:06:04,410 --> 00:06:06,461
+Na página, tem duas abas.
+
+119
+00:06:06,761 --> 00:06:09,205
+A de Python roda tudo em memória,
+
+120
+00:06:09,205 --> 00:06:12,240
+para você ver a fusão sem motor de busca.
+
+121
+00:06:12,540 --> 00:06:14,953
+Ela tokeniza com a etapa de normalização,
+
+122
+00:06:14,953 --> 00:06:18,190
+pontua com uma biblioteca de ranking por palavra e gera
+
+123
+00:06:18,190 --> 00:06:20,838
+embeddings com um modelo multilíngue pequeno.
+
+124
+00:06:21,488 --> 00:06:23,901
+As duas buscas recebem os mesmos filtros
+
+125
+00:06:23,901 --> 00:06:26,133
+e devolvem cinquenta candidatos cada.
+
+126
+00:06:26,783 --> 00:06:28,523
+A fusão é de poucas linhas.
+
+127
+00:06:28,823 --> 00:06:32,217
+Cada documento ganha um sobre sessenta mais a sua posição,
+
+128
+00:06:32,217 --> 00:06:34,324
+em cada lista, e os pontos se somam.
+
+129
+00:06:34,974 --> 00:06:37,619
+A aba de TypeScript faz dentro do Postgres,
+
+130
+00:06:37,619 --> 00:06:40,140
+com busca de texto e a extensão vetorial.
+
+131
+00:06:40,440 --> 00:06:43,455
+Duas consultas viram duas tabelas temporárias,
+
+132
+00:06:43,455 --> 00:06:46,011
+e a mesma fusão é um único comando SQL.
+
+133
+00:06:46,311 --> 00:06:48,388
+Você ganha um banco só,
+
+134
+00:06:48,388 --> 00:06:53,176
+com filtros idênticos nas duas buscas por construção.
+
+135
+00:06:53,476 --> 00:06:57,455
+Você abre mão de ajuste fino além do que o Postgres oferece.
+
+136
+00:06:58,655 --> 00:07:00,951
+Então, a ideia para levar.
+
+137
+00:07:01,251 --> 00:07:04,705
+Sentido sem termo exato perde o código da peça.
+
+138
+00:07:05,005 --> 00:07:09,644
+Termo exato sem sentido perde o cliente que perguntou mal.
+
+139
+00:07:09,944 --> 00:07:13,546
+Rode as duas, sobre os mesmos documentos, com os mesmos filtros,
+
+140
+00:07:13,546 --> 00:07:15,123
+e deixe os rankings votarem.
+
+141
+00:07:15,773 --> 00:07:18,017
+A busca híbrida acha o resultado certo.
+
+142
+00:07:18,317 --> 00:07:20,968
+Mas nem sempre o coloca onde o modelo vai ler.
+
+143
+00:07:21,268 --> 00:07:25,004
+Se o trecho certo está na posição 18 e o modelo só lê cinco,
+
+144
+00:07:25,004 --> 00:07:27,992
+você precisa de um juiz mais afiado para o topo.
+
+145
+00:07:28,292 --> 00:07:30,648
+Essa é a próxima aula: reranking.
+
+146
+00:07:30,948 --> 00:07:32,317
+Até lá.
